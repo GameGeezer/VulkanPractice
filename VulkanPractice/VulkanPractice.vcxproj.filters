@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{722584e4-a801-403f-8265-5d4e876f03ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window">
+      <UniqueIdentifier>{76e9dcf0-19a3-4c8b-b3eb-863a94cd8f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\private">
+      <UniqueIdentifier>{6e46ef89-de93-4935-a844-221db97ed63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\public">
+      <UniqueIdentifier>{263a2e08-105d-4fc5-8616-20a2081a155f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{dca789f5-10c2-4100-9274-f8990a5c8814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics">
+      <UniqueIdentifier>{af37e74b-2638-4fe8-aba9-4c908ee373b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics\public">
+      <UniqueIdentifier>{5231932d-9a7e-4004-ae85-9d82dd932530}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics\private">
+      <UniqueIdentifier>{6d3a2878-240b-4189-8b9d-66b98b39d7f8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>src\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDevice.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanQueueFamily.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h">
+      <Filter>src\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanHelper.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanQueueFamily.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
