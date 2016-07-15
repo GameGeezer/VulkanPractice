@@ -10,16 +10,20 @@ class VulkanDevice
 {
 public:
 
-	const VkDevice						device;
-	const VkPhysicalDevice				physicalDevice;
-	const VkPhysicalDeviceProperties	physicalDeviceProperties;
+	VkDevice					device;
+	VkPhysicalDevice			physicalDevice;
+	VkPhysicalDeviceProperties	physicalDeviceProperties;
 
-	const uint32_t						queueFamilyCount;
-	const VkQueueFamilyProperties		queueFamilyProperties;
+	uint32_t					queueFamilyCount;
+	VkQueueFamilyProperties		queueFamilyProperties;
 
-	VulkanDevice(VkDevice device, VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties physicalDeviceProperties, uint32_t queueFamilyCount, VkQueueFamilyProperties queueFamilyProperties);
+	VulkanDevice(VkPhysicalDevice physicalDevice, VkQueueFamilyProperties queueFamilyProperties);
 
 	~VulkanDevice();
 
-	void getQueue(uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* queue);
+	void getGraphicsFamily();
+
+private:
+	
+	vector<uint32_t> graphicsFamilyQueues;
 };

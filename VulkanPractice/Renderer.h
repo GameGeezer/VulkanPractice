@@ -1,37 +1,49 @@
 #pragma once
 
-#include <vulkan\vulkan.h>
-#include <stdint.h>
+#include "Platform.h"
+
 #include <vector>
-
-#include "VulkanDevice.h"
-
-using namespace std;
+#include <string>
 
 class Renderer
 {
 public:
-
 	Renderer();
-
 	~Renderer();
 
-	VulkanDevice* getDevice(int number);
+	const VkInstance						GetVulkanInstance()	const;
+	const VkPhysicalDevice					GetVulkanPhysicalDevice() const;
+	const VkDevice							GetVulkanDevice() const;
+	const VkQueue							GetVulkanQueue() const;
+	const uint32_t							GetVulkanGraphicsQueueFamilyIndex() const;
+	const VkPhysicalDeviceProperties	&	GetVulkanPhysicalDeviceProperties() const;
 
 private:
+	void _SetupLayersAndExtensions();
 
-	void _initInstance();
+	void initInstance();
+	void deInitInstance();
 
-	void _initDevices();
+	void initDevice();
+	void deInitDevice();
 
-	void _createDevice(VkPhysicalDevice& physicalDevice, VkDevice& outDevice);
+	void setupDebug();
+	void initDebug();
+	void deInitDebug();
 
-	void _createDeviceProperties(VkPhysicalDevice& device, VkPhysicalDeviceProperties& outProperties);
+	VkInstance								m_instance = VK_NULL_HANDLE;
+	VkPhysicalDevice						m_gpu = VK_NULL_HANDLE;
+	VkDevice								m_device = VK_NULL_HANDLE;
+	VkQueue									m_queue = VK_NULL_HANDLE;
+	VkPhysicalDeviceProperties				m_gpuProperties = {};
 
-	void _dubugFamilyQueueCheckSupported(VkQueueFamilyProperties& familitProperties);
+	uint32_t								m_graphicsFamilyIndex = 0;
 
-	
-	VkInstance				instance;
-	vector<VulkanDevice*>*	vulkanDevices;
-	uint32_t				deviceCount = 0;
+	std::vector<const char*>				_instance_layers;
+	std::vector<const char*>				_instance_extensions;
+	//	std::vector<const char*>				_device_layers;					// depricated
+	std::vector<const char*>				_device_extensions;
+
+	VkDebugReportCallbackEXT				_debug_report = VK_NULL_HANDLE;
+	VkDebugReportCallbackCreateInfoEXT		_debug_callback_create_info = {};
 };

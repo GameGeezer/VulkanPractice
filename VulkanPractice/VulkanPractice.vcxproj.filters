@@ -37,6 +37,30 @@
     <Filter Include="src\graphics\private">
       <UniqueIdentifier>{6d3a2878-240b-4189-8b9d-66b98b39d7f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\graphics\helper">
+      <UniqueIdentifier>{03f6e428-00b0-4a7c-a4c4-2d085f026732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\options">
+      <UniqueIdentifier>{9862af85-f28e-4dd3-b1f4-e6688834865a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\glfw">
+      <UniqueIdentifier>{a3bfd5b0-d8b9-416f-84ab-f444e3ba8049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\glfw\private">
+      <UniqueIdentifier>{f8c11af5-8e9c-44f6-b026-6299c963b557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\glfw\public">
+      <UniqueIdentifier>{b5469bed-83e9-4287-b9d1-726c7b5bff4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\win32">
+      <UniqueIdentifier>{a5964250-b711-4c69-ab85-282170d444e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\win32\private">
+      <UniqueIdentifier>{45de71b1-f217-4e8d-8602-f46208609ee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\win32\public">
+      <UniqueIdentifier>{544a848a-8b41-4045-8e89-355920a1b238}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -54,6 +78,27 @@
     <ClCompile Include="VulkanQueueFamily.cpp">
       <Filter>src\graphics\private</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>src\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Shared.cpp">
+      <Filter>src\graphics\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window_glfw.cpp">
+      <Filter>src\window\glfw\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Window_win32.cpp">
+      <Filter>src\window\win32\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform.cpp">
+      <Filter>src\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>src\window\private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -62,14 +107,50 @@
     <ClInclude Include="VulkanHelper.h">
       <Filter>src\util</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanDevice.h">
       <Filter>src\graphics\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanQueueFamily.h">
       <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>src\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>src\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSwapChain.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="BUILD_OPTIONS.h">
+      <Filter>src\options</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Shared.h">
+      <Filter>src\graphics\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScreen.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardKeycodes_glfw.h">
+      <Filter>src\window\glfw\public</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardKeycodes_win32.h">
+      <Filter>src\window\win32\public</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformHeaders_glfw.h">
+      <Filter>src\window\glfw</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformHeaders_win32.h">
+      <Filter>src\window\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>src\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>src\window\public</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

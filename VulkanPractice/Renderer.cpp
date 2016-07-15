@@ -1,156 +1,271 @@
-#include "Renderer.h"
+/* -----------------------------------------------------
+This source code is public domain ( CC0 )
+The code is provided as-is without limitations, requirements and responsibilities.
+Creators and contributors to this source code are provided as a token of appreciation
+and no one associated with this source code can be held responsible for any possible
+damages or losses of any kind.
+Original file creator:  Niko Kauppi (Code maintenance)
+Contributors:
+----------------------------------------------------- */
 
-#include "VulkanHelper.h"
+#include "BUILD_OPTIONS.h"
+#include "Platform.h"
+
+#include "Renderer.h"
+#include "Shared.h"
+#include "Window.h"
+
+#include <cstdlib>
+#include <assert.h>
+#include <vector>
+#include <iostream>
+#include <sstream>
 
 Renderer::Renderer()
 {
-	_initInstance();
-
-	_initDevices();
+	InitPlatform();
+	_SetupLayersAndExtensions();
+	setupDebug();
+	initInstance();
+	initDebug();
+	initDevice();
 }
 
 Renderer::~Renderer()
 {
-
+	deInitDevice();
+	deInitDebug();
+	deInitInstance();
+	DeInitPlatform();
 }
 
-VulkanDevice* Renderer::getDevice(int number)
+const VkInstance Renderer::GetVulkanInstance() const
 {
-	return (*vulkanDevices)[number];
+	return m_instance;
 }
 
-void Renderer::_initInstance()
+const VkPhysicalDevice Renderer::GetVulkanPhysicalDevice() const
 {
-	VkApplicationInfo applicationInfo { };
-	// Filling out application description:
-	// sType is mandatory
-	applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	// pNext is mandatory
-	applicationInfo.pNext = NULL;
-	// The name of our application
-	applicationInfo.pApplicationName = "Tutorial 1";
-	// The name of the engine (e.g: Game engine name)
-	applicationInfo.pEngineName = NULL;
-	// The version of the engine
-	applicationInfo.engineVersion = 1;
-	// The version of Vulkan we're using for this application
-	applicationInfo.apiVersion = VK_API_VERSION_1_0;
-
-	VkInstanceCreateInfo instanceInfo { };
-	// Filling out instance description:
-	// sType is mandatory
-	instanceInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	// pNext is mandatory
-	instanceInfo.pNext = NULL;
-	// flags is mandatory
-	instanceInfo.flags = 0;
-	// The application info structure is then passed through the instance
-	instanceInfo.pApplicationInfo = &applicationInfo;
-	// Don't enable and layer
-	instanceInfo.enabledLayerCount = 0;
-	instanceInfo.ppEnabledLayerNames = NULL;
-	// Don't enable any extensions
-	instanceInfo.enabledExtensionCount = 0;
-	instanceInfo.ppEnabledExtensionNames = NULL;
-
-	// Now create the desired instance
-	assertVulkan(vkCreateInstance(&instanceInfo, NULL, &instance));
+	return m_gpu;
 }
 
-void Renderer::_initDevices()
+const VkDevice Renderer::GetVulkanDevice() const
 {
-	// Query how many devices are present in the system
-	assertVulkan(vkEnumeratePhysicalDevices(instance, &deviceCount, NULL));
+	return m_device;
+}
 
-	// There has to be at least one device present
-	if (deviceCount == 0) {
+const VkQueue Renderer::GetVulkanQueue() const
+{
+	return m_queue;
+}
 
-		exit(EXIT_FAILURE);
+const uint32_t Renderer::GetVulkanGraphicsQueueFamilyIndex() const
+{
+	return m_graphicsFamilyIndex;
+}
+
+const VkPhysicalDeviceProperties & Renderer::GetVulkanPhysicalDeviceProperties() const
+{
+	return m_gpuProperties;
+}
+
+void Renderer::_SetupLayersAndExtensions()
+{
+	_instance_extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+	AddRequiredPlatformInstanceExtensions(&_instance_extensions);
+
+	_device_extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+}
+
+void Renderer::initInstance()
+{
+	VkApplicationInfo application_info{};
+	application_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	application_info.apiVersion = VK_MAKE_VERSION(1, 0, 2);			// 1.0.2 should work on all vulkan enabled drivers.
+	application_info.applicationVersion = VK_MAKE_VERSION(0, 1, 0);
+	application_info.pApplicationName = "Vulkan API Tutorial Series";
+
+	VkInstanceCreateInfo instance_create_info{};
+	instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	instance_create_info.pApplicationInfo = &application_info;
+	instance_create_info.enabledLayerCount = _instance_layers.size();
+	instance_create_info.ppEnabledLayerNames = _instance_layers.data();
+	instance_create_info.enabledExtensionCount = _instance_extensions.size();
+	instance_create_info.ppEnabledExtensionNames = _instance_extensions.data();
+	instance_create_info.pNext = &_debug_callback_create_info;
+
+	ErrorCheck(vkCreateInstance(&instance_create_info, nullptr, &m_instance));
+}
+
+void Renderer::deInitInstance()
+{
+	vkDestroyInstance(m_instance, nullptr);
+	m_instance = nullptr;
+}
+
+void Renderer::initDevice()
+{
+	{
+		uint32_t gpu_count = 0;
+		vkEnumeratePhysicalDevices(m_instance, &gpu_count, nullptr);
+		std::vector<VkPhysicalDevice> gpu_list(gpu_count);
+		vkEnumeratePhysicalDevices(m_instance, &gpu_count, gpu_list.data());
+		m_gpu = gpu_list[0];
+		vkGetPhysicalDeviceProperties(m_gpu, &m_gpuProperties);
 	}
-	vulkanDevices = new vector<VulkanDevice*>(deviceCount);
-	// Get the physical devices
-	vector<VkPhysicalDevice> physicalDevices(deviceCount);
-	assertVulkan(vkEnumeratePhysicalDevices(instance, &deviceCount, &(physicalDevices[0])));
+	{
+		uint32_t family_count = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(m_gpu, &family_count, nullptr);
+		std::vector<VkQueueFamilyProperties> family_property_list(family_count);
+		vkGetPhysicalDeviceQueueFamilyProperties(m_gpu, &family_count, family_property_list.data());
 
-	vector<uint32_t> queueFamilyCount(deviceCount);
-	vector<VkQueueFamilyProperties> queueFamilyProperties(deviceCount);
-
-	vector<VkDevice> devices(deviceCount);
-	vector<VkPhysicalDeviceProperties> physicalDeviceProperties(deviceCount);
-
-	for (uint32_t i = 0; i < deviceCount; i++) {
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &(queueFamilyCount[i]), NULL);
-		vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &(queueFamilyCount[i]), &(queueFamilyProperties[i]));
-
-		_createDevice(physicalDevices[i], devices[i]);
-		_createDeviceProperties(physicalDevices[i], physicalDeviceProperties[i]);
-
-		(*vulkanDevices)[i] = new VulkanDevice(devices[i], physicalDevices[i], physicalDeviceProperties[i], queueFamilyCount[i], queueFamilyProperties[i]);
+		bool found = false;
+		for (uint32_t i = 0; i < family_count; ++i) {
+			if (family_property_list[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				found = true;
+				m_graphicsFamilyIndex = i;
+			}
+		}
+		if (!found) {
+			assert(0 && "Vulkan ERROR: Queue family supporting graphics not found.");
+			std::exit(-1);
+		}
 	}
+
+	float queue_priorities[]{ 1.0f };
+	VkDeviceQueueCreateInfo device_queue_create_info{};
+	device_queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	device_queue_create_info.queueFamilyIndex = m_graphicsFamilyIndex;
+	device_queue_create_info.queueCount = 1;
+	device_queue_create_info.pQueuePriorities = queue_priorities;
+
+	VkDeviceCreateInfo device_create_info{};
+	device_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	device_create_info.queueCreateInfoCount = 1;
+	device_create_info.pQueueCreateInfos = &device_queue_create_info;
+	//	device_create_info.enabledLayerCount		= _device_layers.size();			// depricated
+	//	device_create_info.ppEnabledLayerNames		= _device_layers.data();			// depricated
+	device_create_info.enabledExtensionCount = _device_extensions.size();
+	device_create_info.ppEnabledExtensionNames = _device_extensions.data();
+
+	ErrorCheck(vkCreateDevice(m_gpu, &device_create_info, nullptr, &m_device));
+
+	vkGetDeviceQueue(m_device, m_graphicsFamilyIndex, 0, &m_queue);
 }
 
-void Renderer::_createDevice(VkPhysicalDevice& physicalDevice, VkDevice& outDevice)
+void Renderer::deInitDevice()
 {
-	VkDeviceCreateInfo deviceInfo { };
-	// Mandatory fields
-	deviceInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-	deviceInfo.pNext = NULL;
-	deviceInfo.flags = 0;
-
-	// We won't bother with extensions or layers
-	deviceInfo.enabledLayerCount = 0;
-	deviceInfo.ppEnabledLayerNames = NULL;
-	deviceInfo.enabledExtensionCount = 0;
-	deviceInfo.ppEnabledExtensionNames = NULL;
-
-	// We don't want any any features,:the wording in the spec for DeviceCreateInfo
-	// excludes that you can pass NULL to disable features, which GetPhysicalDeviceFeatures
-	// tells you is a valid value. This must be supplied - NULL is legal here.
-	deviceInfo.pEnabledFeatures = NULL;
-
-	// Here's where we initialize our queues
-	VkDeviceQueueCreateInfo deviceQueueInfo { };
-	deviceQueueInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-	deviceQueueInfo.pNext = NULL;
-	deviceQueueInfo.flags = 0;
-	// Use the first queue family in the family list
-	deviceQueueInfo.queueFamilyIndex = 0;
-
-	// Create only one queue
-	float queuePriorities[] = { 1.0f };
-	deviceQueueInfo.queueCount = 1;
-	deviceQueueInfo.pQueuePriorities = queuePriorities;
-	// Set queue(s) into the device
-	deviceInfo.queueCreateInfoCount = 1;
-	deviceInfo.pQueueCreateInfos = &deviceQueueInfo;
-
-	assertVulkan(vkCreateDevice(physicalDevice, &deviceInfo, NULL, &outDevice));
+	vkDestroyDevice(m_device, nullptr);
+	m_device = nullptr;
 }
 
-void Renderer::_createDeviceProperties(VkPhysicalDevice& device, VkPhysicalDeviceProperties& outProperties)
+#if BUILD_ENABLE_VULKAN_DEBUG
+
+VKAPI_ATTR VkBool32 VKAPI_CALL
+VulkanDebugCallback(
+	VkDebugReportFlagsEXT		flags,
+	VkDebugReportObjectTypeEXT	obj_type,
+	uint64_t					src_obj,
+	size_t						location,
+	int32_t						msg_code,
+	const char *				layer_prefix,
+	const char *				msg,
+	void *						user_data
+	)
 {
-	memset(&outProperties, 0, sizeof outProperties);
-	vkGetPhysicalDeviceProperties(device, &outProperties);
-	printf("Driver Version: %d\n", outProperties.driverVersion);
-	printf("Device Name:    %s\n", outProperties.deviceName);
-	printf("Device Type:    %d\n", outProperties.deviceType);
-	printf("API Version:    %d.%d.%d\n",
-		// See note below regarding this:
-		(outProperties.apiVersion >> 22) & 0x3FF,
-		(outProperties.apiVersion >> 12) & 0x3FF,
-		(outProperties.apiVersion & 0xFFF));
+	std::ostringstream stream;
+	stream << "VKDBG: ";
+	if (flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
+		stream << "INFO: ";
+	}
+	if (flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) {
+		stream << "WARNING: ";
+	}
+	if (flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) {
+		stream << "PERFORMANCE: ";
+	}
+	if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) {
+		stream << "ERROR: ";
+	}
+	if (flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
+		stream << "DEBUG: ";
+	}
+	stream << "@[" << layer_prefix << "]: ";
+	stream << msg << std::endl;
+	std::cout << stream.str();
+
+#if defined( _WIN32 )
+	if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) {
+		MessageBox(NULL, stream.str().c_str(), "Vulkan Error!", 0);
+	}
+#endif
+
+	return false;
 }
 
-void Renderer::_dubugFamilyQueueCheckSupported(VkQueueFamilyProperties& familitProperties)
+void Renderer::setupDebug()
 {
-	printf("Count of Queues: %d\n", familitProperties.queueCount);
-	printf("Supported operationg on this queue:\n");
-	if (familitProperties.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-		printf("\t\t Graphics\n");
-	if (familitProperties.queueFlags & VK_QUEUE_COMPUTE_BIT)
-		printf("\t\t Compute\n");
-	if (familitProperties.queueFlags & VK_QUEUE_TRANSFER_BIT)
-		printf("\t\t Transfer\n");
-	if (familitProperties.queueFlags & VK_QUEUE_SPARSE_BINDING_BIT)
-		printf("\t\t Sparse Binding\n");
+	_debug_callback_create_info.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
+	_debug_callback_create_info.pfnCallback = VulkanDebugCallback;
+	_debug_callback_create_info.flags =
+		//		VK_DEBUG_REPORT_INFORMATION_BIT_EXT |
+		VK_DEBUG_REPORT_WARNING_BIT_EXT |
+		VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
+		VK_DEBUG_REPORT_ERROR_BIT_EXT |
+		//		VK_DEBUG_REPORT_DEBUG_BIT_EXT |
+		0;
+
+	_instance_layers.push_back("VK_LAYER_LUNARG_standard_validation");
+	/*
+	//	_instance_layers.push_back( "VK_LAYER_LUNARG_threading" );
+	_instance_layers.push_back( "VK_LAYER_GOOGLE_threading" );
+	_instance_layers.push_back( "VK_LAYER_LUNARG_draw_state" );
+	_instance_layers.push_back( "VK_LAYER_LUNARG_image" );
+	_instance_layers.push_back( "VK_LAYER_LUNARG_mem_tracker" );
+	_instance_layers.push_back( "VK_LAYER_LUNARG_object_tracker" );
+	_instance_layers.push_back( "VK_LAYER_LUNARG_param_checker" );
+	*/
+	_instance_extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+
+	//	_device_layers.push_back( "VK_LAYER_LUNARG_standard_validation" );			// depricated
+	/*
+	//	_device_layers.push_back( "VK_LAYER_LUNARG_threading" );
+	_device_layers.push_back( "VK_LAYER_GOOGLE_threading" );
+	_device_layers.push_back( "VK_LAYER_LUNARG_draw_state" );
+	_device_layers.push_back( "VK_LAYER_LUNARG_image" );
+	_device_layers.push_back( "VK_LAYER_LUNARG_mem_tracker" );
+	_device_layers.push_back( "VK_LAYER_LUNARG_object_tracker" );
+	_device_layers.push_back( "VK_LAYER_LUNARG_param_checker" );
+	*/
 }
+
+PFN_vkCreateDebugReportCallbackEXT		fvkCreateDebugReportCallbackEXT = nullptr;
+PFN_vkDestroyDebugReportCallbackEXT		fvkDestroyDebugReportCallbackEXT = nullptr;
+
+void Renderer::initDebug()
+{
+	fvkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(m_instance, "vkCreateDebugReportCallbackEXT");
+	fvkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(m_instance, "vkDestroyDebugReportCallbackEXT");
+	if (nullptr == fvkCreateDebugReportCallbackEXT || nullptr == fvkDestroyDebugReportCallbackEXT) {
+		assert(0 && "Vulkan ERROR: Can't fetch debug function pointers.");
+		std::exit(-1);
+	}
+
+	fvkCreateDebugReportCallbackEXT(m_instance, &_debug_callback_create_info, nullptr, &_debug_report);
+
+	//	vkCreateDebugReportCallbackEXT( _instance, nullptr, nullptr, nullptr );
+}
+
+void Renderer::deInitDebug()
+{
+	fvkDestroyDebugReportCallbackEXT(m_instance, _debug_report, nullptr);
+	_debug_report = VK_NULL_HANDLE;
+}
+
+#else
+
+void Renderer::_SetupDebug() {};
+void Renderer::_InitDebug() {};
+void Renderer::_DeInitDebug() {};
+
+#endif // BUILD_ENABLE_VULKAN_DEBUG
