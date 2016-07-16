@@ -61,6 +61,15 @@
     <Filter Include="src\window\win32\public">
       <UniqueIdentifier>{544a848a-8b41-4045-8e89-355920a1b238}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\graphics\public\nf">
+      <UniqueIdentifier>{3765114b-ff02-445a-a0ff-67ef86b0af24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\graphics\private\nf">
+      <UniqueIdentifier>{2d9783e8-a82a-4a9a-840a-033b03f5dd06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\tutorial">
+      <UniqueIdentifier>{623abd02-bb55-492c-908f-5e202a4f6521}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -70,12 +79,6 @@
       <Filter>src\window\private</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>src\graphics\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDevice.cpp">
-      <Filter>src\graphics\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanQueueFamily.cpp">
       <Filter>src\graphics\private</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
@@ -99,6 +102,36 @@
     <ClCompile Include="Window.cpp">
       <Filter>src\window\private</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanGraphicsPipeline.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderPass.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDevice.cpp">
+      <Filter>src\graphics\private\nf</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanQueueFamily.cpp">
+      <Filter>src\graphics\private\nf</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanSubPassGroup.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanColorAttachment.cpp">
+      <Filter>src\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanQuad.cpp">
+      <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanSample.cpp">
+      <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="AMDWindow.cpp">
+      <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -107,20 +140,11 @@
     <ClInclude Include="VulkanHelper.h">
       <Filter>src\util</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanDevice.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanQueueFamily.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>src\window\public</Filter>
     </ClInclude>
     <ClInclude Include="Screen.h">
       <Filter>src\window\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanSwapChain.h">
-      <Filter>src\graphics\public</Filter>
     </ClInclude>
     <ClInclude Include="BUILD_OPTIONS.h">
       <Filter>src\options</Filter>
@@ -152,5 +176,58 @@
     <ClInclude Include="Window.h">
       <Filter>src\window\public</Filter>
     </ClInclude>
+    <ClInclude Include="VulkanGraphicsPipeline.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderPass.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSwapChain.h">
+      <Filter>src\graphics\public\nf</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanQueueFamily.h">
+      <Filter>src\graphics\public\nf</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>src\graphics\public\nf</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanColorAttachment.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSubPassGroup.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanExampleBase.h">
+      <Filter>src\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders.h">
+      <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanQuad.h">
+      <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSample.h">
+      <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="AMDWindow.h">
+      <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Triangle.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Triangle.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="tri.vert">
+      <Filter>Source Files\tutorial</Filter>
+    </None>
+    <None Include="tri.frag">
+      <Filter>Source Files\tutorial</Filter>
+    </None>
   </ItemGroup>
 </Project>

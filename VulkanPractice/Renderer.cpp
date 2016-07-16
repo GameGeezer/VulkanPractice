@@ -20,15 +20,18 @@ Contributors:
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <array>
 
 Renderer::Renderer()
 {
 	InitPlatform();
-	_SetupLayersAndExtensions();
+	setupLayersAndExtensions();
 	setupDebug();
 	initInstance();
 	initDebug();
 	initDevice();
+
+	initRenderPass();
 }
 
 Renderer::~Renderer()
@@ -69,12 +72,150 @@ const VkPhysicalDeviceProperties & Renderer::GetVulkanPhysicalDeviceProperties()
 	return m_gpuProperties;
 }
 
-void Renderer::_SetupLayersAndExtensions()
+void Renderer::setupLayersAndExtensions()
 {
-	_instance_extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
-	AddRequiredPlatformInstanceExtensions(&_instance_extensions);
+	// Add surfaces as an extension
+	instanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+	// Add the extensions specific to the platform
+	AddRequiredPlatformInstanceExtensions(&instanceExtensions);
+	// Add swap chaings to our extensions
+	deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+}
 
-	_device_extensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+void Renderer::initRenderPass()
+{
+	// Render passes are a new concept in Vulkan
+	// They describe the attachments used during rendering
+	// and may contain multiple subpasses with attachment
+	// dependencies 
+	// This allows the driver to know up-front how the
+	// rendering will look like and is a good opportunity to
+	// optimize, especially on tile-based renderers (with multiple subpasses)
+
+	// This example will use a single render pass with
+	// one subpass, which is the minimum setup
+
+	// Two attachments
+	// Basic setup with a color and a depth attachments
+	std::array<VkAttachmentDescription, 2> attachments = {};
+
+	// Color attachment
+	attachments[0].format = VK_FORMAT_B8G8R8A8_UNORM;
+	// We don't use multi sampling
+	// Multi sampling requires a setup with resolve attachments
+	// See the multisampling example for more details
+	attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+	// loadOp describes what happens with the attachment content at the beginning of the subpass
+	// We want the color buffer to be cleared
+	attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	// storeOp describes what happens with the attachment content after the subpass is finished
+	// As we want to display the color attachment after rendering is done we have to store it
+	attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	// We don't use stencil and DONT_CARE allows the driver to discard the result 
+	attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	// Set the initial image layout for the color atttachment
+	attachments[0].initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	attachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	// Depth attachment
+	attachments[1].format = depthFormat;
+	attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+	// Clear depth at the beginnging of the subpass
+	attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	// We don't need the contents of the depth buffer after the sub pass
+	// anymore, so let the driver discard it
+	attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	// Don't care for stencil 
+	attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	// Set the initial image layout for the depth attachment
+	attachments[1].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	// Setup references to our attachments for the sub pass
+	VkAttachmentReference colorReference = {};
+	colorReference.attachment = 0;
+	colorReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference depthReference = {};
+	depthReference.attachment = 1;
+	depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	// Setup a single subpass that references our color and depth attachments
+	VkSubpassDescription subpass = {};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	// Input attachments can be used to sample from contents of attachments 
+	// written to by previous sub passes in a setup with multiple sub passes
+	// This example doesn't make use of this
+	subpass.inputAttachmentCount = 0;
+	subpass.pInputAttachments = nullptr;
+	// Preserved attachments can be used to loop (and preserve) attachments
+	// through a sub pass that does not actually use them
+	// This example doesn't make use of this
+	subpass.preserveAttachmentCount = 0;
+	subpass.pPreserveAttachments = nullptr;
+	// Resoluve attachments are resolved at the end of a sub pass and can be
+	// used for e.g. multi sampling
+	// This example doesn't make use of this
+	subpass.pResolveAttachments = nullptr;
+	// Reference to the color attachment
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &colorReference;
+	// Reference to the depth attachment
+	subpass.pDepthStencilAttachment = &depthReference;
+
+	// Setup the render pass
+	VkRenderPassCreateInfo renderPassInfo = {};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	// Set attachments used in our renderpass
+	renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+	renderPassInfo.pAttachments = attachments.data();
+	// We only use one subpass
+	renderPassInfo.subpassCount = 1;
+	renderPassInfo.pSubpasses = &subpass;
+	// As we only use one subpass we don't have any subpass dependencies
+	renderPassInfo.dependencyCount = 0;
+	renderPassInfo.pDependencies = nullptr;
+
+	// Create the renderpass
+	ErrorCheck(vkCreateRenderPass(m_device, &renderPassInfo, nullptr, &m_renderPass));
+}
+
+void Renderer::initDescriptorSetLayout()
+{
+	// Setup layout of descriptors used in this example
+	// Basically connects the different shader stages to descriptors
+	// for binding uniform buffers, image samplers, etc.
+	// So every shader binding should map to one descriptor set layout
+	// binding
+
+	// Binding 0 : Uniform buffer (Vertex shader)
+	VkDescriptorSetLayoutBinding layoutBinding = {};
+	layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	layoutBinding.descriptorCount = 1;
+	layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	layoutBinding.pImmutableSamplers = NULL;
+
+	VkDescriptorSetLayoutCreateInfo descriptorLayout = {};
+	descriptorLayout.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	descriptorLayout.pNext = NULL;
+	descriptorLayout.bindingCount = 1;
+	descriptorLayout.pBindings = &layoutBinding;
+
+	ErrorCheck(vkCreateDescriptorSetLayout(m_device, &descriptorLayout, NULL, &m_descriptorSetLayout));
+
+	// Create the pipeline layout that is used to generate the rendering pipelines that
+	// are based on this descriptor set layout
+	// In a more complex scenario you would have different pipeline layouts for different
+	// descriptor set layouts that could be reused
+	VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = {};
+	pPipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	pPipelineLayoutCreateInfo.pNext = NULL;
+	pPipelineLayoutCreateInfo.setLayoutCount = 1;
+	pPipelineLayoutCreateInfo.pSetLayouts = &m_descriptorSetLayout;
+
+	ErrorCheck(vkCreatePipelineLayout(m_device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout));
 }
 
 void Renderer::initInstance()
@@ -88,10 +229,10 @@ void Renderer::initInstance()
 	VkInstanceCreateInfo instance_create_info{};
 	instance_create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	instance_create_info.pApplicationInfo = &application_info;
-	instance_create_info.enabledLayerCount = _instance_layers.size();
-	instance_create_info.ppEnabledLayerNames = _instance_layers.data();
-	instance_create_info.enabledExtensionCount = _instance_extensions.size();
-	instance_create_info.ppEnabledExtensionNames = _instance_extensions.data();
+	instance_create_info.enabledLayerCount = instanceLayers.size();
+	instance_create_info.ppEnabledLayerNames = instanceLayers.data();
+	instance_create_info.enabledExtensionCount = instanceExtensions.size();		// The number of extensions being added
+	instance_create_info.ppEnabledExtensionNames = instanceExtensions.data();	// A list of the extensions
 	instance_create_info.pNext = &_debug_callback_create_info;
 
 	ErrorCheck(vkCreateInstance(&instance_create_info, nullptr, &m_instance));
@@ -145,12 +286,16 @@ void Renderer::initDevice()
 	device_create_info.pQueueCreateInfos = &device_queue_create_info;
 	//	device_create_info.enabledLayerCount		= _device_layers.size();			// depricated
 	//	device_create_info.ppEnabledLayerNames		= _device_layers.data();			// depricated
-	device_create_info.enabledExtensionCount = _device_extensions.size();
-	device_create_info.ppEnabledExtensionNames = _device_extensions.data();
+	device_create_info.enabledExtensionCount = deviceExtensions.size();
+	device_create_info.ppEnabledExtensionNames = deviceExtensions.data();
 
 	ErrorCheck(vkCreateDevice(m_gpu, &device_create_info, nullptr, &m_device));
 
 	vkGetDeviceQueue(m_device, m_graphicsFamilyIndex, 0, &m_queue);
+
+
+	//VkBool32 validDepthFormat = vkTools::getSupportedDepthFormat(m_gpu, &depthFormat);
+	//assert(validDepthFormat);
 }
 
 void Renderer::deInitDevice()
@@ -215,7 +360,7 @@ void Renderer::setupDebug()
 		//		VK_DEBUG_REPORT_DEBUG_BIT_EXT |
 		0;
 
-	_instance_layers.push_back("VK_LAYER_LUNARG_standard_validation");
+	instanceLayers.push_back("VK_LAYER_LUNARG_standard_validation");
 	/*
 	//	_instance_layers.push_back( "VK_LAYER_LUNARG_threading" );
 	_instance_layers.push_back( "VK_LAYER_GOOGLE_threading" );
@@ -225,7 +370,7 @@ void Renderer::setupDebug()
 	_instance_layers.push_back( "VK_LAYER_LUNARG_object_tracker" );
 	_instance_layers.push_back( "VK_LAYER_LUNARG_param_checker" );
 	*/
-	_instance_extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+	instanceExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 
 	//	_device_layers.push_back( "VK_LAYER_LUNARG_standard_validation" );			// depricated
 	/*

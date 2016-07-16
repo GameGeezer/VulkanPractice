@@ -19,7 +19,10 @@ public:
 	const VkPhysicalDeviceProperties	&	GetVulkanPhysicalDeviceProperties() const;
 
 private:
-	void _SetupLayersAndExtensions();
+	void setupLayersAndExtensions();
+
+	void initRenderPass();
+	void initDescriptorSetLayout();
 
 	void initInstance();
 	void deInitInstance();
@@ -37,12 +40,17 @@ private:
 	VkQueue									m_queue = VK_NULL_HANDLE;
 	VkPhysicalDeviceProperties				m_gpuProperties = {};
 
+	VkDescriptorSetLayout					m_descriptorSetLayout = VK_NULL_HANDLE;
+	VkPipelineLayout						m_pipelineLayout = VK_NULL_HANDLE;
+	VkRenderPass							m_renderPass = VK_NULL_HANDLE;
+
 	uint32_t								m_graphicsFamilyIndex = 0;
 
-	std::vector<const char*>				_instance_layers;
-	std::vector<const char*>				_instance_extensions;
-	//	std::vector<const char*>				_device_layers;					// depricated
-	std::vector<const char*>				_device_extensions;
+	VkFormat								depthFormat;
+
+	std::vector<const char*>				instanceLayers;
+	std::vector<const char*>				instanceExtensions;
+	std::vector<const char*>				deviceExtensions;
 
 	VkDebugReportCallbackEXT				_debug_report = VK_NULL_HANDLE;
 	VkDebugReportCallbackCreateInfoEXT		_debug_callback_create_info = {};

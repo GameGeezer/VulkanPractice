@@ -88,6 +88,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <UndefinePreprocessorDefinitions>
+      </UndefinePreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -121,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AMDWindow.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -128,13 +132,21 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Shared.cpp" />
     <ClCompile Include="TestScreen.cpp" />
+    <ClCompile Include="Utility.cpp" />
+    <ClCompile Include="VulkanColorAttachment.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanGraphicsPipeline.cpp" />
+    <ClCompile Include="VulkanQuad.cpp" />
     <ClCompile Include="VulkanQueueFamily.cpp" />
+    <ClCompile Include="VulkanRenderPass.cpp" />
+    <ClCompile Include="VulkanSample.cpp" />
+    <ClCompile Include="VulkanSubPassGroup.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Window_glfw.cpp" />
     <ClCompile Include="Window_win32.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AMDWindow.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="BUILD_OPTIONS.h" />
     <ClInclude Include="Game.h" />
@@ -145,13 +157,28 @@
     <ClInclude Include="PlatformHeaders_win32.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="Shaders.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="TestScreen.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="VulkanColorAttachment.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanExampleBase.h" />
+    <ClInclude Include="VulkanGraphicsPipeline.h" />
     <ClInclude Include="VulkanHelper.h" />
+    <ClInclude Include="VulkanQuad.h" />
     <ClInclude Include="VulkanQueueFamily.h" />
+    <ClInclude Include="VulkanRenderPass.h" />
+    <ClInclude Include="VulkanSample.h" />
+    <ClInclude Include="VulkanSubPassGroup.h" />
     <ClInclude Include="VulkanSwapChain.h" />
     <ClInclude Include="Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tri.frag" />
+    <None Include="tri.vert" />
+    <None Include="Triangle.frag" />
+    <None Include="Triangle.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
