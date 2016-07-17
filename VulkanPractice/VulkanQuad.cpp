@@ -105,8 +105,7 @@ namespace AMD
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		VkDeviceMemory AllocateMemory(const std::vector<MemoryTypeInfo>& memoryInfos,
-			VkDevice device, const int size)
+		VkDeviceMemory AllocateMemory(const std::vector<MemoryTypeInfo>& memoryInfos, VkDevice device, const int size)
 		{
 			// We take the first HOST_VISIBLE memory
 			for (auto& memoryInfo : memoryInfos)
@@ -129,8 +128,7 @@ namespace AMD
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		VkBuffer AllocateBuffer(VkDevice device, const int size,
-			const VkBufferUsageFlagBits bits)
+		VkBuffer AllocateBuffer(VkDevice device, const int size, const VkBufferUsageFlagBits bits)
 		{
 			VkBufferCreateInfo bufferCreateInfo = {};
 			bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -172,9 +170,7 @@ namespace AMD
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		VkPipeline CreatePipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout,
-			VkShaderModule vertexShader, VkShaderModule fragmentShader,
-			VkExtent2D viewportSize)
+		VkPipeline CreatePipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout, VkShaderModule vertexShader, VkShaderModule fragmentShader, VkExtent2D viewportSize)
 		{
 			VkVertexInputBindingDescription vertexInputBindingDescription;
 			vertexInputBindingDescription.binding = 0;

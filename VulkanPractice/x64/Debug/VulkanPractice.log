@@ -1,2 +1,9 @@
-﻿  VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.exe
+﻿  VulkanSample.cpp
+  VulkanQuad.cpp
+  FenceGroup.cpp
+  Generating Code...
+  Compiling...
+  Main.cpp
+  Generating Code...
+  VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.exe
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.pdb (Partial PDB)

@@ -5,6 +5,8 @@
 #include <vulkan/vulkan.h>
 #include <memory>
 
+class FenceGroup;
+
 namespace AMD
 {
 	class Window;
@@ -48,7 +50,8 @@ namespace AMD
 
 		std::unique_ptr<ImportTable> importTable_;
 
-		VkFence frameFences_[QUEUE_SLOT_COUNT];
+		//VkFence frameFences_[QUEUE_SLOT_COUNT];
+		FenceGroup* frameFences;
 		VkImage swapchainImages_[QUEUE_SLOT_COUNT];
 		VkImageView swapChainImageViews_[QUEUE_SLOT_COUNT];
 		VkFramebuffer framebuffer_[QUEUE_SLOT_COUNT];

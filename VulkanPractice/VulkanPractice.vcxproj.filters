@@ -70,6 +70,9 @@
     <Filter Include="Source Files\tutorial">
       <UniqueIdentifier>{623abd02-bb55-492c-908f-5e202a4f6521}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tutorial\test">
+      <UniqueIdentifier>{9c9ab949-3b3d-42b4-a6bf-f194aab505ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -131,6 +134,12 @@
     </ClCompile>
     <ClCompile Include="AMDWindow.cpp">
       <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="PresentationSurface.cpp">
+      <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="FenceGroup.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="AMDWindow.h">
       <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="PresentationSurface.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="FenceGroup.h">
+      <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
