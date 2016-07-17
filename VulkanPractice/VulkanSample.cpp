@@ -7,6 +7,9 @@
 #include "AMDWindow.h"
 
 #include "FenceGroup.h"
+#include "CommandPool.h"
+#include "CommandBufferGroup.h"
+#include "AttachmentDescription.h"
 
 #include <cassert>
 
@@ -362,15 +365,7 @@ namespace AMD
 		///////////////////////////////////////////////////////////////////////////////
 		VkRenderPass CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 		{
-			VkAttachmentDescription attachmentDescription = {};
-			attachmentDescription.samples = VK_SAMPLE_COUNT_1_BIT;
-			attachmentDescription.format = swapchainFormat;
-			attachmentDescription.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-			attachmentDescription.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-			attachmentDescription.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			attachmentDescription.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-			attachmentDescription.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-			attachmentDescription.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+			AttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
 
 			VkAttachmentReference attachmentReference = {};
 			attachmentReference.attachment = 0;
@@ -387,7 +382,7 @@ namespace AMD
 			renderPassCreateInfo.attachmentCount = 1;
 			renderPassCreateInfo.subpassCount = 1;
 			renderPassCreateInfo.pSubpasses = &subpassDescription;
-			renderPassCreateInfo.pAttachments = &attachmentDescription;
+			renderPassCreateInfo.pAttachments = attachmentDescription.getDescription();
 
 			VkRenderPass result = nullptr;
 			vkCreateRenderPass(device, &renderPassCreateInfo, nullptr,
@@ -610,32 +605,12 @@ namespace AMD
 		CreateSwapchainImageViews(device_, swapchainFormat, QUEUE_SLOT_COUNT, swapchainImages_, swapChainImageViews_);
 		CreateFramebuffers(device_, renderPass_, window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, swapChainImageViews_, framebuffer_);
 
-		VkCommandPoolCreateInfo commandPoolCreateInfo = {};
-		commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-		commandPoolCreateInfo.queueFamilyIndex = queueFamilyIndex_;
-		commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+		commandPool = new CommandPool(device_, false, true, queueFamilyIndex_);
+		commandBufferGroup = new CommandBufferGroup(device_, *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
-		vkCreateCommandPool(device_, &commandPoolCreateInfo, nullptr, &commandPool_);
+		setupCommandBuffer_ = commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
 
-		VkCommandBufferAllocateInfo commandBufferAllocateInfo = {};
-		commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		commandBufferAllocateInfo.commandBufferCount = QUEUE_SLOT_COUNT + 1;
-		commandBufferAllocateInfo.commandPool = commandPool_;
-		commandBufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-
-		VkCommandBuffer commandBuffers[QUEUE_SLOT_COUNT + 1];
-
-		vkAllocateCommandBuffers(device_, &commandBufferAllocateInfo,
-			commandBuffers);
-
-		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
-		{
-			commandBuffers_[i] = commandBuffers[i];
-		}
-
-		setupCommandBuffer_ = commandBuffers[QUEUE_SLOT_COUNT];
-
-		frameFences = new FenceGroup(QUEUE_SLOT_COUNT, device_);
+		frameFences = new FenceGroup(device_, QUEUE_SLOT_COUNT);
 
 		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
 		{
@@ -664,7 +639,7 @@ namespace AMD
 			vkDestroyImageView(device_, swapChainImageViews_[i], nullptr);
 		}
 
-		vkDestroyCommandPool(device_, commandPool_, nullptr);
+		delete commandPool;
 
 		vkDestroySwapchainKHR(device_, swapchain_, nullptr);
 		vkDestroySurfaceKHR(instance_, surface_, nullptr);
@@ -701,7 +676,7 @@ namespace AMD
 			submitInfo.commandBufferCount = 1;
 			submitInfo.pCommandBuffers = &setupCommandBuffer_;
 			// Submit the command buffer to the queue
-			vkQueueSubmit(queue_, 1, &submitInfo, *(frameFences->getFenceAtIndex(0)));
+			vkQueueSubmit(queue_, 1, &submitInfo, frameFences->getFenceAtIndex(0));
 		}
 		// Wait for queue to finish
 		frameFences->waitForFences(0, 1, VK_TRUE, UINT64_MAX);
@@ -720,13 +695,14 @@ namespace AMD
 		{
 			importTable_->vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
 
-			vkWaitForFences(device_, 1, frameFences->getFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
-			vkResetFences(device_, 1, frameFences->getFenceAtIndex(currentBackBuffer_));
+			vkWaitForFences(device_, 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
+			vkResetFences(device_, 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
 
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-			vkBeginCommandBuffer(commandBuffers_[currentBackBuffer_], &beginInfo);
+			VkCommandBuffer commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer_);
+			vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
 			VkRenderPassBeginInfo renderPassBeginInfo = {};
 			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -745,13 +721,13 @@ namespace AMD
 			renderPassBeginInfo.pClearValues = &clearValue;
 			renderPassBeginInfo.clearValueCount = 1;
 
-			vkCmdBeginRenderPass(commandBuffers_[currentBackBuffer_],
+			vkCmdBeginRenderPass(commandBuffer,
 				&renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-			RenderImpl(commandBuffers_[currentBackBuffer_]);
+			RenderImpl(commandBuffer);
 
-			vkCmdEndRenderPass(commandBuffers_[currentBackBuffer_]);
-			vkEndCommandBuffer(commandBuffers_[currentBackBuffer_]);
+			vkCmdEndRenderPass(commandBuffer);
+			vkEndCommandBuffer(commandBuffer);
 
 			// Submit rendering work to the graphics queue
 			const VkPipelineStageFlags waitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -761,7 +737,7 @@ namespace AMD
 			submitInfo.pWaitSemaphores = &imageAcquiredSemaphore;
 			submitInfo.pWaitDstStageMask = &waitDstStageMask;
 			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &commandBuffers_[currentBackBuffer_];
+			submitInfo.pCommandBuffers = &commandBuffer;
 			submitInfo.signalSemaphoreCount = 1;
 			submitInfo.pSignalSemaphores = &renderingCompleteSemaphore;
 			vkQueueSubmit(queue_, 1, &submitInfo, VK_NULL_HANDLE);
@@ -776,11 +752,11 @@ namespace AMD
 			presentInfo.pImageIndices = &currentBackBuffer_;
 			importTable_->vkQueuePresentKHR(queue_, &presentInfo);
 
-			vkQueueSubmit(queue_, 0, nullptr, *(frameFences->getFenceAtIndex(currentBackBuffer_)));
+			vkQueueSubmit(queue_, 0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
 		};
 
 		// Wait for all rendering to finish
-		vkWaitForFences(device_, 3, frameFences->getFenceAtIndex(0), VK_TRUE, UINT64_MAX);
+		vkWaitForFences(device_, 3, frameFences->getPointerToFenceAtIndex(0), VK_TRUE, UINT64_MAX);
 
 		vkDestroySemaphore(device_, imageAcquiredSemaphore, nullptr);
 		vkDestroySemaphore(device_, renderingCompleteSemaphore, nullptr);

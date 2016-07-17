@@ -2,7 +2,7 @@
 
 #include "Shared.h"
 
-FenceGroup::FenceGroup(uint32_t count, VkDevice device) : m_count(count), m_device(device), m_fences(new VkFence[count])
+FenceGroup::FenceGroup(VkDevice device, uint32_t count) : m_device(device), m_count(count), m_fences(new VkFence[count])
 {
 	
 }
@@ -12,8 +12,14 @@ FenceGroup::~FenceGroup()
 	delete[] m_fences;
 }
 
-VkFence*
+VkFence
 FenceGroup::getFenceAtIndex(uint32_t index)
+{
+	return m_fences[index];
+}
+
+VkFence*
+FenceGroup::getPointerToFenceAtIndex(uint32_t index)
 {
 	return &m_fences[index];
 }

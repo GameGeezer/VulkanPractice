@@ -73,6 +73,9 @@
     <Filter Include="Source Files\tutorial\test">
       <UniqueIdentifier>{9c9ab949-3b3d-42b4-a6bf-f194aab505ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tutorial\test\pipelines">
+      <UniqueIdentifier>{f4bb233b-6976-4432-b37f-3a5abdadef0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -140,6 +143,33 @@
     </ClCompile>
     <ClCompile Include="FenceGroup.cpp">
       <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandPool.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandBufferGroup.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderModule.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineLayout.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputePipeline.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachmentDescription.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSubPass.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,11 +254,35 @@
     <ClInclude Include="AMDWindow.h">
       <Filter>Source Files\tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="PresentationSurface.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
     <ClInclude Include="FenceGroup.h">
       <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPool.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandBufferGroup.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderModule.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineLayout.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPipeline.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputePipeline.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachmentDescription.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSubPass.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

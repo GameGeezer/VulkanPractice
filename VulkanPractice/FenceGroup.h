@@ -7,12 +7,15 @@
 class FenceGroup
 {
 public:
-	FenceGroup(uint32_t count, VkDevice device);
+	FenceGroup(VkDevice device, uint32_t count);
 
 	~FenceGroup();
 
-	VkFence*
+	VkFence
 	getFenceAtIndex(uint32_t index);
+
+	VkFence*
+	getPointerToFenceAtIndex(uint32_t index);
 
 	void
 	initFenceAtIndex(uint32_t index, bool signaled);

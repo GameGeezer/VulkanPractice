@@ -3,8 +3,13 @@
 
 #include "VulkanSample.h"
 
+class ShaderModule;
+class PipelineLayout;
+
 namespace AMD
 {
+	
+
 	class VulkanQuad : public VulkanSample
 	{
 	private:
@@ -18,11 +23,11 @@ namespace AMD
 		VkBuffer vertexBuffer_ = VK_NULL_HANDLE;
 		VkBuffer indexBuffer_ = VK_NULL_HANDLE;
 
-		VkShaderModule vertexShader_ = VK_NULL_HANDLE;
-		VkShaderModule fragmentShader_ = VK_NULL_HANDLE;
+		ShaderModule *vertexShader_;
+		ShaderModule *fragmentShader_;
 
 		VkPipeline pipeline_ = VK_NULL_HANDLE;
-		VkPipelineLayout pipelineLayout_ = VK_NULL_HANDLE;
+		PipelineLayout *pipelineLayout_;
 	};
 }
 

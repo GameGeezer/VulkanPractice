@@ -6,6 +6,8 @@
 #include <memory>
 
 class FenceGroup;
+class CommandPool;
+class CommandBufferGroup;
 
 namespace AMD
 {
@@ -31,7 +33,7 @@ namespace AMD
 			return currentBackBuffer_;
 		}
 
-		static const int QUEUE_SLOT_COUNT = 3;
+		static const uint32_t QUEUE_SLOT_COUNT = 3;
 
 		static int GetQueueSlotCount()
 		{
@@ -51,7 +53,9 @@ namespace AMD
 		std::unique_ptr<ImportTable> importTable_;
 
 		//VkFence frameFences_[QUEUE_SLOT_COUNT];
-		FenceGroup* frameFences;
+		CommandPool *commandPool;
+		CommandBufferGroup *commandBufferGroup;
+		FenceGroup *frameFences;
 		VkImage swapchainImages_[QUEUE_SLOT_COUNT];
 		VkImageView swapChainImageViews_[QUEUE_SLOT_COUNT];
 		VkFramebuffer framebuffer_[QUEUE_SLOT_COUNT];
@@ -67,8 +71,6 @@ namespace AMD
 		virtual void ShutdownImpl();
 
 	private:
-		VkCommandPool commandPool_;
-		VkCommandBuffer commandBuffers_[QUEUE_SLOT_COUNT];
 		VkCommandBuffer setupCommandBuffer_;
 		uint32_t currentBackBuffer_ = 0;
 

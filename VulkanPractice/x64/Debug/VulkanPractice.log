@@ -1,9 +1,7 @@
 ﻿  VulkanSample.cpp
-  VulkanQuad.cpp
-  FenceGroup.cpp
+  RenderSubPass.cpp
+c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\rendersubpass.cpp(18): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
   Generating Code...
-  Compiling...
-  Main.cpp
-  Generating Code...
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.exe
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.pdb (Partial PDB)

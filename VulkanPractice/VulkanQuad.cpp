@@ -3,6 +3,8 @@
 #include "Shaders.h"
 #include "Utility.h"
 #include "AMDWindow.h"
+#include "ShaderModule.h"
+#include "PipelineLayout.h"
 
 #include <vector>
 
@@ -12,14 +14,14 @@ namespace AMD
 	void VulkanQuad::ShutdownImpl()
 	{
 		vkDestroyPipeline(device_, pipeline_, nullptr);
-		vkDestroyPipelineLayout(device_, pipelineLayout_, nullptr);
+		delete pipelineLayout_;
 
 		vkDestroyBuffer(device_, vertexBuffer_, nullptr);
 		vkDestroyBuffer(device_, indexBuffer_, nullptr);
 		vkFreeMemory(device_, deviceMemory_, nullptr);
 
-		vkDestroyShaderModule(device_, vertexShader_, nullptr);
-		vkDestroyShaderModule(device_, fragmentShader_, nullptr);
+		delete vertexShader_;
+		delete fragmentShader_;
 
 		VulkanSample::ShutdownImpl();
 	}
@@ -149,22 +151,6 @@ namespace AMD
 			VkPipelineLayout result;
 			vkCreatePipelineLayout(device, &pipelineLayoutCreateInfo, nullptr,
 				&result);
-
-			return result;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		VkShaderModule LoadShader(VkDevice device, const void* shaderContents,
-			const size_t size)
-		{
-			VkShaderModuleCreateInfo shaderModuleCreateInfo = {};
-			shaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-
-			shaderModuleCreateInfo.pCode = static_cast<const uint32_t*> (shaderContents);
-			shaderModuleCreateInfo.codeSize = size;
-
-			VkShaderModule result;
-			vkCreateShaderModule(device, &shaderModuleCreateInfo, nullptr, &result);
 
 			return result;
 		}
@@ -359,12 +345,12 @@ namespace AMD
 	///////////////////////////////////////////////////////////////////////////////
 	void VulkanQuad::CreatePipelineStateObject()
 	{
-		vertexShader_ = LoadShader(device_, BasicVertexShader, sizeof(BasicVertexShader));
-		fragmentShader_ = LoadShader(device_, BasicFragmentShader, sizeof(BasicFragmentShader));
+		vertexShader_ = new ShaderModule(device_, BasicVertexShader, sizeof(BasicVertexShader));
+		fragmentShader_ = new ShaderModule(device_, BasicFragmentShader, sizeof(BasicFragmentShader));
 
-		pipelineLayout_ = CreatePipelineLayout(device_);
-		pipeline_ = CreatePipeline(device_, renderPass_, pipelineLayout_,
-			vertexShader_, fragmentShader_,
+		pipelineLayout_ = new PipelineLayout(device_);
+		pipeline_ = CreatePipeline(device_, renderPass_, pipelineLayout_->getHandle(),
+			vertexShader_->getHandle(), fragmentShader_->getHandle(),
 			VkExtent2D{ static_cast<uint32_t> (window_->GetWidth()), static_cast<uint32_t> (window_->GetHeight()) }
 		);
 	}
