@@ -4,10 +4,14 @@
 #define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 #include <memory>
+#include <vector>
 
 class FenceGroup;
 class CommandPool;
 class CommandBufferGroup;
+class RenderPass;
+class FrameBuffer;
+class ImageView;
 
 namespace AMD
 {
@@ -56,11 +60,15 @@ namespace AMD
 		CommandPool *commandPool;
 		CommandBufferGroup *commandBufferGroup;
 		FenceGroup *frameFences;
+		RenderPass *renderPass;
 		VkImage swapchainImages_[QUEUE_SLOT_COUNT];
 		VkImageView swapChainImageViews_[QUEUE_SLOT_COUNT];
 		VkFramebuffer framebuffer_[QUEUE_SLOT_COUNT];
 
-		VkRenderPass renderPass_ = VK_NULL_HANDLE;
+		std::vector<ImageView*> imageViews;
+		std::vector<FrameBuffer*> frameBuffers;
+
+		//VkRenderPass renderPass_ = VK_NULL_HANDLE;
 
 		int queueFamilyIndex_ = -1;
 

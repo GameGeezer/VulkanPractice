@@ -171,6 +171,12 @@
     <ClCompile Include="RenderSubPass.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageView.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -282,6 +288,12 @@
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
     <ClInclude Include="RenderSubPass.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageView.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
   </ItemGroup>

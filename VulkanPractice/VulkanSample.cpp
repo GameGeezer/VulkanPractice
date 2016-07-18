@@ -10,6 +10,10 @@
 #include "CommandPool.h"
 #include "CommandBufferGroup.h"
 #include "AttachmentDescription.h"
+#include "RenderPass.h"
+#include "RenderSubPass.h"
+#include "FrameBuffer.h"
+#include "ImageView.h"
 
 #include <cassert>
 
@@ -363,7 +367,7 @@ namespace AMD
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		VkRenderPass CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
+		RenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 		{
 			AttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
 
@@ -371,45 +375,16 @@ namespace AMD
 			attachmentReference.attachment = 0;
 			attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-			VkSubpassDescription subpassDescription = {};
-			subpassDescription.inputAttachmentCount = 0;
-			subpassDescription.pColorAttachments = &attachmentReference;
-			subpassDescription.colorAttachmentCount = 1;
-			subpassDescription.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+			RenderSubPass subpass;
+			subpass.addColorAttachment(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+			subpass.initialize();
 
-			VkRenderPassCreateInfo renderPassCreateInfo = {};
-			renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-			renderPassCreateInfo.attachmentCount = 1;
-			renderPassCreateInfo.subpassCount = 1;
-			renderPassCreateInfo.pSubpasses = &subpassDescription;
-			renderPassCreateInfo.pAttachments = attachmentDescription.getDescription();
+			RenderPass *renderPass = new RenderPass(device);
+			renderPass->addSubPass(subpass);
+			renderPass->addAttachmentDescription(attachmentDescription);
+			renderPass->initialize();
 
-			VkRenderPass result = nullptr;
-			vkCreateRenderPass(device, &renderPassCreateInfo, nullptr,
-				&result);
-
-			return result;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		void CreateFramebuffers(VkDevice device, VkRenderPass renderPass,
-			const int width, const int height,
-			const int count, const VkImageView* imageViews, VkFramebuffer* framebuffers)
-		{
-			for (int i = 0; i < count; ++i)
-			{
-				VkFramebufferCreateInfo framebufferCreateInfo = {};
-				framebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-				framebufferCreateInfo.attachmentCount = 1;
-				framebufferCreateInfo.pAttachments = &imageViews[i];
-				framebufferCreateInfo.height = height;
-				framebufferCreateInfo.width = width;
-				framebufferCreateInfo.layers = 1;
-				framebufferCreateInfo.renderPass = renderPass;
-
-				vkCreateFramebuffer(device, &framebufferCreateInfo, nullptr,
-					&framebuffers[i]);
-			}
+			return renderPass;
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
@@ -600,10 +575,21 @@ namespace AMD
 
 		importTable_->vkGetSwapchainImagesKHR(device_, swapchain_, &swapchainImageCount, swapchainImages_);
 
-		renderPass_ = CreateRenderPass(device_, swapchainFormat);
+		renderPass = CreateRenderPass(device_, swapchainFormat);
 
-		CreateSwapchainImageViews(device_, swapchainFormat, QUEUE_SLOT_COUNT, swapchainImages_, swapChainImageViews_);
-		CreateFramebuffers(device_, renderPass_, window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, swapChainImageViews_, framebuffer_);
+		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
+		{
+			// create imageViews
+			ImageView *imageView = new ImageView(device_, swapchainImages_[i], swapchainFormat);
+			swapChainImageViews_[i] = imageView->getHandle();
+			imageViews.push_back(imageView);
+
+			// create framebuffers
+			FrameBuffer *frameBuffer = new FrameBuffer(device_, *renderPass, swapChainImageViews_[i], window_->GetWidth(), window_->GetHeight());
+			framebuffer_[i] = frameBuffer->getHandle();
+			frameBuffers.push_back(frameBuffer);
+		}
+
 
 		commandPool = new CommandPool(device_, false, true, queueFamilyIndex_);
 		commandBufferGroup = new CommandBufferGroup(device_, *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
@@ -631,12 +617,16 @@ namespace AMD
 			frameFences->destroyFenceAtIndex(i);
 		}
 
-		vkDestroyRenderPass(device_, renderPass_, nullptr);
+		vkDestroyRenderPass(device_, renderPass->getHandle(), nullptr);
 
-		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
+		for (int i = 0; i < imageViews.size(); ++i)
 		{
-			vkDestroyFramebuffer(device_, framebuffer_[i], nullptr);
-			vkDestroyImageView(device_, swapChainImageViews_[i], nullptr);
+			delete imageViews[i];
+		}
+
+		for (int i = 0; i < frameBuffers.size(); ++i)
+		{
+			delete frameBuffers[i];
 		}
 
 		delete commandPool;
@@ -704,13 +694,6 @@ namespace AMD
 			VkCommandBuffer commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer_);
 			vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
-			VkRenderPassBeginInfo renderPassBeginInfo = {};
-			renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderPassBeginInfo.framebuffer = framebuffer_[currentBackBuffer_];
-			renderPassBeginInfo.renderArea.extent.width = window_->GetWidth();
-			renderPassBeginInfo.renderArea.extent.height = window_->GetHeight();
-			renderPassBeginInfo.renderPass = renderPass_;
-
 			VkClearValue clearValue = {};
 
 			clearValue.color.float32[0] = 0.042f;
@@ -718,15 +701,11 @@ namespace AMD
 			clearValue.color.float32[2] = 0.042f;
 			clearValue.color.float32[3] = 1.0f;
 
-			renderPassBeginInfo.pClearValues = &clearValue;
-			renderPassBeginInfo.clearValueCount = 1;
-
-			vkCmdBeginRenderPass(commandBuffer,
-				&renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+			renderPass->begin(commandBuffer, framebuffer_[currentBackBuffer_], window_->GetWidth(), window_->GetHeight(), clearValue, 1);
 
 			RenderImpl(commandBuffer);
 
-			vkCmdEndRenderPass(commandBuffer);
+			renderPass->end(commandBuffer);
 			vkEndCommandBuffer(commandBuffer);
 
 			// Submit rendering work to the graphics queue

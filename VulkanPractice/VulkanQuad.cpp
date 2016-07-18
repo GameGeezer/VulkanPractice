@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#include "RenderPass.h"
+
 namespace AMD
 {
 	///////////////////////////////////////////////////////////////////////////////
@@ -349,7 +351,7 @@ namespace AMD
 		fragmentShader_ = new ShaderModule(device_, BasicFragmentShader, sizeof(BasicFragmentShader));
 
 		pipelineLayout_ = new PipelineLayout(device_);
-		pipeline_ = CreatePipeline(device_, renderPass_, pipelineLayout_->getHandle(),
+		pipeline_ = CreatePipeline(device_, renderPass->getHandle(), pipelineLayout_->getHandle(),
 			vertexShader_->getHandle(), fragmentShader_->getHandle(),
 			VkExtent2D{ static_cast<uint32_t> (window_->GetWidth()), static_cast<uint32_t> (window_->GetHeight()) }
 		);
