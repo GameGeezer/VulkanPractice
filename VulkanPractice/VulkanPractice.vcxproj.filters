@@ -129,9 +129,6 @@
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files\tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanQuad.cpp">
-      <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanSample.cpp">
       <Filter>Source Files\tutorial</Filter>
     </ClCompile>
@@ -162,19 +159,46 @@
     <ClCompile Include="ComputePipeline.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
-    <ClCompile Include="RenderPass.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="AttachmentDescription.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
     <ClCompile Include="RenderSubPass.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+      <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
-    <ClCompile Include="FrameBuffer.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
     <ClCompile Include="ImageView.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="AttachmentDescription.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineColorBlendState.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanQuad.cpp">
+      <Filter>Source Files\tutorial</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineRasterizationState.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineDepthStencilState.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineMultisampleState.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineShaderStage.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineViewportState.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineInputAssemblyeState.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineVertexInputState.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
   </ItemGroup>
@@ -281,19 +305,43 @@
     <ClInclude Include="ComputePipeline.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="AttachmentDescription.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
     <ClInclude Include="RenderSubPass.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+      <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
-    <ClInclude Include="FrameBuffer.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    <ClInclude Include="RenderPass.h">
+      <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
     <ClInclude Include="ImageView.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="AttachmentDescription.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineColorBlendState.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineRasterizationState.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineDepthStencilState.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineMultisampleState.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineShaderStage.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineViewportState.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineInputAssemblyState.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineVertexInputState.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
   </ItemGroup>
