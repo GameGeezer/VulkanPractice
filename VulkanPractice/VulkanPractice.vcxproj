@@ -127,6 +127,7 @@
     <ClCompile Include="AMDWindow.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AttachmentDescription.cpp" />
+    <ClCompile Include="VulkanBuffer.cpp" />
     <ClCompile Include="CommandBufferGroup.cpp" />
     <ClCompile Include="CommandPool.cpp" />
     <ClCompile Include="ComputePipeline.cpp" />
@@ -134,7 +135,7 @@
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
-    <ClCompile Include="ImageView.cpp" />
+    <ClCompile Include="VulkanImageView.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PipelineColorBlendState.cpp" />
     <ClCompile Include="PipelineDepthStencilState.cpp" />
@@ -142,7 +143,6 @@
     <ClCompile Include="PipelineLayout.cpp" />
     <ClCompile Include="PipelineMultisampleState.cpp" />
     <ClCompile Include="PipelineRasterizationState.cpp" />
-    <ClCompile Include="PipelineShaderStage.cpp" />
     <ClCompile Include="PipelineVertexInputState.cpp" />
     <ClCompile Include="PipelineViewportState.cpp" />
     <ClCompile Include="Platform.cpp" />
@@ -156,7 +156,9 @@
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="VulkanColorAttachment.cpp" />
     <ClCompile Include="VulkanDevice.cpp" />
+    <ClCompile Include="VulkanDeviceMemory.cpp" />
     <ClCompile Include="VulkanGraphicsPipeline.cpp" />
+    <ClCompile Include="VulkanMemoryAllocateInfo.cpp" />
     <ClCompile Include="VulkanQuad.cpp" />
     <ClCompile Include="VulkanQueueFamily.cpp" />
     <ClCompile Include="VulkanRenderPass.cpp" />
@@ -170,7 +172,9 @@
     <ClInclude Include="AMDWindow.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="AttachmentDescription.h" />
+    <ClInclude Include="VulkanBuffer.h" />
     <ClInclude Include="BUILD_OPTIONS.h" />
+    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="CommandBufferGroup.h" />
     <ClInclude Include="CommandPool.h" />
     <ClInclude Include="ComputePipeline.h" />
@@ -178,7 +182,7 @@
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsPipeline.h" />
-    <ClInclude Include="ImageView.h" />
+    <ClInclude Include="VulkanImageView.h" />
     <ClInclude Include="KeyboardKeycodes_glfw.h" />
     <ClInclude Include="KeyboardKeycodes_win32.h" />
     <ClInclude Include="PipelineInputAssemblyState.h" />
@@ -187,7 +191,6 @@
     <ClInclude Include="PipelineLayout.h" />
     <ClInclude Include="PipelineMultisampleState.h" />
     <ClInclude Include="PipelineRasterizationState.h" />
-    <ClInclude Include="PipelineShaderStage.h" />
     <ClInclude Include="PipelineVertexInputState.h" />
     <ClInclude Include="PipelineViewportState.h" />
     <ClInclude Include="Platform.h" />
@@ -204,9 +207,11 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="VulkanColorAttachment.h" />
     <ClInclude Include="VulkanDevice.h" />
+    <ClInclude Include="VulkanDeviceMemory.h" />
     <ClInclude Include="VulkanExampleBase.h" />
     <ClInclude Include="VulkanGraphicsPipeline.h" />
     <ClInclude Include="VulkanHelper.h" />
+    <ClInclude Include="VulkanMemoryAllocateInfo.h" />
     <ClInclude Include="VulkanQuad.h" />
     <ClInclude Include="VulkanQueueFamily.h" />
     <ClInclude Include="VulkanRenderPass.h" />

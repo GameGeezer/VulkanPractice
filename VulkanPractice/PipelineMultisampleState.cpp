@@ -3,7 +3,7 @@
 PipelineMultisampleState::PipelineMultisampleState(VkSampleCountFlagBits rasterizationSamples)
 {
 	m_pipelineMultisampleStateCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-	m_pipelineMultisampleStateCreateInfo.rasterizationSamples = rasterizationSamples;
+	m_pipelineMultisampleStateCreateInfo.rasterizationSamples = rasterizationSamples;	// The number of samples
 }
 
 PipelineMultisampleState::~PipelineMultisampleState()

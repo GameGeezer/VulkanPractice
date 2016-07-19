@@ -76,6 +76,9 @@
     <Filter Include="Source Files\tutorial\test\pipelines">
       <UniqueIdentifier>{f4bb233b-6976-4432-b37f-3a5abdadef0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tutorial\test\utils">
+      <UniqueIdentifier>{f89c64c3-af5a-4d0d-90bf-11c9a9c514c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -114,9 +117,6 @@
     <ClCompile Include="VulkanRenderPass.cpp">
       <Filter>src\graphics\private</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanDevice.cpp">
-      <Filter>src\graphics\private\nf</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanQueueFamily.cpp">
       <Filter>src\graphics\private\nf</Filter>
     </ClCompile>
@@ -150,9 +150,6 @@
     <ClCompile Include="ShaderModule.cpp">
       <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineLayout.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsPipeline.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
@@ -163,9 +160,6 @@
       <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
     <ClCompile Include="RenderPass.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageView.cpp">
       <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
     <ClCompile Include="FrameBuffer.cpp">
@@ -189,9 +183,6 @@
     <ClCompile Include="PipelineMultisampleState.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineShaderStage.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
     <ClCompile Include="PipelineViewportState.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
@@ -200,6 +191,24 @@
     </ClCompile>
     <ClCompile Include="PipelineVertexInputState.cpp">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDevice.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanBuffer.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDeviceMemory.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImageView.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineLayout.cpp">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanMemoryAllocateInfo.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,9 +266,6 @@
     <ClInclude Include="VulkanQueueFamily.h">
       <Filter>src\graphics\public\nf</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanDevice.h">
-      <Filter>src\graphics\public\nf</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanColorAttachment.h">
       <Filter>src\graphics\public</Filter>
     </ClInclude>
@@ -296,9 +302,6 @@
     <ClInclude Include="ShaderModule.h">
       <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineLayout.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsPipeline.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
@@ -309,9 +312,6 @@
       <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
     <ClInclude Include="RenderPass.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageView.h">
       <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
     <ClInclude Include="FrameBuffer.h">
@@ -332,9 +332,6 @@
     <ClInclude Include="PipelineMultisampleState.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineShaderStage.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
     <ClInclude Include="PipelineViewportState.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
@@ -343,6 +340,27 @@
     </ClInclude>
     <ClInclude Include="PipelineVertexInputState.h">
       <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Source Files\tutorial\test\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanBuffer.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDeviceMemory.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImageView.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineLayout.h">
+      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanMemoryAllocateInfo.h">
+      <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

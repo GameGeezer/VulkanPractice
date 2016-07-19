@@ -10,15 +10,18 @@ class ShaderModule;
 class GraphicsPipeline
 {
 public:
-	GraphicsPipeline(VkDevice device, PipelineLayout& layout);
+	GraphicsPipeline(VkDevice device);
 
 	~GraphicsPipeline();
 
 	void
-	initialize();
+	initialize(VkPipelineLayout layout, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo vertexInput, VkPipelineInputAssemblyStateCreateInfo inputAssembly, VkPipelineViewportStateCreateInfo viewportState, VkPipelineColorBlendStateCreateInfo colorBlendState, VkPipelineRasterizationStateCreateInfo rasterizationState, VkPipelineDepthStencilStateCreateInfo depthStencilState, VkPipelineMultisampleStateCreateInfo multisampleState);
 
 	void
-	addShaderStage(ShaderModule &shadermodule, char *entry, VkShaderStageFlagBits stage);
+	addShaderStage(VkShaderModule &shadermodule, char *entry, VkShaderStageFlagBits stage);
+
+	VkPipeline
+	getHandle();
 
 private:
 	VkDevice	m_device;

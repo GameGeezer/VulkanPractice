@@ -13,7 +13,8 @@
 #include "RenderPass.h"
 #include "RenderSubPass.h"
 #include "FrameBuffer.h"
-#include "ImageView.h"
+#include "VulkanImageView.h"
+
 
 #include <cassert>
 
@@ -261,8 +262,7 @@ namespace AMD
 			vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
 
 			std::vector<VkPhysicalDevice> devices{ physicalDeviceCount };
-			vkEnumeratePhysicalDevices(instance, &physicalDeviceCount,
-				devices.data());
+			vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, devices.data());
 
 			VkPhysicalDevice physicalDevice = nullptr;
 			int graphicsQueueIndex = -1;
@@ -545,12 +545,25 @@ namespace AMD
 			return;
 		}
 
-		VkPhysicalDevice physicalDevice;
-		CreateDeviceAndQueue(instance_, &device_, &queue_, &queueFamilyIndex_,
-			&physicalDevice);
-		physicalDevice_ = physicalDevice;
+		uint32_t physicalDeviceCount = 0;
+		vkEnumeratePhysicalDevices(instance_, &physicalDeviceCount, nullptr);
 
-		importTable_.reset(new ImportTable{ instance_, device_ });
+		std::vector<VkPhysicalDevice> devices{ physicalDeviceCount };
+		vkEnumeratePhysicalDevices(instance_, &physicalDeviceCount, devices.data());
+
+		VkPhysicalDevice physicalDevice = nullptr;
+		int graphicsQueueIndex = -1;
+
+		FindPhysicalDeviceWithGraphicsQueue(devices, &physicalDevice, &graphicsQueueIndex);
+
+		std::vector<const char*> deviceExtensions =
+		{
+			"VK_KHR_swapchain"
+		};
+
+		m_device = new VulkanDevice(physicalDevice, graphicsQueueIndex, deviceExtensions);
+
+		importTable_.reset(new ImportTable{ instance_, m_device->getDevice() });
 
 #ifdef _DEBUG
 		debugCallback_ = SetupDebugCallback(instance_, importTable_.get());
@@ -565,38 +578,38 @@ namespace AMD
 		assert(presentSupported);
 
 		VkFormat swapchainFormat = VK_FORMAT_UNDEFINED;
-		swapchain_ = CreateSwapchain(physicalDevice, device_, surface_,window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, importTable_.get(), &swapchainFormat);
+		swapchain_ = CreateSwapchain(physicalDevice, m_device->getDevice(), surface_,window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, importTable_.get(), &swapchainFormat);
 
 		assert(swapchain_);
 
 		uint32_t swapchainImageCount = 0;
-		importTable_->vkGetSwapchainImagesKHR(device_, swapchain_, &swapchainImageCount, nullptr);
+		importTable_->vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, nullptr);
 		assert(static_cast<int> (swapchainImageCount) == QUEUE_SLOT_COUNT);
 
-		importTable_->vkGetSwapchainImagesKHR(device_, swapchain_, &swapchainImageCount, swapchainImages_);
+		importTable_->vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, swapchainImages_);
 
-		renderPass = CreateRenderPass(device_, swapchainFormat);
+		renderPass = CreateRenderPass(m_device->getDevice(), swapchainFormat);
 
 		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
 		{
 			// create imageViews
-			ImageView *imageView = new ImageView(device_, swapchainImages_[i], swapchainFormat);
+			VulkanImageView *imageView = new VulkanImageView(m_device->getDevice(), swapchainImages_[i], swapchainFormat);
 			swapChainImageViews_[i] = imageView->getHandle();
 			imageViews.push_back(imageView);
 
 			// create framebuffers
-			FrameBuffer *frameBuffer = new FrameBuffer(device_, *renderPass, swapChainImageViews_[i], window_->GetWidth(), window_->GetHeight());
+			FrameBuffer *frameBuffer = new FrameBuffer(m_device->getDevice(), *renderPass, swapChainImageViews_[i], window_->GetWidth(), window_->GetHeight());
 			framebuffer_[i] = frameBuffer->getHandle();
 			frameBuffers.push_back(frameBuffer);
 		}
 
 
-		commandPool = new CommandPool(device_, false, true, queueFamilyIndex_);
-		commandBufferGroup = new CommandBufferGroup(device_, *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+		commandPool = new CommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
+		commandBufferGroup = new CommandBufferGroup(m_device->getDevice(), *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
 		setupCommandBuffer_ = commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
 
-		frameFences = new FenceGroup(device_, QUEUE_SLOT_COUNT);
+		frameFences = new FenceGroup(m_device->getDevice(), QUEUE_SLOT_COUNT);
 
 		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
 		{
@@ -617,7 +630,7 @@ namespace AMD
 			frameFences->destroyFenceAtIndex(i);
 		}
 
-		vkDestroyRenderPass(device_, renderPass->getHandle(), nullptr);
+		vkDestroyRenderPass(m_device->getDevice(), renderPass->getHandle(), nullptr);
 
 		for (int i = 0; i < imageViews.size(); ++i)
 		{
@@ -631,14 +644,14 @@ namespace AMD
 
 		delete commandPool;
 
-		vkDestroySwapchainKHR(device_, swapchain_, nullptr);
+		vkDestroySwapchainKHR(m_device->getDevice(), swapchain_, nullptr);
 		vkDestroySurfaceKHR(instance_, surface_, nullptr);
 
 #ifdef _DEBUG
 		CleanupDebugCallback(instance_, debugCallback_, importTable_.get());
 #endif
 
-		vkDestroyDevice(device_, nullptr);
+		vkDestroyDevice(m_device->getDevice(), nullptr);
 		vkDestroyInstance(instance_, nullptr);
 	}
 
@@ -666,7 +679,7 @@ namespace AMD
 			submitInfo.commandBufferCount = 1;
 			submitInfo.pCommandBuffers = &setupCommandBuffer_;
 			// Submit the command buffer to the queue
-			vkQueueSubmit(queue_, 1, &submitInfo, frameFences->getFenceAtIndex(0));
+			vkQueueSubmit(m_device->getQueue(), 1, &submitInfo, frameFences->getFenceAtIndex(0));
 		}
 		// Wait for queue to finish
 		frameFences->waitForFences(0, 1, VK_TRUE, UINT64_MAX);
@@ -676,17 +689,17 @@ namespace AMD
 		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
 		VkSemaphore imageAcquiredSemaphore;
-		vkCreateSemaphore(device_, &semaphoreCreateInfo, nullptr, &imageAcquiredSemaphore);
+		vkCreateSemaphore(m_device->getDevice(), &semaphoreCreateInfo, nullptr, &imageAcquiredSemaphore);
 
 		VkSemaphore renderingCompleteSemaphore;
-		vkCreateSemaphore(device_, &semaphoreCreateInfo, nullptr, &renderingCompleteSemaphore);
+		vkCreateSemaphore(m_device->getDevice(), &semaphoreCreateInfo, nullptr, &renderingCompleteSemaphore);
 
 		for (int i = 0; i < frameCount; ++i)
 		{
-			importTable_->vkAcquireNextImageKHR(device_, swapchain_, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
+			importTable_->vkAcquireNextImageKHR(m_device->getDevice(), swapchain_, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
 
-			vkWaitForFences(device_, 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
-			vkResetFences(device_, 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
+			vkWaitForFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
+			vkResetFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
 
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -719,7 +732,7 @@ namespace AMD
 			submitInfo.pCommandBuffers = &commandBuffer;
 			submitInfo.signalSemaphoreCount = 1;
 			submitInfo.pSignalSemaphores = &renderingCompleteSemaphore;
-			vkQueueSubmit(queue_, 1, &submitInfo, VK_NULL_HANDLE);
+			vkQueueSubmit(m_device->getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
 
 			// Submit present operation to present queue
 			VkPresentInfoKHR presentInfo = {};
@@ -729,16 +742,16 @@ namespace AMD
 			presentInfo.swapchainCount = 1;
 			presentInfo.pSwapchains = &swapchain_;
 			presentInfo.pImageIndices = &currentBackBuffer_;
-			importTable_->vkQueuePresentKHR(queue_, &presentInfo);
+			importTable_->vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 
-			vkQueueSubmit(queue_, 0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
+			vkQueueSubmit(m_device->getQueue(), 0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
 		};
 
 		// Wait for all rendering to finish
-		vkWaitForFences(device_, 3, frameFences->getPointerToFenceAtIndex(0), VK_TRUE, UINT64_MAX);
+		vkWaitForFences(m_device->getDevice(), 3, frameFences->getPointerToFenceAtIndex(0), VK_TRUE, UINT64_MAX);
 
-		vkDestroySemaphore(device_, imageAcquiredSemaphore, nullptr);
-		vkDestroySemaphore(device_, renderingCompleteSemaphore, nullptr);
+		vkDestroySemaphore(m_device->getDevice(), imageAcquiredSemaphore, nullptr);
+		vkDestroySemaphore(m_device->getDevice(), renderingCompleteSemaphore, nullptr);
 
 		ShutdownImpl();
 	}

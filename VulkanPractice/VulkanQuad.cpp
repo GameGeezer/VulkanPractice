@@ -9,10 +9,16 @@
 #include "PipelineRasterizationState.h"
 #include "PipelineDepthStencilState.h"
 #include "PipelineMultisampleState.h"
-#include "PipelineShaderStage.h"
+
 #include "PipelineViewportState.h"
 #include "PipelineInputAssemblyState.h"
 #include "PipelineVertexInputState.h"
+#include "GraphicsPipeline.h"
+
+#include "VulkanBuffer.h"
+
+#include "VulkanDevice.h"
+#include "VulkanDeviceMemory.h"
 
 #include <vector>
 
@@ -23,12 +29,11 @@ namespace AMD
 	///////////////////////////////////////////////////////////////////////////////
 	void VulkanQuad::ShutdownImpl()
 	{
-		vkDestroyPipeline(device_, pipeline_, nullptr);
+		vkDestroyPipeline(m_device->getDevice(), pipeline_, nullptr);
 		delete pipelineLayout_;
-
-		vkDestroyBuffer(device_, vertexBuffer_, nullptr);
-		vkDestroyBuffer(device_, indexBuffer_, nullptr);
-		vkFreeMemory(device_, deviceMemory_, nullptr);
+		delete vertexBuffer;
+		delete indexBuffer;
+		vkFreeMemory(m_device->getDevice(), deviceMemory_, nullptr);
 
 		delete vertexShader_;
 		delete fragmentShader_;
@@ -43,8 +48,9 @@ namespace AMD
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline_);
 		VkDeviceSize offsets[] = { 0 };
-		vkCmdBindIndexBuffer(commandBuffer, indexBuffer_, 0, VK_INDEX_TYPE_UINT32);
-		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer_, offsets);
+		vkCmdBindIndexBuffer(commandBuffer, indexBuffer->getHandle(), 0, VK_INDEX_TYPE_UINT32);
+		VkBuffer vertBuffer = vertexBuffer->getHandle();
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, const_cast<const VkBuffer*>(&vertBuffer), offsets);
 		vkCmdDrawIndexed(commandBuffer, 6, 1, 0, 0, 0);
 	}
 
@@ -59,99 +65,6 @@ namespace AMD
 
 	namespace
 	{
-		struct MemoryTypeInfo
-		{
-			bool deviceLocal = false;
-			bool hostVisible = false;
-			bool hostCoherent = false;
-			bool hostCached = false;
-			bool lazilyAllocated = false;
-
-			struct Heap
-			{
-				uint64_t size = 0;
-				bool deviceLocal = false;
-			};
-
-			Heap heap;
-			int index;
-		};
-
-		///////////////////////////////////////////////////////////////////////////////
-		std::vector<MemoryTypeInfo> EnumerateHeaps(VkPhysicalDevice device)
-		{
-			VkPhysicalDeviceMemoryProperties memoryProperties = {};
-			vkGetPhysicalDeviceMemoryProperties(device, &memoryProperties);
-
-			std::vector<MemoryTypeInfo::Heap> heaps;
-
-			for (uint32_t i = 0; i < memoryProperties.memoryHeapCount; ++i)
-			{
-				MemoryTypeInfo::Heap info;
-				info.size = memoryProperties.memoryHeaps[i].size;
-				info.deviceLocal = (memoryProperties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) != 0;
-
-				heaps.push_back(info);
-			}
-
-			std::vector<MemoryTypeInfo> result;
-
-			for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; ++i)
-			{
-				MemoryTypeInfo typeInfo;
-
-				typeInfo.deviceLocal = (memoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0;
-				typeInfo.hostVisible = (memoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
-				typeInfo.hostCoherent = (memoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
-				typeInfo.hostCached = (memoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT) != 0;
-				typeInfo.lazilyAllocated = (memoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT) != 0;
-
-				typeInfo.heap = heaps[memoryProperties.memoryTypes[i].heapIndex];
-
-				typeInfo.index = static_cast<int> (i);
-
-				result.push_back(typeInfo);
-			}
-
-			return result;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		VkDeviceMemory AllocateMemory(const std::vector<MemoryTypeInfo>& memoryInfos, VkDevice device, const int size)
-		{
-			// We take the first HOST_VISIBLE memory
-			for (auto& memoryInfo : memoryInfos)
-			{
-				if (memoryInfo.hostVisible)
-				{
-					VkMemoryAllocateInfo memoryAllocateInfo = {};
-					memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-					memoryAllocateInfo.memoryTypeIndex = memoryInfo.index;
-					memoryAllocateInfo.allocationSize = size;
-
-					VkDeviceMemory deviceMemory;
-					vkAllocateMemory(device, &memoryAllocateInfo, nullptr,
-						&deviceMemory);
-					return deviceMemory;
-				}
-			}
-
-			return VK_NULL_HANDLE;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		VkBuffer AllocateBuffer(VkDevice device, const int size, const VkBufferUsageFlagBits bits)
-		{
-			VkBufferCreateInfo bufferCreateInfo = {};
-			bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-			bufferCreateInfo.size = static_cast<uint32_t> (size);
-			bufferCreateInfo.usage = bits;
-
-			VkBuffer result;
-			vkCreateBuffer(device, &bufferCreateInfo, nullptr, &result);
-			return result;
-		}
-
 		///////////////////////////////////////////////////////////////////////////////
 		VkPipelineLayout CreatePipelineLayout(VkDevice device)
 		{
@@ -166,7 +79,7 @@ namespace AMD
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		VkPipeline CreatePipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout, VkShaderModule vertexShader, VkShaderModule fragmentShader, VkExtent2D viewportSize)
+		GraphicsPipeline* CreatePipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout, VkShaderModule vertexShader, VkShaderModule fragmentShader, VkExtent2D viewportSize)
 		{
 			PipelineVertexInputState vertexInputState;
 			vertexInputState.addVertexBindingDescription(0, VK_VERTEX_INPUT_RATE_VERTEX, sizeof(float) * 5);
@@ -174,7 +87,7 @@ namespace AMD
 			vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 1, sizeof(float) * 3);
 			vertexInputState.initialize();
 
-			PipelineInputAssemblyeState assemblyState(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+			PipelineInputAssemblyState assemblyState(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 
 			PipelineViewportState viewportState;
 			viewportState.addViewport(0, 0, viewportSize.width, viewportSize.height, 0, 1);
@@ -195,30 +108,14 @@ namespace AMD
 
 			PipelineMultisampleState multisampleState(VK_SAMPLE_COUNT_1_BIT);
 
-			PipelineShaderStage shaderStage;
-			shaderStage.addShader(vertexShader, "main", VK_SHADER_STAGE_VERTEX_BIT);
-			shaderStage.addShader(fragmentShader, "main", VK_SHADER_STAGE_FRAGMENT_BIT);
+			GraphicsPipeline *graphicsPipeline = new GraphicsPipeline(device);
 
-			VkGraphicsPipelineCreateInfo graphicsPipelineCreateInfo = {};
-			graphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+			graphicsPipeline->addShaderStage(vertexShader, "main", VK_SHADER_STAGE_VERTEX_BIT);
+			graphicsPipeline->addShaderStage(fragmentShader, "main", VK_SHADER_STAGE_FRAGMENT_BIT);
+			graphicsPipeline->initialize(layout, renderPass, *vertexInputState.getCreateInfo(), *assemblyState.getCreateInfo(), *viewportState.getCreateInfo(), *colorBlendState.getCreateInfo(), *rasterizationState.getCreateInfo(), *depthStencilState.getCreateInfo(), *multisampleState.getCreateInfo());
+	
 
-			graphicsPipelineCreateInfo.layout = layout;
-			graphicsPipelineCreateInfo.pVertexInputState = vertexInputState.getCreateInfo();
-			graphicsPipelineCreateInfo.pInputAssemblyState = assemblyState.getCreateInfo();
-			graphicsPipelineCreateInfo.renderPass = renderPass;
-			graphicsPipelineCreateInfo.pViewportState = viewportState.getCreateInfo();
-			graphicsPipelineCreateInfo.pColorBlendState = colorBlendState.getCreateInfo();
-			graphicsPipelineCreateInfo.pRasterizationState = rasterizationState.getCreateInfo();
-			graphicsPipelineCreateInfo.pDepthStencilState = depthStencilState.getCreateInfo();
-			graphicsPipelineCreateInfo.pMultisampleState = multisampleState.getCreateInfo();
-			graphicsPipelineCreateInfo.pStages = shaderStage.getCreateInfos();
-			graphicsPipelineCreateInfo.stageCount = static_cast<uint32_t> (shaderStage.size());
-
-			VkPipeline pipeline;
-			vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &graphicsPipelineCreateInfo,
-				nullptr, &pipeline);
-
-			return pipeline;
+			return graphicsPipeline;
 		}
 	}   // namespace
 
@@ -248,54 +145,40 @@ namespace AMD
 			0, 1, 2, 2, 3, 0
 		};
 
-		auto memoryHeaps = EnumerateHeaps(physicalDevice_);
+		vertexBuffer = new VulkanBuffer(m_device->getDevice(), sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+		indexBuffer = new VulkanBuffer(m_device->getDevice(), sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
 
-		indexBuffer_ = AllocateBuffer(device_, sizeof(indices),
-			VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
-		vertexBuffer_ = AllocateBuffer(device_, sizeof(vertices),
-			VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 
-		VkMemoryRequirements vertexBufferMemoryRequirements = {};
-		vkGetBufferMemoryRequirements(device_, vertexBuffer_,
-			&vertexBufferMemoryRequirements);
-		VkMemoryRequirements indexBufferMemoryRequirements = {};
-		vkGetBufferMemoryRequirements(device_, indexBuffer_,
-			&indexBufferMemoryRequirements);
-
-		VkDeviceSize bufferSize = vertexBufferMemoryRequirements.size;
+		VkDeviceSize bufferSize = vertexBuffer->getSize();
 		// We want to place the index buffer behind the vertex buffer. Need to take
 		// the alignment into account to find the next suitable location
-		VkDeviceSize indexBufferOffset = RoundToNextMultiple(bufferSize,
-			indexBufferMemoryRequirements.alignment);
+		VkDeviceSize indexBufferOffset = RoundToNextMultiple(bufferSize, indexBuffer->getAlignment());
 
-		bufferSize = indexBufferOffset + indexBufferMemoryRequirements.size;
-		deviceMemory_ = AllocateMemory(memoryHeaps, device_,
-			static_cast<int>(bufferSize));
+		bufferSize = indexBufferOffset + indexBuffer->getSize();
+		deviceMemory_ = m_device->allocateMemory(static_cast<uint32_t>(bufferSize));
 
-		vkBindBufferMemory(device_, vertexBuffer_, deviceMemory_, 0);
-		vkBindBufferMemory(device_, indexBuffer_, deviceMemory_,
-			indexBufferOffset);
+		VulkanDeviceMemory deviceMemory(m_device->getDevice(), deviceMemory_);
+		deviceMemory.map(0, VK_WHOLE_SIZE);
+		deviceMemory.copyInto(vertices, 0, sizeof(vertices));
+		deviceMemory.copyInto(indices, indexBufferOffset, sizeof(indices));
+		deviceMemory.unmap();
 
-		void* mapping = nullptr;
-		vkMapMemory(device_, deviceMemory_, 0, VK_WHOLE_SIZE,
-			0, &mapping);
-		::memcpy(mapping, vertices, sizeof(vertices));
-
-		::memcpy(static_cast<uint8_t*> (mapping) + indexBufferOffset,
-			indices, sizeof(indices));
-		vkUnmapMemory(device_, deviceMemory_);
+		vertexBuffer->bindToMemory(deviceMemory_, 0);
+		indexBuffer->bindToMemory(deviceMemory_, indexBufferOffset);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
 	void VulkanQuad::CreatePipelineStateObject()
 	{
-		vertexShader_ = new ShaderModule(device_, BasicVertexShader, sizeof(BasicVertexShader));
-		fragmentShader_ = new ShaderModule(device_, BasicFragmentShader, sizeof(BasicFragmentShader));
+		vertexShader_ = new ShaderModule(m_device->getDevice(), BasicVertexShader, sizeof(BasicVertexShader));
+		fragmentShader_ = new ShaderModule(m_device->getDevice(), BasicFragmentShader, sizeof(BasicFragmentShader));
 
-		pipelineLayout_ = new PipelineLayout(device_);
-		pipeline_ = CreatePipeline(device_, renderPass->getHandle(), pipelineLayout_->getHandle(),
+		pipelineLayout_ = new PipelineLayout(m_device->getDevice());
+		graphicsPipeline = CreatePipeline(m_device->getDevice(), renderPass->getHandle(), pipelineLayout_->getHandle(),
 			vertexShader_->getHandle(), fragmentShader_->getHandle(),
 			VkExtent2D{ static_cast<uint32_t> (window_->GetWidth()), static_cast<uint32_t> (window_->GetHeight()) }
 		);
+
+		pipeline_ = graphicsPipeline->getHandle();
 	}
 }   // namespace AMD

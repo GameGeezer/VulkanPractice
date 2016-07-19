@@ -2,12 +2,12 @@
 
 #include <vulkan\vulkan.h>
 
-class PipelineInputAssemblyeState
+class PipelineInputAssemblyState
 {
 public:
-	PipelineInputAssemblyeState(VkPrimitiveTopology topology);
+	PipelineInputAssemblyState(VkPrimitiveTopology topology);
 
-	~PipelineInputAssemblyeState();
+	~PipelineInputAssemblyState();
 
 	VkPipelineInputAssemblyStateCreateInfo*
 	getCreateInfo();

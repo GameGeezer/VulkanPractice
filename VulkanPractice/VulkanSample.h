@@ -6,12 +6,14 @@
 #include <memory>
 #include <vector>
 
+#include "VulkanDevice.h"
+
 class FenceGroup;
 class CommandPool;
 class CommandBufferGroup;
 class RenderPass;
 class FrameBuffer;
-class ImageView;
+class VulkanImageView;
 
 namespace AMD
 {
@@ -27,7 +29,7 @@ namespace AMD
 		VulkanSample();
 		virtual ~VulkanSample();
 
-		bool IsInitialized() { return (instance_ != VK_NULL_HANDLE && device_ != VK_NULL_HANDLE); }
+		bool IsInitialized() { return (instance_ != VK_NULL_HANDLE && m_device->getDevice() != VK_NULL_HANDLE); }
 		void Run(const int frameCount);
 		struct ImportTable;
 
@@ -46,11 +48,10 @@ namespace AMD
 
 		VkViewport viewport_;
 
+		VulkanDevice *m_device;
+
 		VkSwapchainKHR swapchain_ = VK_NULL_HANDLE;
 		VkInstance instance_ = VK_NULL_HANDLE;
-		VkDevice device_ = VK_NULL_HANDLE;
-		VkPhysicalDevice physicalDevice_ = VK_NULL_HANDLE;
-		VkQueue queue_ = VK_NULL_HANDLE;
 
 		VkSurfaceKHR surface_ = VK_NULL_HANDLE;
 
@@ -65,12 +66,8 @@ namespace AMD
 		VkImageView swapChainImageViews_[QUEUE_SLOT_COUNT];
 		VkFramebuffer framebuffer_[QUEUE_SLOT_COUNT];
 
-		std::vector<ImageView*> imageViews;
+		std::vector<VulkanImageView*> imageViews;
 		std::vector<FrameBuffer*> frameBuffers;
-
-		//VkRenderPass renderPass_ = VK_NULL_HANDLE;
-
-		int queueFamilyIndex_ = -1;
 
 		std::unique_ptr<Window> window_;
 

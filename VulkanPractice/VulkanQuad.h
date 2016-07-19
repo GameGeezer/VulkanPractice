@@ -5,6 +5,9 @@
 
 class ShaderModule;
 class PipelineLayout;
+class GraphicsPipeline;
+class VulkanBuffer;
+class VulkanDevice;
 
 namespace AMD
 {
@@ -20,12 +23,13 @@ namespace AMD
 		void ShutdownImpl() override;
 
 		VkDeviceMemory deviceMemory_ = VK_NULL_HANDLE;
-		VkBuffer vertexBuffer_ = VK_NULL_HANDLE;
-		VkBuffer indexBuffer_ = VK_NULL_HANDLE;
+		VulkanBuffer *vertexBuffer;
+		VulkanBuffer *indexBuffer;
 
 		ShaderModule *vertexShader_;
 		ShaderModule *fragmentShader_;
 
+		GraphicsPipeline *graphicsPipeline;
 		VkPipeline pipeline_ = VK_NULL_HANDLE;
 		PipelineLayout *pipelineLayout_;
 	};
