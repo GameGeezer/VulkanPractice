@@ -135,6 +135,7 @@
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
+    <ClCompile Include="VulkanCommandBuffer.cpp" />
     <ClCompile Include="VulkanImageView.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PipelineColorBlendState.cpp" />
@@ -158,9 +159,11 @@
     <ClCompile Include="VulkanDevice.cpp" />
     <ClCompile Include="VulkanDeviceMemory.cpp" />
     <ClCompile Include="VulkanGraphicsPipeline.cpp" />
+    <ClCompile Include="VulkanInstance.cpp" />
     <ClCompile Include="VulkanMemoryAllocateInfo.cpp" />
     <ClCompile Include="VulkanQuad.cpp" />
     <ClCompile Include="VulkanQueueFamily.cpp" />
+    <ClCompile Include="VulkanQueueSubmission.cpp" />
     <ClCompile Include="VulkanRenderPass.cpp" />
     <ClCompile Include="VulkanSample.cpp" />
     <ClCompile Include="VulkanSubPassGroup.cpp" />
@@ -182,6 +185,7 @@
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsPipeline.h" />
+    <ClInclude Include="VulkanCommandBuffer.h" />
     <ClInclude Include="VulkanImageView.h" />
     <ClInclude Include="KeyboardKeycodes_glfw.h" />
     <ClInclude Include="KeyboardKeycodes_win32.h" />
@@ -211,9 +215,11 @@
     <ClInclude Include="VulkanExampleBase.h" />
     <ClInclude Include="VulkanGraphicsPipeline.h" />
     <ClInclude Include="VulkanHelper.h" />
+    <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="VulkanMemoryAllocateInfo.h" />
     <ClInclude Include="VulkanQuad.h" />
     <ClInclude Include="VulkanQueueFamily.h" />
+    <ClInclude Include="VulkanQueueSubmission.h" />
     <ClInclude Include="VulkanRenderPass.h" />
     <ClInclude Include="VulkanSample.h" />
     <ClInclude Include="VulkanSubPassGroup.h" />

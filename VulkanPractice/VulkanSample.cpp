@@ -14,7 +14,9 @@
 #include "RenderSubPass.h"
 #include "FrameBuffer.h"
 #include "VulkanImageView.h"
+#include "VulkanCommandBuffer.h"
 
+#include "VulkanQueueSubmission.h"
 
 #include <cassert>
 
@@ -203,132 +205,6 @@ namespace AMD
 
 					++i;
 				}
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		VkInstance CreateInstance()
-		{
-			VkInstanceCreateInfo instanceCreateInfo = {};
-			instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-
-			std::vector<const char*> instanceExtensions =
-			{
-				"VK_KHR_surface", "VK_KHR_win32_surface"
-			};
-
-#ifdef _DEBUG
-			auto debugInstanceExtensionNames = GetDebugInstanceExtensionNames();
-			instanceExtensions.insert(instanceExtensions.end(),
-				debugInstanceExtensionNames.begin(), debugInstanceExtensionNames.end());
-#endif
-
-			instanceCreateInfo.ppEnabledExtensionNames = instanceExtensions.data();
-			instanceCreateInfo.enabledExtensionCount = static_cast<uint32_t> (instanceExtensions.size());
-
-			std::vector<const char*> instanceLayers;
-
-#ifdef _DEBUG
-			auto debugInstanceLayerNames = GetDebugInstanceLayerNames();
-			instanceLayers.insert(instanceLayers.end(),
-				debugInstanceLayerNames.begin(), debugInstanceLayerNames.end());
-#endif
-
-			instanceCreateInfo.ppEnabledLayerNames = instanceLayers.data();
-			instanceCreateInfo.enabledLayerCount = static_cast<uint32_t> (instanceLayers.size());
-
-			VkApplicationInfo applicationInfo = {};
-			applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-			applicationInfo.apiVersion = VK_API_VERSION_1_0;
-			applicationInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-			applicationInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-			applicationInfo.pApplicationName = "AMD Vulkan Sample application";
-			applicationInfo.pEngineName = "AMD Vulkan Sample Engine";
-
-			instanceCreateInfo.pApplicationInfo = &applicationInfo;
-
-			VkInstance instance = VK_NULL_HANDLE;
-			vkCreateInstance(&instanceCreateInfo, nullptr, &instance);
-
-			return instance;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		void CreateDeviceAndQueue(VkInstance instance, VkDevice* outputDevice,
-			VkQueue* outputQueue, int* outputQueueIndex,
-			VkPhysicalDevice* outputPhysicalDevice)
-		{
-			uint32_t physicalDeviceCount = 0;
-			vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
-
-			std::vector<VkPhysicalDevice> devices{ physicalDeviceCount };
-			vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, devices.data());
-
-			VkPhysicalDevice physicalDevice = nullptr;
-			int graphicsQueueIndex = -1;
-
-			FindPhysicalDeviceWithGraphicsQueue(devices, &physicalDevice, &graphicsQueueIndex);
-
-			assert(physicalDevice);
-
-			VkDeviceQueueCreateInfo deviceQueueCreateInfo = {};
-			deviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-			deviceQueueCreateInfo.queueCount = 1;
-			deviceQueueCreateInfo.queueFamilyIndex = graphicsQueueIndex;
-
-			static const float queuePriorities[] = { 1.0f };
-			deviceQueueCreateInfo.pQueuePriorities = queuePriorities;
-
-			VkDeviceCreateInfo deviceCreateInfo = {};
-			deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-			deviceCreateInfo.queueCreateInfoCount = 1;
-			deviceCreateInfo.pQueueCreateInfos = &deviceQueueCreateInfo;
-
-			std::vector<const char*> deviceLayers;
-
-#ifdef _DEBUG
-			auto debugDeviceLayerNames = GetDebugDeviceLayerNames(physicalDevice);
-			deviceLayers.insert(deviceLayers.end(),
-				debugDeviceLayerNames.begin(), debugDeviceLayerNames.end());
-#endif
-
-			deviceCreateInfo.ppEnabledLayerNames = deviceLayers.data();
-			deviceCreateInfo.enabledLayerCount = static_cast<uint32_t> (deviceLayers.size());
-
-			std::vector<const char*> deviceExtensions =
-			{
-				"VK_KHR_swapchain"
-			};
-
-			deviceCreateInfo.ppEnabledExtensionNames = deviceExtensions.data();
-			deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t> (deviceExtensions.size());
-
-			VkDevice device = nullptr;
-			vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &device);
-			assert(device);
-
-			VkQueue queue = nullptr;
-			vkGetDeviceQueue(device, graphicsQueueIndex, 0, &queue);
-			assert(queue);
-
-			if (outputQueue)
-			{
-				*outputQueue = queue;
-			}
-
-			if (outputDevice)
-			{
-				*outputDevice = device;
-			}
-
-			if (outputQueueIndex)
-			{
-				*outputQueueIndex = graphicsQueueIndex;
-			}
-
-			if (outputPhysicalDevice)
-			{
-				*outputPhysicalDevice = physicalDevice;
 			}
 		}
 
@@ -538,40 +414,40 @@ namespace AMD
 		///////////////////////////////////////////////////////////////////////////////
 	VulkanSample::VulkanSample()
 	{
-		instance_ = CreateInstance();
-		if (instance_ == VK_NULL_HANDLE)
+		m_instance = new VulkanInstance();
+		m_instance->addExtension("VK_KHR_surface");
+		m_instance->addExtension("VK_KHR_win32_surface");
+
+		if (!m_instance->instantiate())
 		{
 			// just bail out if the user does not have a compatible Vulkan driver
 			return;
 		}
 
 		uint32_t physicalDeviceCount = 0;
-		vkEnumeratePhysicalDevices(instance_, &physicalDeviceCount, nullptr);
+		vkEnumeratePhysicalDevices(m_instance->getHandle(), &physicalDeviceCount, nullptr);
 
 		std::vector<VkPhysicalDevice> devices{ physicalDeviceCount };
-		vkEnumeratePhysicalDevices(instance_, &physicalDeviceCount, devices.data());
+		vkEnumeratePhysicalDevices(m_instance->getHandle(), &physicalDeviceCount, devices.data());
 
 		VkPhysicalDevice physicalDevice = nullptr;
 		int graphicsQueueIndex = -1;
 
 		FindPhysicalDeviceWithGraphicsQueue(devices, &physicalDevice, &graphicsQueueIndex);
 
-		std::vector<const char*> deviceExtensions =
-		{
-			"VK_KHR_swapchain"
-		};
+		m_device = new VulkanDevice(physicalDevice, graphicsQueueIndex);
+		m_device->addExtension("VK_KHR_swapchain");
+		m_device->initialize();
 
-		m_device = new VulkanDevice(physicalDevice, graphicsQueueIndex, deviceExtensions);
-
-		importTable_.reset(new ImportTable{ instance_, m_device->getDevice() });
+		importTable_.reset(new ImportTable{ m_instance->getHandle(), m_device->getDevice() });
 
 #ifdef _DEBUG
-		debugCallback_ = SetupDebugCallback(instance_, importTable_.get());
+		debugCallback_ = SetupDebugCallback(m_instance->getHandle(), importTable_.get());
 #endif
 
 		window_.reset(new Window{ "Hello Vulkan", 640, 480 });
 
-		surface_ = CreateSurface(instance_, window_->GetHWND());
+		surface_ = CreateSurface(m_instance->getHandle(), window_->GetHWND());
 
 		VkBool32 presentSupported;
 		importTable_->vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, 0, surface_, &presentSupported);
@@ -607,7 +483,7 @@ namespace AMD
 		commandPool = new CommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
 		commandBufferGroup = new CommandBufferGroup(m_device->getDevice(), *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
-		setupCommandBuffer_ = commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
+		m_setupCommandBuffer = commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
 
 		frameFences = new FenceGroup(m_device->getDevice(), QUEUE_SLOT_COUNT);
 
@@ -645,14 +521,14 @@ namespace AMD
 		delete commandPool;
 
 		vkDestroySwapchainKHR(m_device->getDevice(), swapchain_, nullptr);
-		vkDestroySurfaceKHR(instance_, surface_, nullptr);
+		vkDestroySurfaceKHR(m_instance->getHandle(), surface_, nullptr);
 
 #ifdef _DEBUG
-		CleanupDebugCallback(instance_, debugCallback_, importTable_.get());
+		CleanupDebugCallback(m_instance->getHandle(), debugCallback_, importTable_.get());
 #endif
 
 		vkDestroyDevice(m_device->getDevice(), nullptr);
-		vkDestroyInstance(instance_, nullptr);
+		vkDestroyInstance(m_instance->getHandle(), nullptr);
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -665,21 +541,19 @@ namespace AMD
 		}
 		frameFences->resetFences(0, 1);
 		{
-			VkCommandBufferBeginInfo beginInfo = {};
-			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 			// Start recording to a command buffer
-			vkBeginCommandBuffer(setupCommandBuffer_, &beginInfo);
+			m_setupCommandBuffer->begin();
 
-			InitializeImpl(setupCommandBuffer_);
+			InitializeImpl(m_setupCommandBuffer->getHandle());
 			// Finish recording to a command buffer
-			vkEndCommandBuffer(setupCommandBuffer_);
+			m_setupCommandBuffer->end();
 			// What to submit to the queue
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &setupCommandBuffer_;
+			VkCommandBuffer buf = m_setupCommandBuffer->getHandle();
+			VulkanQueueSubmission submission;
+			submission.addCommandBuffer(buf);
+			submission.inititialize(0);
 			// Submit the command buffer to the queue
-			vkQueueSubmit(m_device->getQueue(), 1, &submitInfo, frameFences->getFenceAtIndex(0));
+			m_device->submitToQueue(1, submission.getSubmitInfo(), frameFences->getFenceAtIndex(0));
 		}
 		// Wait for queue to finish
 		frameFences->waitForFences(0, 1, VK_TRUE, UINT64_MAX);
@@ -704,8 +578,9 @@ namespace AMD
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-			VkCommandBuffer commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer_);
-			vkBeginCommandBuffer(commandBuffer, &beginInfo);
+			VulkanCommandBuffer *commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer_);
+			commandBuffer->begin();
+			VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
 
 			VkClearValue clearValue = {};
 
@@ -714,25 +589,21 @@ namespace AMD
 			clearValue.color.float32[2] = 0.042f;
 			clearValue.color.float32[3] = 1.0f;
 
-			renderPass->begin(commandBuffer, framebuffer_[currentBackBuffer_], window_->GetWidth(), window_->GetHeight(), clearValue, 1);
+			renderPass->begin(rawCommandBuffer, framebuffer_[currentBackBuffer_], window_->GetWidth(), window_->GetHeight(), clearValue, 1);
 
-			RenderImpl(commandBuffer);
+			RenderImpl(rawCommandBuffer);
 
-			renderPass->end(commandBuffer);
-			vkEndCommandBuffer(commandBuffer);
+			renderPass->end(rawCommandBuffer);
+			commandBuffer->end();
 
+			VulkanQueueSubmission submission;
+			submission.addCommandBuffer(rawCommandBuffer);
+			submission.addWaitSemaphore(imageAcquiredSemaphore);
+			submission.addSignalSemaphore(renderingCompleteSemaphore);
+			submission.inititialize(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 			// Submit rendering work to the graphics queue
-			const VkPipelineStageFlags waitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-			VkSubmitInfo submitInfo = {};
-			submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			submitInfo.waitSemaphoreCount = 1;
-			submitInfo.pWaitSemaphores = &imageAcquiredSemaphore;
-			submitInfo.pWaitDstStageMask = &waitDstStageMask;
-			submitInfo.commandBufferCount = 1;
-			submitInfo.pCommandBuffers = &commandBuffer;
-			submitInfo.signalSemaphoreCount = 1;
-			submitInfo.pSignalSemaphores = &renderingCompleteSemaphore;
-			vkQueueSubmit(m_device->getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+
+			vkQueueSubmit(m_device->getQueue(), 1, submission.getSubmitInfo(), VK_NULL_HANDLE);
 
 			// Submit present operation to present queue
 			VkPresentInfoKHR presentInfo = {};

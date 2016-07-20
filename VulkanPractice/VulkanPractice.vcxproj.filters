@@ -210,6 +210,15 @@
     <ClCompile Include="VulkanMemoryAllocateInfo.cpp">
       <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanQueueSubmission.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanCommandBuffer.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanInstance.cpp">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -360,6 +369,15 @@
       <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClInclude>
     <ClInclude Include="VulkanMemoryAllocateInfo.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanQueueSubmission.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanCommandBuffer.h">
+      <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanInstance.h">
       <Filter>Source Files\tutorial\test</Filter>
     </ClInclude>
   </ItemGroup>

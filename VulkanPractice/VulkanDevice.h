@@ -28,12 +28,18 @@ class VulkanDevice
 {
 public:
 
-	VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t graphicsQueueIndex, std::vector<const char*> &extensions);
+	VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t graphicsQueueIndex);
 
 	~VulkanDevice();
 
+	void
+	initialize();
+
 	VkDeviceMemory
 	allocateMemory(uint32_t size);
+
+	void
+	submitToQueue(uint32_t submitCount, VkSubmitInfo *submitInfo, VkFence fence);
 
 	VkDevice
 	getDevice();
@@ -45,7 +51,10 @@ public:
 	getQueue();
 
 	uint32_t
-		getQueueIndex();
+	getQueueIndex();
+
+	void
+	addExtension(const char* extension);
 
 private:
 	VkDevice							m_device;
@@ -57,6 +66,7 @@ private:
 	uint32_t							m_queueFamilyIndex;
 
 	std::vector<MemoryTypeInfo>			m_heaps;
+	std::vector<const char*>			m_extensions;
 
 	void
 	setupEnumerateHeaps();

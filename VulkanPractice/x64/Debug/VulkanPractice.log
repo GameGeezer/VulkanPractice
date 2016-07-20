@@ -1,10 +1,11 @@
 ﻿  VulkanSample.cpp
-  VulkanDevice.cpp
   Generating Code...
-  Skipping... (no relevant changes detected)
-  Renderer.cpp
+  Compiling...
   VulkanQuad.cpp
+c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\vulkanquad.cpp(163): warning C4244: 'argument': conversion from 'VkDeviceSize' to 'uint32_t', possible loss of data
+c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\vulkanquad.cpp(167): warning C4244: 'argument': conversion from 'VkDeviceSize' to 'uint32_t', possible loss of data
   Main.cpp
+  Generating Code...
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.exe
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.pdb (Partial PDB)

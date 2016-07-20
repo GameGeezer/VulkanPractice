@@ -1,6 +1,17 @@
 #include "VulkanDevice.h"
 
-VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex, std::vector<const char*> &extensions) :  m_physicalDevice(physicalDevice), m_queueFamilyIndex(queueIndex)
+VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex) :  m_physicalDevice(physicalDevice), m_queueFamilyIndex(queueIndex)
+{
+
+}
+
+VulkanDevice::~VulkanDevice()
+{
+
+}
+
+void
+VulkanDevice::initialize()
 {
 	VkDeviceQueueCreateInfo deviceQueueCreateInfo = {};
 	deviceQueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -16,39 +27,21 @@ VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex,
 	deviceCreateInfo.pQueueCreateInfos = &deviceQueueCreateInfo;
 
 	std::vector<const char*> deviceLayers;
+	//Add layers here if needed
+
 	deviceCreateInfo.ppEnabledLayerNames = deviceLayers.data();
 	deviceCreateInfo.enabledLayerCount = static_cast<uint32_t> (deviceLayers.size());
-	deviceCreateInfo.ppEnabledExtensionNames = extensions.data();
-	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t> (extensions.size());
+	deviceCreateInfo.ppEnabledExtensionNames = m_extensions.data();
+	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t> (m_extensions.size());
 
-	vkCreateDevice(physicalDevice, &deviceCreateInfo, nullptr, &m_device);
+	vkCreateDevice(m_physicalDevice, &deviceCreateInfo, nullptr, &m_device);
 
 	vkGetDeviceQueue(m_device, m_queueFamilyIndex, 0, &m_queue);
 
 	// Get the device properties
-	vkGetPhysicalDeviceProperties(physicalDevice, &m_physicalDeviceProperties);
+	vkGetPhysicalDeviceProperties(m_physicalDevice, &m_physicalDeviceProperties);
 	// List all of the available heaps and their properties
 	setupEnumerateHeaps();
-	// Get the queue family count
-	/*
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, nullptr);
-	// Get the queue family properties
-	std::vector<VkQueueFamilyProperties> familyProperties(queueFamilyCount);
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyCount, familyProperties.data());
-	// Most vendor implementations group all queues in to one family
-	for (uint32_t i = 0; i < queueFamilyCount; ++i)
-	{
-		if (familyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
-		{
-			graphicsFamilyQueues.push_back(i);
-		}
-	}
-	*/
-}
-
-VulkanDevice::~VulkanDevice()
-{
-
 }
 
 VkDeviceMemory
@@ -75,6 +68,43 @@ VulkanDevice::allocateMemory(uint32_t size)
 
 	return VK_NULL_HANDLE;
 }
+
+void
+VulkanDevice::submitToQueue(uint32_t submitCount, VkSubmitInfo *submitInfo, VkFence fence)
+{
+	vkQueueSubmit(m_queue, submitCount, submitInfo, fence);
+}
+
+VkDevice
+VulkanDevice::getDevice()
+{
+	return m_device;
+}
+
+VkPhysicalDevice
+VulkanDevice::getPhysicalDevice()
+{
+	return m_physicalDevice;
+}
+
+VkQueue
+VulkanDevice::getQueue()
+{
+	return m_queue;
+}
+
+uint32_t
+VulkanDevice::getQueueIndex()
+{
+	return m_queueFamilyIndex;
+}
+
+void
+VulkanDevice::addExtension(const char* extension)
+{
+	m_extensions.push_back(extension);
+}
+
 
 void
 VulkanDevice::setupEnumerateHeaps()
@@ -108,28 +138,4 @@ VulkanDevice::setupEnumerateHeaps()
 
 		m_heaps.push_back(typeInfo);
 	}
-}
-
-VkDevice
-VulkanDevice::getDevice()
-{
-	return m_device;
-}
-
-VkPhysicalDevice
-VulkanDevice::getPhysicalDevice()
-{
-	return m_physicalDevice;
-}
-
-VkQueue
-VulkanDevice::getQueue()
-{
-	return m_queue;
-}
-
-uint32_t
-VulkanDevice::getQueueIndex()
-{
-	return m_queueFamilyIndex;
 }

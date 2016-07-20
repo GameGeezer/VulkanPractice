@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "VulkanDevice.h"
+#include "VulkanInstance.h"
 
 class FenceGroup;
 class CommandPool;
@@ -14,6 +15,8 @@ class CommandBufferGroup;
 class RenderPass;
 class FrameBuffer;
 class VulkanImageView;
+class VulkanCommandBuffer;
+class VulkanInstance;
 
 namespace AMD
 {
@@ -29,7 +32,7 @@ namespace AMD
 		VulkanSample();
 		virtual ~VulkanSample();
 
-		bool IsInitialized() { return (instance_ != VK_NULL_HANDLE && m_device->getDevice() != VK_NULL_HANDLE); }
+		bool IsInitialized() { return (m_instance->getHandle() != VK_NULL_HANDLE && m_device->getDevice() != VK_NULL_HANDLE); }
 		void Run(const int frameCount);
 		struct ImportTable;
 
@@ -46,12 +49,10 @@ namespace AMD
 			return QUEUE_SLOT_COUNT;
 		}
 
-		VkViewport viewport_;
-
 		VulkanDevice *m_device;
 
 		VkSwapchainKHR swapchain_ = VK_NULL_HANDLE;
-		VkInstance instance_ = VK_NULL_HANDLE;
+		VulkanInstance *m_instance;
 
 		VkSurfaceKHR surface_ = VK_NULL_HANDLE;
 
@@ -76,7 +77,7 @@ namespace AMD
 		virtual void ShutdownImpl();
 
 	private:
-		VkCommandBuffer setupCommandBuffer_;
+		VulkanCommandBuffer *m_setupCommandBuffer;
 		uint32_t currentBackBuffer_ = 0;
 
 #ifdef _DEBUG

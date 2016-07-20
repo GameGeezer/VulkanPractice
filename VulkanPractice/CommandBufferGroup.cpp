@@ -1,6 +1,7 @@
 #include "CommandBufferGroup.h"
 
 #include "CommandPool.h"
+#include "VulkanCommandBuffer.h"
 
 CommandBufferGroup::CommandBufferGroup(VkDevice device, CommandPool& commandPool, uint32_t buffersToAllocate, VkCommandBufferLevel level) : m_device(device), count(buffersToAllocate), m_commandBuffers(new VkCommandBuffer[buffersToAllocate])
 {
@@ -11,6 +12,11 @@ CommandBufferGroup::CommandBufferGroup(VkDevice device, CommandPool& commandPool
 	commandBufferAllocateInfo.level = level;
 
 	vkAllocateCommandBuffers(m_device, &commandBufferAllocateInfo, m_commandBuffers);
+
+	for (uint32_t i = 0; i < buffersToAllocate; ++i)
+	{
+		m_commandBufferWrappers.push_back(new VulkanCommandBuffer(m_commandBuffers[i]));
+	}
 }
 
 CommandBufferGroup::~CommandBufferGroup()
@@ -18,8 +24,8 @@ CommandBufferGroup::~CommandBufferGroup()
 
 }
 
-VkCommandBuffer
+VulkanCommandBuffer*
 CommandBufferGroup::getCommandBufferAtIndex(uint32_t index)
 {
-	return m_commandBuffers[index];
+	return m_commandBufferWrappers.at(index);
 }
