@@ -32,53 +32,6 @@
 
 namespace AMD
 {
-	struct VulkanSample::ImportTable
-	{
-#define GET_INSTANCE_ENTRYPOINT(i, w) w = reinterpret_cast<PFN_##w>(vkGetInstanceProcAddr(i, #w))
-#define GET_DEVICE_ENTRYPOINT(i, w) w = reinterpret_cast<PFN_##w>(vkGetDeviceProcAddr(i, #w))
-
-		ImportTable() = default;
-
-		ImportTable(VkInstance instance, VkDevice device)
-		{
-			GET_INSTANCE_ENTRYPOINT(instance, vkGetPhysicalDeviceSurfaceSupportKHR);
-			GET_INSTANCE_ENTRYPOINT(instance, vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
-			GET_INSTANCE_ENTRYPOINT(instance, vkGetPhysicalDeviceSurfaceFormatsKHR);
-			GET_INSTANCE_ENTRYPOINT(instance, vkGetPhysicalDeviceSurfacePresentModesKHR);
-
-			GET_DEVICE_ENTRYPOINT(device, vkCreateSwapchainKHR);
-			GET_DEVICE_ENTRYPOINT(device, vkDestroySwapchainKHR);
-			GET_DEVICE_ENTRYPOINT(device, vkGetSwapchainImagesKHR);
-			GET_DEVICE_ENTRYPOINT(device, vkAcquireNextImageKHR);
-			GET_DEVICE_ENTRYPOINT(device, vkQueuePresentKHR);
-
-#ifdef _DEBUG
-			GET_INSTANCE_ENTRYPOINT(instance, vkCreateDebugReportCallbackEXT);
-			GET_INSTANCE_ENTRYPOINT(instance, vkDebugReportMessageEXT);
-			GET_INSTANCE_ENTRYPOINT(instance, vkDestroyDebugReportCallbackEXT);
-#endif
-		}
-
-#undef GET_INSTANCE_ENTRYPOINT
-#undef GET_DEVICE_ENTRYPOINT
-
-		PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR = nullptr;
-		PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR = nullptr;
-		PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR = nullptr;
-		PFN_vkGetPhysicalDeviceSurfacePresentModesKHR vkGetPhysicalDeviceSurfacePresentModesKHR = nullptr;
-
-		PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR = nullptr;
-		PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR = nullptr;
-		PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR = nullptr;
-		PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR = nullptr;
-		PFN_vkQueuePresentKHR vkQueuePresentKHR = nullptr;
-
-#ifdef _DEBUG
-		PFN_vkCreateDebugReportCallbackEXT vkCreateDebugReportCallbackEXT = nullptr;
-		PFN_vkDebugReportMessageEXT vkDebugReportMessageEXT = nullptr;
-		PFN_vkDestroyDebugReportCallbackEXT vkDestroyDebugReportCallbackEXT = nullptr;
-#endif
-	};
 
 	namespace
 	{
@@ -215,16 +168,13 @@ namespace AMD
 		};
 
 		///////////////////////////////////////////////////////////////////////////////
-		SwapchainFormatColorSpace GetSwapchainFormatAndColorspace(VkPhysicalDevice physicalDevice,
-			VkSurfaceKHR surface, VulkanSample::ImportTable* importTable)
+		SwapchainFormatColorSpace GetSwapchainFormatAndColorspace(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
 		{
 			uint32_t surfaceFormatCount = 0;
-			importTable->vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
-				surface, &surfaceFormatCount, nullptr);
+			vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &surfaceFormatCount, nullptr);
 
 			std::vector<VkSurfaceFormatKHR> surfaceFormats{ surfaceFormatCount };
-			importTable->vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice,
-				surface, &surfaceFormatCount, surfaceFormats.data());
+			vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &surfaceFormatCount, surfaceFormats.data());
 
 			SwapchainFormatColorSpace result;
 
@@ -286,20 +236,20 @@ namespace AMD
 		///////////////////////////////////////////////////////////////////////////////
 		VkSwapchainKHR CreateSwapchain(VkPhysicalDevice physicalDevice, VkDevice device,
 			VkSurfaceKHR surface, const int surfaceWidth, const int surfaceHeight,
-			const int backbufferCount, VulkanSample::ImportTable* importTable,
+			const int backbufferCount,
 			VkFormat* swapchainFormat)
 		{
 			VkSurfaceCapabilitiesKHR surfaceCapabilities;
-			importTable->vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice,
+			vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice,
 				surface, &surfaceCapabilities);
 
 			uint32_t presentModeCount;
-			importTable->vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
+			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
 				surface, &presentModeCount, nullptr);
 
 			std::vector<VkPresentModeKHR> presentModes{ presentModeCount };
 
-			importTable->vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
+			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
 				surface, &presentModeCount, presentModes.data());
 
 			VkExtent2D swapChainSize = {};
@@ -327,8 +277,7 @@ namespace AMD
 				surfaceTransformFlags = surfaceCapabilities.currentTransform;
 			}
 
-			auto swapchainFormatColorSpace = GetSwapchainFormatAndColorspace(physicalDevice, surface,
-				importTable);
+			auto swapchainFormatColorSpace = GetSwapchainFormatAndColorspace(physicalDevice, surface);
 
 			VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
 			swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -348,7 +297,7 @@ namespace AMD
 			swapchainCreateInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 
 			VkSwapchainKHR swapchain;
-			importTable->vkCreateSwapchainKHR(device, &swapchainCreateInfo,
+			vkCreateSwapchainKHR(device, &swapchainCreateInfo,
 				nullptr, &swapchain);
 
 			if (swapchainFormat)
@@ -373,41 +322,6 @@ namespace AMD
 
 			return surface;
 		}
-
-#ifdef _DEBUG
-		///////////////////////////////////////////////////////////////////////////////
-		VkDebugReportCallbackEXT SetupDebugCallback(VkInstance instance, VulkanSample::ImportTable* importTable)
-		{
-			if (importTable->vkCreateDebugReportCallbackEXT)
-			{
-				VkDebugReportCallbackCreateInfoEXT callbackCreateInfo = {};
-				callbackCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT;
-				callbackCreateInfo.flags =
-					VK_DEBUG_REPORT_ERROR_BIT_EXT |
-					VK_DEBUG_REPORT_WARNING_BIT_EXT |
-					VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT;
-				callbackCreateInfo.pfnCallback = &DebugReportCallback;
-
-				VkDebugReportCallbackEXT callback;
-				importTable->vkCreateDebugReportCallbackEXT(instance, &callbackCreateInfo, nullptr, &callback);
-				return callback;
-			}
-			else
-			{
-				return VK_NULL_HANDLE;
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		void CleanupDebugCallback(VkInstance instance, VkDebugReportCallbackEXT callback,
-			VulkanSample::ImportTable* importTable)
-		{
-			if (importTable->vkDestroyDebugReportCallbackEXT)
-			{
-				importTable->vkDestroyDebugReportCallbackEXT(instance, callback, nullptr);
-			}
-		}
-#endif
 
 	}   // namespace
 
@@ -439,30 +353,24 @@ namespace AMD
 		m_device->addExtension("VK_KHR_swapchain");
 		m_device->initialize();
 
-		importTable_.reset(new ImportTable{ m_instance->getHandle(), m_device->getDevice() });
-
-#ifdef _DEBUG
-		debugCallback_ = SetupDebugCallback(m_instance->getHandle(), importTable_.get());
-#endif
-
 		window_.reset(new Window{ "Hello Vulkan", 640, 480 });
 
 		surface_ = CreateSurface(m_instance->getHandle(), window_->GetHWND());
 
 		VkBool32 presentSupported;
-		importTable_->vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, 0, surface_, &presentSupported);
+		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, 0, surface_, &presentSupported);
 		assert(presentSupported);
 
 		VkFormat swapchainFormat = VK_FORMAT_UNDEFINED;
-		swapchain_ = CreateSwapchain(physicalDevice, m_device->getDevice(), surface_,window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, importTable_.get(), &swapchainFormat);
+		swapchain_ = CreateSwapchain(physicalDevice, m_device->getDevice(), surface_,window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, &swapchainFormat);
 
 		assert(swapchain_);
 
 		uint32_t swapchainImageCount = 0;
-		importTable_->vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, nullptr);
+		vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, nullptr);
 		assert(static_cast<int> (swapchainImageCount) == QUEUE_SLOT_COUNT);
 
-		importTable_->vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, swapchainImages_);
+		vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, swapchainImages_);
 
 		renderPass = CreateRenderPass(m_device->getDevice(), swapchainFormat);
 
@@ -523,9 +431,6 @@ namespace AMD
 		vkDestroySwapchainKHR(m_device->getDevice(), swapchain_, nullptr);
 		vkDestroySurfaceKHR(m_instance->getHandle(), surface_, nullptr);
 
-#ifdef _DEBUG
-		CleanupDebugCallback(m_instance->getHandle(), debugCallback_, importTable_.get());
-#endif
 
 		vkDestroyDevice(m_device->getDevice(), nullptr);
 		vkDestroyInstance(m_instance->getHandle(), nullptr);
@@ -570,7 +475,7 @@ namespace AMD
 
 		for (int i = 0; i < frameCount; ++i)
 		{
-			importTable_->vkAcquireNextImageKHR(m_device->getDevice(), swapchain_, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
+			vkAcquireNextImageKHR(m_device->getDevice(), swapchain_, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
 
 			vkWaitForFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
 			vkResetFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
@@ -613,7 +518,7 @@ namespace AMD
 			presentInfo.swapchainCount = 1;
 			presentInfo.pSwapchains = &swapchain_;
 			presentInfo.pImageIndices = &currentBackBuffer_;
-			importTable_->vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
+			vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 
 			vkQueueSubmit(m_device->getQueue(), 0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
 		};

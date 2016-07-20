@@ -79,6 +79,9 @@
     <Filter Include="Source Files\tutorial\test\utils">
       <UniqueIdentifier>{f89c64c3-af5a-4d0d-90bf-11c9a9c514c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\tutorial\test\swapchains">
+      <UniqueIdentifier>{67425335-232f-430a-af78-96830f6a25d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -133,9 +136,6 @@
       <Filter>Source Files\tutorial</Filter>
     </ClCompile>
     <ClCompile Include="AMDWindow.cpp">
-      <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="PresentationSurface.cpp">
       <Filter>Source Files\tutorial</Filter>
     </ClCompile>
     <ClCompile Include="FenceGroup.cpp">
@@ -219,6 +219,15 @@
     <ClCompile Include="VulkanInstance.cpp">
       <Filter>Source Files\tutorial\test</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanSwapchain.cpp">
+      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanPresentationSurface_win32.cpp">
+      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanPresentationSurface_glfw.cpp">
+      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -268,9 +277,6 @@
     </ClInclude>
     <ClInclude Include="VulkanRenderPass.h">
       <Filter>src\graphics\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanSwapChain.h">
-      <Filter>src\graphics\public\nf</Filter>
     </ClInclude>
     <ClInclude Include="VulkanQueueFamily.h">
       <Filter>src\graphics\public\nf</Filter>
@@ -379,6 +385,12 @@
     </ClInclude>
     <ClInclude Include="VulkanInstance.h">
       <Filter>Source Files\tutorial\test</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSwapChain.h">
+      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanPresentationSurface.h">
+      <Filter>Source Files\tutorial\test\swapchains</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

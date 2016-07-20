@@ -34,7 +34,6 @@ namespace AMD
 
 		bool IsInitialized() { return (m_instance->getHandle() != VK_NULL_HANDLE && m_device->getDevice() != VK_NULL_HANDLE); }
 		void Run(const int frameCount);
-		struct ImportTable;
 
 	protected:
 		int GetQueueSlot() const
@@ -55,8 +54,6 @@ namespace AMD
 		VulkanInstance *m_instance;
 
 		VkSurfaceKHR surface_ = VK_NULL_HANDLE;
-
-		std::unique_ptr<ImportTable> importTable_;
 
 		//VkFence frameFences_[QUEUE_SLOT_COUNT];
 		CommandPool *commandPool;

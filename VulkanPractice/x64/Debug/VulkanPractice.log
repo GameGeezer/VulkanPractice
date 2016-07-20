@@ -1,11 +1,25 @@
-﻿  VulkanSample.cpp
+﻿  Window_win32.cpp
+  Window_glfw.cpp
+  VulkanRenderPass.cpp
+  VulkanPresentationSurface_win32.cpp
+  VulkanPresentationSurface_glfw.cpp
+  VulkanBuffer.cpp
+  Shared.cpp
+  Renderer.cpp
+c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\renderer.cpp(232): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\renderer.cpp(234): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\renderer.cpp(289): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+  Platform.cpp
+  FenceGroup.cpp
+  Application.cpp
   Generating Code...
   Compiling...
-  VulkanQuad.cpp
-c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\vulkanquad.cpp(163): warning C4244: 'argument': conversion from 'VkDeviceSize' to 'uint32_t', possible loss of data
-c:\users\wpger_000\documents\visual studio 2015\projects\vulkanpractice\vulkanpractice\vulkanquad.cpp(167): warning C4244: 'argument': conversion from 'VkDeviceSize' to 'uint32_t', possible loss of data
-  Main.cpp
+  Window.cpp
   Generating Code...
+  Skipping... (no relevant changes detected)
+  VulkanSample.cpp
+  VulkanQuad.cpp
+  Main.cpp
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.exe
   VulkanPractice.vcxproj -> C:\Users\wpger_000\documents\visual studio 2015\Projects\VulkanPractice\x64\Debug\VulkanPractice.pdb (Partial PDB)

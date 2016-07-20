@@ -176,7 +176,7 @@ namespace AMD
 		pipelineLayout_ = new PipelineLayout(m_device->getDevice());
 		graphicsPipeline = CreatePipeline(m_device->getDevice(), renderPass->getHandle(), pipelineLayout_->getHandle(),
 			vertexShader_->getHandle(), fragmentShader_->getHandle(),
-			VkExtent2D{ static_cast<uint32_t> (window_->GetWidth()), static_cast<uint32_t> (window_->GetHeight()) }
+			VkExtent2D{ static_cast<uint32_t> (640), static_cast<uint32_t> (480) }
 		);
 
 		pipeline_ = graphicsPipeline->getHandle();

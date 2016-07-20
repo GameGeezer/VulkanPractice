@@ -62,7 +62,7 @@ Application::init()
 {
 	m_renderer = new Renderer();
 
-	m_window = new Window(m_renderer, m_windowWidth, m_windowHeight, m_windowTitle);
+	//m_window = new Window(m_renderer, m_windowWidth, m_windowHeight, m_windowTitle);
 	/*
 	glfwSetErrorCallback(error_callback);
 
