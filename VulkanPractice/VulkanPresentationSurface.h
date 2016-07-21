@@ -2,21 +2,30 @@
 
 #include <vulkan\vulkan.h>
 
-#include "BUILD_OPTIONS.h"
-#include "Platform.h"
+class VulkanDevice;
 
 class VulkanPresentationSurface
 {
 public:
-
-#if USE_FRAMEWORK_GLFW
-	VulkanPresentationSurface(VkInstance instance, GLFWwindow& window);
-#elif VK_USE_PLATFORM_WIN32_KHR
-	VulkanPresentationSurface();
-#endif
+	VulkanPresentationSurface(VulkanDevice &device, VkInstance instance, VkSurfaceKHR surface);
 
 	~VulkanPresentationSurface();
 
+	VkSurfaceKHR
+	getHandle();
+
+	VkSurfaceFormatKHR*
+	getFormat();
+
+	VkSurfaceCapabilitiesKHR*
+	getCapabilities();
+
 private:
-	VkSurfaceKHR m_surface;
+	VulkanDevice			*	m_device;
+	VkInstance					m_instance;
+	VkSurfaceKHR				m_surface;
+	VkSurfaceFormatKHR			m_surfaceFormat = {};
+	VkSurfaceCapabilitiesKHR	m_capabilities = {};
+
+	uint32_t					m_width, m_height;
 };

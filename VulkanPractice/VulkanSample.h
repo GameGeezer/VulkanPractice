@@ -41,7 +41,7 @@ namespace AMD
 			return currentBackBuffer_;
 		}
 
-		static const uint32_t QUEUE_SLOT_COUNT = 3;
+		static const uint32_t QUEUE_SLOT_COUNT = 2;
 
 		static int GetQueueSlotCount()
 		{
@@ -50,7 +50,6 @@ namespace AMD
 
 		VulkanDevice *m_device;
 
-		VkSwapchainKHR swapchain_ = VK_NULL_HANDLE;
 		VulkanInstance *m_instance;
 
 		VkSurfaceKHR surface_ = VK_NULL_HANDLE;

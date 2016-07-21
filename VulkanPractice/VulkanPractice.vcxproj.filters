@@ -222,10 +222,10 @@
     <ClCompile Include="VulkanSwapchain.cpp">
       <Filter>Source Files\tutorial\test\swapchains</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanPresentationSurface_win32.cpp">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    <ClCompile Include="AMDWindow_win32.cpp">
+      <Filter>Source Files\tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanPresentationSurface_glfw.cpp">
+    <ClCompile Include="VulkanPresentationSurface.cpp">
       <Filter>Source Files\tutorial\test\swapchains</Filter>
     </ClCompile>
   </ItemGroup>
@@ -391,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="VulkanPresentationSurface.h">
       <Filter>Source Files\tutorial\test\swapchains</Filter>
+    </ClInclude>
+    <ClInclude Include="AMDWindow_glfw.h">
+      <Filter>Source Files\tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

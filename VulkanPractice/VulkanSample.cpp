@@ -353,36 +353,31 @@ namespace AMD
 		m_device->addExtension("VK_KHR_swapchain");
 		m_device->initialize();
 
-		window_.reset(new Window{ "Hello Vulkan", 640, 480 });
+		window_.reset(new Window{ m_instance->getHandle(), *m_device,"Hello Vulkan", 640, 480, QUEUE_SLOT_COUNT });
 
-		surface_ = CreateSurface(m_instance->getHandle(), window_->GetHWND());
+		surface_ = window_->getSurface();
 
 		VkBool32 presentSupported;
 		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, 0, surface_, &presentSupported);
 		assert(presentSupported);
 
-		VkFormat swapchainFormat = VK_FORMAT_UNDEFINED;
-		swapchain_ = CreateSwapchain(physicalDevice, m_device->getDevice(), surface_,window_->GetWidth(), window_->GetHeight(), QUEUE_SLOT_COUNT, &swapchainFormat);
-
-		assert(swapchain_);
-
 		uint32_t swapchainImageCount = 0;
-		vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, nullptr);
-		assert(static_cast<int> (swapchainImageCount) == QUEUE_SLOT_COUNT);
+		vkGetSwapchainImagesKHR(m_device->getDevice(), window_->getSwapchain(), &swapchainImageCount, nullptr);
+		//assert(static_cast<int> (swapchainImageCount) == QUEUE_SLOT_COUNT);
 
-		vkGetSwapchainImagesKHR(m_device->getDevice(), swapchain_, &swapchainImageCount, swapchainImages_);
+		vkGetSwapchainImagesKHR(m_device->getDevice(), window_->getSwapchain(), &swapchainImageCount, swapchainImages_);
 
-		renderPass = CreateRenderPass(m_device->getDevice(), swapchainFormat);
+		renderPass = CreateRenderPass(m_device->getDevice(), window_->getSurfaceFormat());
 
 		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
 		{
 			// create imageViews
-			VulkanImageView *imageView = new VulkanImageView(m_device->getDevice(), swapchainImages_[i], swapchainFormat);
+			VulkanImageView *imageView = new VulkanImageView(m_device->getDevice(), swapchainImages_[i], window_->getSurfaceFormat());
 			swapChainImageViews_[i] = imageView->getHandle();
 			imageViews.push_back(imageView);
 
 			// create framebuffers
-			FrameBuffer *frameBuffer = new FrameBuffer(m_device->getDevice(), *renderPass, swapChainImageViews_[i], window_->GetWidth(), window_->GetHeight());
+			FrameBuffer *frameBuffer = new FrameBuffer(m_device->getDevice(), *renderPass, swapChainImageViews_[i], window_->getWidth(), window_->getHeight());
 			framebuffer_[i] = frameBuffer->getHandle();
 			frameBuffers.push_back(frameBuffer);
 		}
@@ -428,7 +423,7 @@ namespace AMD
 
 		delete commandPool;
 
-		vkDestroySwapchainKHR(m_device->getDevice(), swapchain_, nullptr);
+		//vkDestroySwapchainKHR(m_device->getDevice(), swapchain_, nullptr);
 		vkDestroySurfaceKHR(m_instance->getHandle(), surface_, nullptr);
 
 
@@ -475,7 +470,7 @@ namespace AMD
 
 		for (int i = 0; i < frameCount; ++i)
 		{
-			vkAcquireNextImageKHR(m_device->getDevice(), swapchain_, UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
+			vkAcquireNextImageKHR(m_device->getDevice(), window_->getSwapchain(), UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
 
 			vkWaitForFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
 			vkResetFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
@@ -494,7 +489,7 @@ namespace AMD
 			clearValue.color.float32[2] = 0.042f;
 			clearValue.color.float32[3] = 1.0f;
 
-			renderPass->begin(rawCommandBuffer, framebuffer_[currentBackBuffer_], window_->GetWidth(), window_->GetHeight(), clearValue, 1);
+			renderPass->begin(rawCommandBuffer, framebuffer_[currentBackBuffer_], window_->getWidth(), window_->getHeight(), clearValue, 1);
 
 			RenderImpl(rawCommandBuffer);
 
@@ -511,12 +506,13 @@ namespace AMD
 			vkQueueSubmit(m_device->getQueue(), 1, submission.getSubmitInfo(), VK_NULL_HANDLE);
 
 			// Submit present operation to present queue
+			VkSwapchainKHR sc = window_->getSwapchain();
 			VkPresentInfoKHR presentInfo = {};
 			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 			presentInfo.waitSemaphoreCount = 1;
 			presentInfo.pWaitSemaphores = &renderingCompleteSemaphore;
 			presentInfo.swapchainCount = 1;
-			presentInfo.pSwapchains = &swapchain_;
+			presentInfo.pSwapchains = &sc;
 			presentInfo.pImageIndices = &currentBackBuffer_;
 			vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 

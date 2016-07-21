@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include <vulkan\vulkan.h>
+
 class Renderer;
 
 class Window
@@ -32,7 +34,7 @@ private:
 	void	initSwapchainImages();
 	void	deInitSwapchainImages();
 
-	void	keyDownEvent(KeyboardKeycode code);
+//	void	keyDownEvent(KeyboardKeycode code);
 
 	Renderer						*	m_renderer	= nullptr;
 
