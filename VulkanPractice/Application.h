@@ -6,9 +6,6 @@
 #include <thread>
 #include <iostream>
 
-#include "Renderer.h"
-#include "Window.h"
-
 //#include "KeyboardCallback.cuh"
 //#include "MouseClickCallback.cuh"
 //#include "MouseMoveCallback.cuh"
@@ -38,9 +35,6 @@ private:
 	string			m_windowTitle;
 	
 	milliseconds	lastFrameTime;
-
-	Renderer		*m_renderer;
-	Window			*m_window;
 
 	void
 		init();

@@ -6,7 +6,7 @@
 
 class VulkanDevice;
 class VulkanImageView;
-class FrameBuffer;
+class VulkanFrameBuffer;
 class VulkanSwapchain;
 class VulkanPresentationSurface;
 
@@ -26,7 +26,7 @@ private:
 	VkImage							*	m_images;
 
 	std::vector<VulkanImageView*>		m_imageViewWrappers;
-	std::vector<FrameBuffer*>			m_frameBufferWrapperss;
+	std::vector<VulkanFrameBuffer*>		m_frameBufferWrappers;
 
 	std::vector<VkImageView>			m_imageViews;
 	std::vector<VkFramebuffer>			m_frameBuffers;

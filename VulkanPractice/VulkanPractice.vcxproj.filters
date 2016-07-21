@@ -19,68 +19,77 @@
     <Filter Include="src\window">
       <UniqueIdentifier>{76e9dcf0-19a3-4c8b-b3eb-863a94cd8f4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\private">
-      <UniqueIdentifier>{6e46ef89-de93-4935-a844-221db97ed63a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\public">
-      <UniqueIdentifier>{263a2e08-105d-4fc5-8616-20a2081a155f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\util">
       <UniqueIdentifier>{dca789f5-10c2-4100-9274-f8990a5c8814}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\graphics">
-      <UniqueIdentifier>{af37e74b-2638-4fe8-aba9-4c908ee373b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\graphics\public">
-      <UniqueIdentifier>{5231932d-9a7e-4004-ae85-9d82dd932530}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\graphics\private">
-      <UniqueIdentifier>{6d3a2878-240b-4189-8b9d-66b98b39d7f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\graphics\helper">
-      <UniqueIdentifier>{03f6e428-00b0-4a7c-a4c4-2d085f026732}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\options">
-      <UniqueIdentifier>{9862af85-f28e-4dd3-b1f4-e6688834865a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\glfw">
-      <UniqueIdentifier>{a3bfd5b0-d8b9-416f-84ab-f444e3ba8049}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\glfw\private">
-      <UniqueIdentifier>{f8c11af5-8e9c-44f6-b026-6299c963b557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\glfw\public">
-      <UniqueIdentifier>{b5469bed-83e9-4287-b9d1-726c7b5bff4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\win32">
-      <UniqueIdentifier>{a5964250-b711-4c69-ab85-282170d444e6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\win32\private">
-      <UniqueIdentifier>{45de71b1-f217-4e8d-8602-f46208609ee3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\win32\public">
-      <UniqueIdentifier>{544a848a-8b41-4045-8e89-355920a1b238}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\graphics\public\nf">
-      <UniqueIdentifier>{3765114b-ff02-445a-a0ff-67ef86b0af24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\graphics\private\nf">
-      <UniqueIdentifier>{2d9783e8-a82a-4a9a-840a-033b03f5dd06}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\tutorial">
       <UniqueIdentifier>{623abd02-bb55-492c-908f-5e202a4f6521}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\tutorial\test">
-      <UniqueIdentifier>{9c9ab949-3b3d-42b4-a6bf-f194aab505ba}</UniqueIdentifier>
+    <Filter Include="src\window\platforms">
+      <UniqueIdentifier>{193d0feb-daaf-4384-b213-7c9cdd12426d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\tutorial\test\pipelines">
+    <Filter Include="src\window\platforms\win32">
+      <UniqueIdentifier>{a5964250-b711-4c69-ab85-282170d444e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\win32\private">
+      <UniqueIdentifier>{45de71b1-f217-4e8d-8602-f46208609ee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\win32\public">
+      <UniqueIdentifier>{544a848a-8b41-4045-8e89-355920a1b238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\glfw">
+      <UniqueIdentifier>{a3bfd5b0-d8b9-416f-84ab-f444e3ba8049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\glfw\private">
+      <UniqueIdentifier>{f8c11af5-8e9c-44f6-b026-6299c963b557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\glfw\public">
+      <UniqueIdentifier>{b5469bed-83e9-4287-b9d1-726c7b5bff4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\public">
+      <UniqueIdentifier>{10f7de08-2f7e-4ed2-96bb-e5da36fb202b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\platforms\private">
+      <UniqueIdentifier>{ae0879fd-f54e-402d-9ade-144582fa8a29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\application">
+      <UniqueIdentifier>{9818c41f-c993-4c4e-acb1-78dad6fe9ee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\application\public">
+      <UniqueIdentifier>{263a2e08-105d-4fc5-8616-20a2081a155f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\application\private">
+      <UniqueIdentifier>{6e46ef89-de93-4935-a844-221db97ed63a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\public">
+      <UniqueIdentifier>{d9d7a36e-4668-435b-9678-ec413571b066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\window\private">
+      <UniqueIdentifier>{c890e3be-2094-4d0a-a5e0-e0f8fa7edba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\buildoptions">
+      <UniqueIdentifier>{9714d77e-2f2b-4755-b4d9-f0ea8912b3b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan">
+      <UniqueIdentifier>{af37e74b-2638-4fe8-aba9-4c908ee373b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\public">
+      <UniqueIdentifier>{5231932d-9a7e-4004-ae85-9d82dd932530}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\private">
+      <UniqueIdentifier>{6d3a2878-240b-4189-8b9d-66b98b39d7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\helper">
+      <UniqueIdentifier>{03f6e428-00b0-4a7c-a4c4-2d085f026732}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\pipelines">
       <UniqueIdentifier>{f4bb233b-6976-4432-b37f-3a5abdadef0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\tutorial\test\utils">
-      <UniqueIdentifier>{f89c64c3-af5a-4d0d-90bf-11c9a9c514c2}</UniqueIdentifier>
+    <Filter Include="src\vulkan\pipelines\public">
+      <UniqueIdentifier>{5c3aca6a-5210-4b1b-b144-4cd382e0479b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\tutorial\test\swapchains">
-      <UniqueIdentifier>{67425335-232f-430a-af78-96830f6a25d2}</UniqueIdentifier>
+    <Filter Include="src\vulkan\pipelines\private">
+      <UniqueIdentifier>{ee9797e1-9e74-4b28-ad27-dd58788dae51}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,218 +97,155 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
-      <Filter>src\window\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>src\graphics\private</Filter>
+      <Filter>src\application\private</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>src\window\private</Filter>
+      <Filter>src\application\private</Filter>
     </ClCompile>
     <ClCompile Include="Shared.cpp">
-      <Filter>src\graphics\helper</Filter>
+      <Filter>src\vulkan\helper</Filter>
     </ClCompile>
     <ClCompile Include="TestScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window_glfw.cpp">
-      <Filter>src\window\glfw\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Window_win32.cpp">
-      <Filter>src\window\win32\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform.cpp">
-      <Filter>src\window\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>src\window\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanGraphicsPipeline.cpp">
-      <Filter>src\graphics\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanRenderPass.cpp">
-      <Filter>src\graphics\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanQueueFamily.cpp">
-      <Filter>src\graphics\private\nf</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanSubPassGroup.cpp">
-      <Filter>src\graphics\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanColorAttachment.cpp">
-      <Filter>src\graphics\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility.cpp">
-      <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanSample.cpp">
       <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="AMDWindow.cpp">
-      <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="FenceGroup.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandPool.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandBufferGroup.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderModule.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsPipeline.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="ComputePipeline.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderSubPass.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderPass.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameBuffer.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="AttachmentDescription.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineColorBlendState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
     </ClCompile>
     <ClCompile Include="VulkanQuad.cpp">
       <Filter>Source Files\tutorial</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineRasterizationState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    <ClCompile Include="Platform.cpp">
+      <Filter>src\window\platforms\private</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineDepthStencilState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineMultisampleState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineViewportState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineInputAssemblyeState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineVertexInputState.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDevice.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanBuffer.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDeviceMemory.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanImageView.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineLayout.cpp">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanMemoryAllocateInfo.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanQueueSubmission.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanCommandBuffer.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanInstance.cpp">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanSwapchain.cpp">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    <ClCompile Include="AMDWindow.cpp">
+      <Filter>src\window\private</Filter>
     </ClCompile>
     <ClCompile Include="AMDWindow_win32.cpp">
-      <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanPresentationSurface.cpp">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanSwapchainImages.cpp">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
+      <Filter>src\window\platforms\win32\private</Filter>
     </ClCompile>
     <ClCompile Include="AMDWindow_glfw.cpp">
-      <Filter>Source Files\tutorial</Filter>
+      <Filter>src\window\platforms\glfw\private</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputePipeline.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsPipeline.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineColorBlendState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineDepthStencilState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineInputAssemblyeState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineLayout.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineMultisampleState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineRasterizationState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineVertexInputState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineViewportState.cpp">
+      <Filter>src\vulkan\pipelines\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanQueueSubmission.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanAttachmentDescription.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanCommandBufferGroup.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanCommandPool.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanFenceGroup.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanFrameBuffer.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderPass.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanRenderSubPass.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanShaderModule.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanBuffer.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanCommandBuffer.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDevice.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDeviceMemory.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImageView.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanInstance.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanMemoryAllocateInfo.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanSwapchain.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanSwapchainImages.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanPresentationSurface.cpp">
+      <Filter>src\vulkan\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>src\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>src\window\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanHelper.h">
-      <Filter>src\util</Filter>
+      <Filter>src\application\public</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>src\window\public</Filter>
+      <Filter>src\application\public</Filter>
     </ClInclude>
     <ClInclude Include="Screen.h">
-      <Filter>src\window\public</Filter>
-    </ClInclude>
-    <ClInclude Include="BUILD_OPTIONS.h">
-      <Filter>src\options</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>src\graphics\public</Filter>
+      <Filter>src\application\public</Filter>
     </ClInclude>
     <ClInclude Include="Shared.h">
-      <Filter>src\graphics\helper</Filter>
+      <Filter>src\vulkan\helper</Filter>
     </ClInclude>
     <ClInclude Include="TestScreen.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardKeycodes_glfw.h">
-      <Filter>src\window\glfw\public</Filter>
+      <Filter>src\window\platforms\glfw\public</Filter>
     </ClInclude>
     <ClInclude Include="KeyboardKeycodes_win32.h">
-      <Filter>src\window\win32\public</Filter>
+      <Filter>src\window\platforms\win32\public</Filter>
     </ClInclude>
     <ClInclude Include="PlatformHeaders_glfw.h">
-      <Filter>src\window\glfw</Filter>
+      <Filter>src\window\platforms\glfw</Filter>
     </ClInclude>
     <ClInclude Include="PlatformHeaders_win32.h">
-      <Filter>src\window\win32</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform.h">
-      <Filter>src\window\public</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>src\window\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanGraphicsPipeline.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanRenderPass.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanQueueFamily.h">
-      <Filter>src\graphics\public\nf</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanColorAttachment.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanSubPassGroup.h">
-      <Filter>src\graphics\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanExampleBase.h">
-      <Filter>src\graphics\public</Filter>
+      <Filter>src\window\platforms\win32</Filter>
     </ClInclude>
     <ClInclude Include="Shaders.h">
-      <Filter>Source Files\tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
       <Filter>Source Files\tutorial</Filter>
     </ClInclude>
     <ClInclude Include="VulkanQuad.h">
@@ -308,98 +254,110 @@
     <ClInclude Include="VulkanSample.h">
       <Filter>Source Files\tutorial</Filter>
     </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>src\window\platforms\public</Filter>
+    </ClInclude>
     <ClInclude Include="AMDWindow.h">
-      <Filter>Source Files\tutorial</Filter>
+      <Filter>src\window\public</Filter>
     </ClInclude>
-    <ClInclude Include="FenceGroup.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandPool.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandBufferGroup.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderModule.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphicsPipeline.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="ComputePipeline.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderSubPass.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPass.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameBuffer.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="AttachmentDescription.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineColorBlendState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineRasterizationState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineDepthStencilState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineMultisampleState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+    <ClInclude Include="BUILD_OPTIONS.h">
+      <Filter>src\buildoptions</Filter>
     </ClInclude>
     <ClInclude Include="PipelineViewportState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineInputAssemblyState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+      <Filter>src\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineVertexInputState.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+      <Filter>src\vulkan\pipelines\public</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.hpp">
-      <Filter>Source Files\tutorial\test\utils</Filter>
+    <ClInclude Include="PipelineRasterizationState.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanDevice.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanBuffer.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanDeviceMemory.h">
-      <Filter>Source Files\tutorial\test</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanImageView.h">
-      <Filter>Source Files\tutorial\test</Filter>
+    <ClInclude Include="PipelineMultisampleState.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineLayout.h">
-      <Filter>Source Files\tutorial\test\pipelines</Filter>
+      <Filter>src\vulkan\pipelines\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanMemoryAllocateInfo.h">
-      <Filter>Source Files\tutorial\test</Filter>
+    <ClInclude Include="PipelineInputAssemblyState.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineDepthStencilState.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineColorBlendState.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsPipeline.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputePipeline.h">
+      <Filter>src\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanQueueSubmission.h">
-      <Filter>Source Files\tutorial\test</Filter>
+      <Filter>src\vulkan\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanCommandBuffer.h">
-      <Filter>Source Files\tutorial\test</Filter>
+    <ClInclude Include="VulkanMemoryAllocateInfo.h">
+      <Filter>src\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanInstance.h">
-      <Filter>Source Files\tutorial\test</Filter>
+      <Filter>src\vulkan\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanSwapChain.h">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    <ClInclude Include="VulkanImageView.h">
+      <Filter>src\vulkan\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanPresentationSurface.h">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
+    <ClInclude Include="VulkanDeviceMemory.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanCommandBuffer.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanBuffer.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanShaderModule.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderSubPass.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanRenderPass.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanFrameBuffer.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanFenceGroup.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanCommandPool.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanCommandBufferGroup.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanAttachmentDescription.h">
+      <Filter>src\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanSwapchainImages.h">
-      <Filter>Source Files\tutorial\test\swapchains</Filter>
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSwapChain.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanPresentationSurface.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanHelper.h">
+      <Filter>src\vulkan\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Source Files\tutorial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

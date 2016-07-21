@@ -2,7 +2,7 @@
 
 #include "PipelineLayout.h"
 
-#include "ShaderModule.h"
+#include "VulkanShaderModule.h"
 
 #include "PipelineVertexInputState.h"
 #include "PipelineInputAssemblyState.h"
@@ -33,7 +33,7 @@ GraphicsPipeline::initialize(VkPipelineLayout layout, VkRenderPass renderPass, V
 	graphicsPipelineCreateInfo.pDepthStencilState = &depthStencilState;
 	graphicsPipelineCreateInfo.pMultisampleState = &multisampleState;
 	graphicsPipelineCreateInfo.pStages = m_shaderStages.data();
-	graphicsPipelineCreateInfo.stageCount = m_shaderStages.size();
+	graphicsPipelineCreateInfo.stageCount = static_cast<uint32_t> (m_shaderStages.size());
 	
 	vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &graphicsPipelineCreateInfo, nullptr, &m_pipeline);
 }

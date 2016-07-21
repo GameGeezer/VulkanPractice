@@ -11,7 +11,7 @@ class VulkanDevice;
 class VulkanPresentationSurface;
 class VulkanSwapchain;
 class VulkanSwapchainImages;
-class RenderPass;
+class VulkanRenderPass;
 
 namespace AMD
 {
@@ -50,7 +50,7 @@ namespace AMD
 		void
 		endRenderPass(VkCommandBuffer commandBuffer);
 
-		RenderPass*
+		VulkanRenderPass*
 		getRenderPass();
 
 		VkSurfaceKHR
@@ -109,7 +109,7 @@ namespace AMD
 		VulkanDevice				*	m_device;
 		VulkanSwapchain				*	m_swapchain;
 		VulkanSwapchainImages		*	m_swapchainImages;
-		RenderPass					*	m_renderPass;
+		VulkanRenderPass					*	m_renderPass;
 
 		uint32_t					m_swapchainImageCount;
 

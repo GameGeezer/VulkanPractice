@@ -60,78 +60,12 @@ Application::start()
 void
 Application::init()
 {
-	m_renderer = new Renderer();
-
-	//m_window = new Window(m_renderer, m_windowWidth, m_windowHeight, m_windowTitle);
-	/*
-	glfwSetErrorCallback(error_callback);
-
-	if (!glfwInit())
-	{
-		exit(EXIT_FAILURE);
-	}
-
-	window = glfwCreateWindow(windowWidth, windowHeight, windowTitle.c_str(), NULL, NULL);
-
-	if (!window)
-	{
-		glfwTerminate();
-
-		exit(EXIT_FAILURE);
-	}
-
-	glfwMakeContextCurrent(window);
-
-	glfwSwapInterval(1);
-
-	glfwSetKeyCallback(window, key_callback);
-
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-
-	glfwSetCursorPosCallback(window, mouse_position_callback);
-
-	glewInit();
-	*/
+	
 }
 
 void
 Application::loop()
 {
 	
-	while (m_window->isAlive())
-	{
-		milliseconds currentFrame = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
-		milliseconds delta = currentFrame - lastFrameTime;
-		lastFrameTime = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
-
-		m_game->update((int32_t) delta.count());
-
-		m_window->update();
-
-		Sleep(60);
-	}
 	
-	
-	/*
-	while (!glfwWindowShouldClose(window))
-	{
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		milliseconds currentFrame = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
-		milliseconds delta = currentFrame - lastFrameTime;
-
-		std::cout << delta.count() << endl;
-		game->update(delta.count());
-
-		glfwSwapBuffers(window);
-
-		glfwPollEvents();
-
-		lastFrameTime = currentFrame;
-	}
-
-	glfwDestroyWindow(window);
-
-	glfwTerminate();
-	*/
 }

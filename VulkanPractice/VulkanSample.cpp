@@ -6,13 +6,12 @@
 #include "Utility.h"
 #include "AMDWindow.h"
 
-#include "FenceGroup.h"
-#include "CommandPool.h"
-#include "CommandBufferGroup.h"
-#include "AttachmentDescription.h"
-#include "RenderPass.h"
-#include "RenderSubPass.h"
-#include "FrameBuffer.h"
+#include "VulkanFenceGroup.h"
+#include "VulkanCommandPool.h"
+#include "VulkanCommandBufferGroup.h"
+#include "VulkanAttachmentDescription.h"
+#include "VulkanRenderPass.h"
+#include "VulkanRenderSubPass.h"
 #include "VulkanImageView.h"
 #include "VulkanCommandBuffer.h"
 
@@ -74,21 +73,21 @@ namespace AMD
 		}
 
 		///////////////////////////////////////////////////////////////////////////////
-		RenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
+		VulkanRenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 		{
-			AttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
+			VulkanAttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
 
 			VkAttachmentReference attachmentReference = {};
 			attachmentReference.attachment = 0;
 			attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-			RenderSubPass subpass;
+			VulkanRenderSubPass subpass;
 			subpass.addColorAttachment(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 			subpass.initialize();
 
-			RenderPass *renderPass = new RenderPass(device);
+			VulkanRenderPass *renderPass = new VulkanRenderPass(device);
 			renderPass->addSubPass(subpass);
-			renderPass->addAttachmentDescription(attachmentDescription);
+			renderPass->addAttachmentDescription(*(attachmentDescription.getDescription()));
 			renderPass->initialize();
 
 			return renderPass;
@@ -126,19 +125,12 @@ namespace AMD
 
 		window_.reset(new Window{ m_instance->getHandle(), *m_device,"Hello Vulkan", 640, 480, QUEUE_SLOT_COUNT });
 
-		surface_ = window_->getSurface();
-
-		VkBool32 presentSupported;
-		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, 0, surface_, &presentSupported);
-		assert(presentSupported);
-
-
 		commandPool = new CommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
-		commandBufferGroup = new CommandBufferGroup(m_device->getDevice(), *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+		commandBufferGroup = new VulkanCommandBufferGroup(m_device->getDevice(), commandPool->getHandle(), QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
 		m_setupCommandBuffer = commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
 
-		frameFences = new FenceGroup(m_device->getDevice(), QUEUE_SLOT_COUNT);
+		frameFences = new VulkanFenceGroup(m_device->getDevice(), QUEUE_SLOT_COUNT);
 
 		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
 		{
@@ -161,7 +153,7 @@ namespace AMD
 
 		delete commandPool;
 
-		// delete window
+		delete window_.get();
 
 		delete m_device;
 		
@@ -250,7 +242,7 @@ namespace AMD
 		};
 
 		// Wait for all rendering to finish
-		vkWaitForFences(m_device->getDevice(), 3, frameFences->getPointerToFenceAtIndex(0), VK_TRUE, UINT64_MAX);
+		vkWaitForFences(m_device->getDevice(), 2, frameFences->getPointerToFenceAtIndex(0), VK_TRUE, UINT64_MAX);
 
 		vkDestroySemaphore(m_device->getDevice(), imageAcquiredSemaphore, nullptr);
 		vkDestroySemaphore(m_device->getDevice(), renderingCompleteSemaphore, nullptr);

@@ -5,7 +5,7 @@
 #include <vector>
 
 class PipelineLayout;
-class ShaderModule;
+class VulkanShaderModule;
 
 class GraphicsPipeline
 {

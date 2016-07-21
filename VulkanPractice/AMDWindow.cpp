@@ -7,9 +7,9 @@
 #include "VulkanSwapChain.h"
 #include "VulkanSwapchainImages.h"
 
-#include "RenderPass.h"
-#include "RenderSubPass.h"
-#include"AttachmentDescription.h"
+#include "VulkanRenderPass.h"
+#include "VulkanRenderSubPass.h"
+#include "VulkanAttachmentDescription.h"
 
 namespace AMD
 {
@@ -19,21 +19,21 @@ namespace AMD
 		
 	}
 
-	RenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
+	VulkanRenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 	{
-		AttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
+		VulkanAttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
 
 		VkAttachmentReference attachmentReference = {};
 		attachmentReference.attachment = 0;
 		attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-		RenderSubPass subpass;
+		VulkanRenderSubPass subpass;
 		subpass.addColorAttachment(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 		subpass.initialize();
 
-		RenderPass *renderPass = new RenderPass(device);
+		VulkanRenderPass *renderPass = new VulkanRenderPass(device);
 		renderPass->addSubPass(subpass);
-		renderPass->addAttachmentDescription(attachmentDescription);
+		renderPass->addAttachmentDescription(*(attachmentDescription.getDescription()));
 		renderPass->initialize();
 
 		return renderPass;
@@ -119,7 +119,7 @@ namespace AMD
 	}
 
 
-	RenderPass*
+	VulkanRenderPass*
 	Window::getRenderPass()
 	{
 		return m_renderPass;

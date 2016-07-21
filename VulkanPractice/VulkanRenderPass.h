@@ -2,20 +2,38 @@
 
 #include <vulkan\vulkan.h>
 
-#include <stdint.h>
-
 #include <vector>
 
-#include "VulkanSubPassGroup.h"
+class VulkanRenderSubPass;
 
 class VulkanRenderPass
 {
 public:
-	VulkanRenderPass(VkDevice device, VulkanSubPassGroup subPasses, std::vector<VkAttachmentDescription> attachments);
+	VulkanRenderPass(VkDevice device);
 
 	~VulkanRenderPass();
 
-private:
+	void
+	begin(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, uint32_t width, uint32_t height, VkClearValue &clearValue, uint32_t clearCount);
 
-	VkRenderPass m_renderPass;
+	void
+	end(VkCommandBuffer commandBuffer);
+
+	void
+	initialize();
+
+	void
+	addSubPass(VulkanRenderSubPass& subPass);
+
+	void
+	addAttachmentDescription(VkAttachmentDescription attachment);
+
+	VkRenderPass
+	getHandle();
+
+private:
+	VkDevice								m_device;
+	VkRenderPass							m_renderPass;
+	std::vector<VkSubpassDescription>		m_subpasses;
+	std::vector<VkAttachmentDescription>	m_attachmentDescriptions;
 };

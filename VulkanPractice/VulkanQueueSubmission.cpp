@@ -14,11 +14,11 @@ void
 VulkanQueueSubmission::inititialize(VkPipelineStageFlags waitDstStageMask)
 {
 	m_submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	m_submitInfo.commandBufferCount = m_buffersToSubmit.size();
+	m_submitInfo.commandBufferCount = static_cast<uint32_t>(m_buffersToSubmit.size());
 	m_submitInfo.pCommandBuffers = m_buffersToSubmit.data();
-	m_submitInfo.signalSemaphoreCount = m_signalSemaphoresToSubmit.size();
+	m_submitInfo.signalSemaphoreCount = static_cast<uint32_t>(m_signalSemaphoresToSubmit.size());
 	m_submitInfo.pSignalSemaphores = m_signalSemaphoresToSubmit.data();
-	m_submitInfo.waitSemaphoreCount = m_waitSemaphoresToSubmit.size();
+	m_submitInfo.waitSemaphoreCount = static_cast<uint32_t>(m_waitSemaphoresToSubmit.size());
 	m_submitInfo.pWaitSemaphores = m_waitSemaphoresToSubmit.data();
 	m_submitInfo.pWaitDstStageMask = &waitDstStageMask;
 }

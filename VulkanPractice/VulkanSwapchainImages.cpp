@@ -2,7 +2,7 @@
 
 #include "VulkanDevice.h"
 #include "VulkanImageView.h"
-#include "FrameBuffer.h"
+#include "VulkanFrameBuffer.h"
 #include "VulkanSwapChain.h"
 #include "VulkanPresentationSurface.h"
 
@@ -20,9 +20,9 @@ VulkanSwapchainImages::VulkanSwapchainImages(VulkanDevice &device, VulkanSwapcha
 		m_imageViewWrappers.push_back(imageView);
 
 		// create framebuffers
-		FrameBuffer *frameBuffer = new FrameBuffer(m_device->getDevice(), renderPass, m_imageViews.at(i), surface.getWidth(), surface.getHeight());
+		VulkanFrameBuffer *frameBuffer = new VulkanFrameBuffer(m_device->getDevice(), renderPass, m_imageViews.at(i), surface.getWidth(), surface.getHeight());
 		m_frameBuffers.push_back(frameBuffer->getHandle());
-		m_frameBufferWrapperss.push_back(frameBuffer);
+		m_frameBufferWrappers.push_back(frameBuffer);
 	}
 }
 
@@ -30,12 +30,12 @@ VulkanSwapchainImages::~VulkanSwapchainImages()
 {
 	for (int i = 0; i < m_imageViews.size(); ++i)
 	{
-		delete m_imageViews.at(i);
+		delete m_imageViewWrappers.at(i);
 	}
 
 	for (int i = 0; i < m_frameBuffers.size(); ++i)
 	{
-		delete m_frameBuffers.at(i);
+		delete m_frameBufferWrappers.at(i);
 	}
 }
 

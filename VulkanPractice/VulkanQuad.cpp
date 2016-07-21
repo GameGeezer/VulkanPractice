@@ -3,7 +3,7 @@
 #include "Shaders.h"
 #include "Utility.h"
 #include "AMDWindow.h"
-#include "ShaderModule.h"
+#include "VulkanShaderModule.h"
 #include "PipelineLayout.h"
 #include "PipelineColorBlendState.h"
 #include "PipelineRasterizationState.h"
@@ -22,7 +22,7 @@
 
 #include <vector>
 
-#include "RenderPass.h"
+#include "VulkanRenderPass.h"
 
 namespace AMD
 {
@@ -160,18 +160,18 @@ namespace AMD
 		VulkanDeviceMemory deviceMemory(m_device->getDevice(), deviceMemory_);
 		deviceMemory.map(0, VK_WHOLE_SIZE);
 		deviceMemory.copyInto(vertices, 0, sizeof(vertices));
-		deviceMemory.copyInto(indices, indexBufferOffset, sizeof(indices));
+		deviceMemory.copyInto(indices, static_cast<uint32_t>(indexBufferOffset), sizeof(indices));
 		deviceMemory.unmap();
 
 		vertexBuffer->bindToMemory(deviceMemory_, 0);
-		indexBuffer->bindToMemory(deviceMemory_, indexBufferOffset);
+		indexBuffer->bindToMemory(deviceMemory_, static_cast<uint32_t>(indexBufferOffset));
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
 	void VulkanQuad::CreatePipelineStateObject()
 	{
-		vertexShader_ = new ShaderModule(m_device->getDevice(), BasicVertexShader, sizeof(BasicVertexShader));
-		fragmentShader_ = new ShaderModule(m_device->getDevice(), BasicFragmentShader, sizeof(BasicFragmentShader));
+		vertexShader_ = new VulkanShaderModule(m_device->getDevice(), BasicVertexShader, sizeof(BasicVertexShader));
+		fragmentShader_ = new VulkanShaderModule(m_device->getDevice(), BasicFragmentShader, sizeof(BasicFragmentShader));
 
 		pipelineLayout_ = new PipelineLayout(m_device->getDevice());
 		graphicsPipeline = CreatePipeline(m_device->getDevice(), window_->getRenderPass()->getHandle(), pipelineLayout_->getHandle(),

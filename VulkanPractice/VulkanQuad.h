@@ -3,7 +3,7 @@
 
 #include "VulkanSample.h"
 
-class ShaderModule;
+class VulkanShaderModule;
 class PipelineLayout;
 class GraphicsPipeline;
 class VulkanBuffer;
@@ -26,8 +26,8 @@ namespace AMD
 		VulkanBuffer *vertexBuffer;
 		VulkanBuffer *indexBuffer;
 
-		ShaderModule *vertexShader_;
-		ShaderModule *fragmentShader_;
+		VulkanShaderModule *vertexShader_;
+		VulkanShaderModule *fragmentShader_;
 
 		GraphicsPipeline *graphicsPipeline;
 		VkPipeline pipeline_ = VK_NULL_HANDLE;

@@ -9,11 +9,11 @@
 #include "VulkanDevice.h"
 #include "VulkanInstance.h"
 
-class FenceGroup;
+class VulkanFenceGroup;
 class CommandPool;
-class CommandBufferGroup;
-class RenderPass;
-class FrameBuffer;
+class VulkanCommandBufferGroup;
+class VulkanRenderPass;
+class VulkanFrameBuffer;
 class VulkanImageView;
 class VulkanCommandBuffer;
 class VulkanInstance;
@@ -52,12 +52,10 @@ namespace AMD
 
 		VulkanInstance *m_instance;
 
-		VkSurfaceKHR surface_ = VK_NULL_HANDLE;
-
 		//VkFence frameFences_[QUEUE_SLOT_COUNT];
 		CommandPool *commandPool;
-		CommandBufferGroup *commandBufferGroup;
-		FenceGroup *frameFences;
+		VulkanCommandBufferGroup *commandBufferGroup;
+		VulkanFenceGroup *frameFences;
 
 		std::unique_ptr<Window> window_;
 
@@ -68,10 +66,6 @@ namespace AMD
 	private:
 		VulkanCommandBuffer *m_setupCommandBuffer;
 		uint32_t currentBackBuffer_ = 0;
-
-#ifdef _DEBUG
-		VkDebugReportCallbackEXT debugCallback_;
-#endif
 	};
 
 }   // namespace AMD
