@@ -14,6 +14,9 @@ public:
 	VkSurfaceKHR
 	getHandle();
 
+	VkSurfaceKHR*
+	getHandlePtr();
+
 	VkSurfaceFormatKHR*
 	getFormat();
 

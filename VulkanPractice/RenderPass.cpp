@@ -5,12 +5,12 @@
 
 RenderPass::RenderPass(VkDevice device) : m_device(device)
 {
-
+	
 }
 
 RenderPass::~RenderPass()
 {
-
+	vkDestroyRenderPass(m_device, m_renderPass, nullptr);
 }
 
 void

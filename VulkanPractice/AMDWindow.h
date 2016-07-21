@@ -68,13 +68,18 @@ namespace AMD
 		VkFormat
 		getSurfaceFormat();
 
+		bool
+		isAlive();
+
+		void
+		requestClose();
+
 	private:
 		bool IsClosedImpl() const override
 		{
 			return isClosed_;
 		}
 
-		// OS independent methods
 
 		// OS depentent methods
 
@@ -91,6 +96,8 @@ namespace AMD
 		initOSSurface();
 
 		// OS independent variables
+
+		bool			m_isAlive = true;
 
 		uint32_t		m_width;
 		uint32_t		m_height;

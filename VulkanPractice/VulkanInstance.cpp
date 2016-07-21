@@ -9,7 +9,7 @@ VulkanInstance::VulkanInstance()
 
 VulkanInstance::~VulkanInstance()
 {
-
+	vkDestroyInstance(m_instance, nullptr);
 }
 
 bool

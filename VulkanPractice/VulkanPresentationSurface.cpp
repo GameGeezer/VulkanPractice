@@ -50,6 +50,12 @@ VulkanPresentationSurface::getHandle()
 	return m_surface;
 }
 
+VkSurfaceKHR*
+VulkanPresentationSurface::getHandlePtr()
+{
+	return &m_surface;
+}
+
 VkSurfaceFormatKHR*
 VulkanPresentationSurface::getFormat()
 {

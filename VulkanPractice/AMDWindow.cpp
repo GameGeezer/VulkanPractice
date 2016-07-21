@@ -42,18 +42,19 @@ namespace AMD
 	///////////////////////////////////////////////////////////////////////////////
 	Window::Window(VkInstance instance, VulkanDevice& device, char *title, const uint32_t width, const uint32_t height, uint32_t swapchainImageCount): m_vulkanInstance(instance), m_device(&device), m_title(title), m_width(width), m_height(height), m_swapchainImageCount(swapchainImageCount)
 	{
+		InitPlatform();
 		initOsWindow();
 		m_surface = new VulkanPresentationSurface(*m_device, m_vulkanInstance, initOSSurface());
 		m_swapchain = new VulkanSwapchain(*m_device, *m_surface, m_swapchainImageCount);
 		m_renderPass = CreateRenderPass(m_device->getDevice(), m_surface->getFormat()->format);
 
 		m_swapchainImages = new VulkanSwapchainImages(*m_device, *m_swapchain, *m_surface, m_renderPass->getHandle());
-	//	initSwapchainImages();
 	}
 
 	Window::~Window()
 	{
-	//	deInitSwapchainImages();
+		delete m_renderPass;
+		delete m_swapchainImages;
 		delete m_swapchain;
 		delete m_surface;
 		deInitOSWindow();
@@ -122,6 +123,18 @@ namespace AMD
 	Window::getRenderPass()
 	{
 		return m_renderPass;
+	}
+
+	bool
+	Window::isAlive()
+	{
+		return m_isAlive;
+	}
+
+	void 
+	Window::requestClose()
+	{
+		m_isAlive = false;
 	}
 
 }   // namespace AMD

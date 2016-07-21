@@ -159,26 +159,13 @@ namespace AMD
 			frameFences->destroyFenceAtIndex(i);
 		}
 
-	//	vkDestroyRenderPass(m_device->getDevice(), renderPass->getHandle(), nullptr);
-
-	//	for (int i = 0; i < imageViews.size(); ++i)
-		{
-		//	delete imageViews[i];
-		}
-
-	//	for (int i = 0; i < frameBuffers.size(); ++i)
-		{
-		//	delete frameBuffers[i];
-		}
-
 		delete commandPool;
 
-		//vkDestroySwapchainKHR(m_device->getDevice(), swapchain_, nullptr);
-		vkDestroySurfaceKHR(m_instance->getHandle(), surface_, nullptr);
+		// delete window
 
-
-		vkDestroyDevice(m_device->getDevice(), nullptr);
-		vkDestroyInstance(m_instance->getHandle(), nullptr);
+		delete m_device;
+		
+		delete m_instance;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -232,15 +219,7 @@ namespace AMD
 			commandBuffer->begin();
 			VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
 
-			VkClearValue clearValue = {};
-
-			clearValue.color.float32[0] = 0.042f;
-			clearValue.color.float32[1] = 0.042f;
-			clearValue.color.float32[2] = 0.042f;
-			clearValue.color.float32[3] = 1.0f;
-
 			window_->beginRenderPass(rawCommandBuffer, currentBackBuffer_);
-			//renderPass->begin(rawCommandBuffer, framebuffer_[currentBackBuffer_], window_->getWidth(), window_->getHeight(), clearValue, 1);
 
 			RenderImpl(rawCommandBuffer);
 

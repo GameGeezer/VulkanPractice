@@ -1,5 +1,8 @@
-#include "AMDWindow.h"
+#include "Platform.h"
 
+#if VK_USE_PLATFORM_WIN32_KHR
+
+#include "AMDWindow.h"
 
 namespace AMD
 {
@@ -11,7 +14,7 @@ namespace AMD
 		switch (uMsg)
 		{
 		case WM_CLOSE:
-		//	window->requestClose();
+			window->requestClose();
 			return 0;
 
 		case WM_KEYDOWN:
@@ -128,3 +131,5 @@ namespace AMD
 		return surface;
 	}
 }
+
+#endif

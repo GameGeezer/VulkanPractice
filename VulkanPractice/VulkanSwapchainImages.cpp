@@ -28,7 +28,15 @@ VulkanSwapchainImages::VulkanSwapchainImages(VulkanDevice &device, VulkanSwapcha
 
 VulkanSwapchainImages::~VulkanSwapchainImages()
 {
+	for (int i = 0; i < m_imageViews.size(); ++i)
+	{
+		delete m_imageViews.at(i);
+	}
 
+	for (int i = 0; i < m_frameBuffers.size(); ++i)
+	{
+		delete m_frameBuffers.at(i);
+	}
 }
 
 VkFramebuffer

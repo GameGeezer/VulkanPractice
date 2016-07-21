@@ -7,7 +7,7 @@ VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex)
 
 VulkanDevice::~VulkanDevice()
 {
-
+	vkDestroyDevice(m_device, nullptr);
 }
 
 void
