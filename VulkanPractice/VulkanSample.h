@@ -58,13 +58,6 @@ namespace AMD
 		CommandPool *commandPool;
 		CommandBufferGroup *commandBufferGroup;
 		FenceGroup *frameFences;
-		RenderPass *renderPass;
-		VkImage swapchainImages_[QUEUE_SLOT_COUNT];
-		VkImageView swapChainImageViews_[QUEUE_SLOT_COUNT];
-		VkFramebuffer framebuffer_[QUEUE_SLOT_COUNT];
-
-		std::vector<VulkanImageView*> imageViews;
-		std::vector<FrameBuffer*> frameBuffers;
 
 		std::unique_ptr<Window> window_;
 

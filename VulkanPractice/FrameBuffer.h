@@ -2,12 +2,10 @@
 
 #include <vulkan\vulkan.h>
 
-class RenderPass;
-
 class FrameBuffer
 {
 public:
-	FrameBuffer(VkDevice device, RenderPass &renderPass, VkImageView &imageView, uint32_t width, uint32_t height);
+	FrameBuffer(VkDevice device, VkRenderPass renderPass, VkImageView &imageView, uint32_t width, uint32_t height);
 
 	~FrameBuffer();
 

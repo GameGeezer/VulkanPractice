@@ -61,3 +61,15 @@ VulkanPresentationSurface::getCapabilities()
 {
 	return &m_capabilities;
 }
+
+uint32_t
+VulkanPresentationSurface::getWidth()
+{
+	return m_width;
+}
+
+uint32_t
+VulkanPresentationSurface::getHeight()
+{
+	return m_height;
+}

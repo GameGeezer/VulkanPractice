@@ -20,6 +20,12 @@ public:
 	VkSurfaceCapabilitiesKHR*
 	getCapabilities();
 
+	uint32_t
+	getWidth();
+
+	uint32_t
+	getHeight();
+
 private:
 	VulkanDevice			*	m_device;
 	VkInstance					m_instance;

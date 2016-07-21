@@ -174,7 +174,7 @@ namespace AMD
 		fragmentShader_ = new ShaderModule(m_device->getDevice(), BasicFragmentShader, sizeof(BasicFragmentShader));
 
 		pipelineLayout_ = new PipelineLayout(m_device->getDevice());
-		graphicsPipeline = CreatePipeline(m_device->getDevice(), renderPass->getHandle(), pipelineLayout_->getHandle(),
+		graphicsPipeline = CreatePipeline(m_device->getDevice(), window_->getRenderPass()->getHandle(), pipelineLayout_->getHandle(),
 			vertexShader_->getHandle(), fragmentShader_->getHandle(),
 			VkExtent2D{ static_cast<uint32_t> (640), static_cast<uint32_t> (480) }
 		);

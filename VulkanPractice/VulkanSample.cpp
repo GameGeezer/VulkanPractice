@@ -36,94 +36,6 @@ namespace AMD
 	namespace
 	{
 		///////////////////////////////////////////////////////////////////////////////
-		VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(
-			VkDebugReportFlagsEXT       /*flags*/,
-			VkDebugReportObjectTypeEXT  /*objectType*/,
-			uint64_t                    /*object*/,
-			size_t                      /*location*/,
-			int32_t                     /*messageCode*/,
-			const char*                 /*pLayerPrefix*/,
-			const char*                 pMessage,
-			void*                       /*pUserData*/)
-		{
-			OutputDebugStringA(pMessage);
-			OutputDebugStringA("\n");
-			return VK_FALSE;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		std::vector<const char*> GetDebugInstanceLayerNames()
-		{
-			uint32_t layerCount = 0;
-
-			vkEnumerateInstanceLayerProperties(&layerCount,
-				nullptr);
-
-			std::vector<VkLayerProperties> instanceLayers{ layerCount };
-
-			vkEnumerateInstanceLayerProperties(&layerCount,
-				instanceLayers.data());
-
-
-			std::vector<const char*> result;
-			for (const auto& p : instanceLayers)
-			{
-				if (strcmp(p.layerName, "VK_LAYER_LUNARG_standard_validation") == 0)
-				{
-					result.push_back("VK_LAYER_LUNARG_standard_validation");
-				}
-			}
-
-			return result;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		std::vector<const char*> GetDebugInstanceExtensionNames()
-		{
-			uint32_t extensionCount = 0;
-
-			vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount,
-				nullptr);
-
-			std::vector<VkExtensionProperties> instanceExtensions{ extensionCount };
-
-			vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount,
-				instanceExtensions.data());
-
-			std::vector<const char*> result;
-			for (const auto& e : instanceExtensions)
-			{
-				if (strcmp(e.extensionName, "VK_EXT_debug_report") == 0)
-				{
-					result.push_back("VK_EXT_debug_report");
-				}
-			}
-
-			return result;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		std::vector<const char*> GetDebugDeviceLayerNames(VkPhysicalDevice device)
-		{
-			uint32_t layerCount = 0;
-			vkEnumerateDeviceLayerProperties(device, &layerCount, nullptr);
-
-			std::vector<VkLayerProperties> deviceLayers{ layerCount };
-			vkEnumerateDeviceLayerProperties(device, &layerCount, deviceLayers.data());
-
-			std::vector<const char*> result;
-			for (const auto& p : deviceLayers)
-			{
-				if (strcmp(p.layerName, "VK_LAYER_LUNARG_standard_validation") == 0)
-				{
-					result.push_back("VK_LAYER_LUNARG_standard_validation");
-				}
-			}
-
-			return result;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
 		void FindPhysicalDeviceWithGraphicsQueue(const std::vector<VkPhysicalDevice>& physicalDevices,
 			VkPhysicalDevice* outputDevice, int* outputGraphicsQueueIndex)
 		{
@@ -161,37 +73,6 @@ namespace AMD
 			}
 		}
 
-		struct SwapchainFormatColorSpace
-		{
-			VkFormat format;
-			VkColorSpaceKHR colorSpace;
-		};
-
-		///////////////////////////////////////////////////////////////////////////////
-		SwapchainFormatColorSpace GetSwapchainFormatAndColorspace(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface)
-		{
-			uint32_t surfaceFormatCount = 0;
-			vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &surfaceFormatCount, nullptr);
-
-			std::vector<VkSurfaceFormatKHR> surfaceFormats{ surfaceFormatCount };
-			vkGetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, &surfaceFormatCount, surfaceFormats.data());
-
-			SwapchainFormatColorSpace result;
-
-			if (surfaceFormatCount == 1 && surfaceFormats.front().format == VK_FORMAT_UNDEFINED)
-			{
-				result.format = VK_FORMAT_R8G8B8A8_UNORM;
-			}
-			else
-			{
-				result.format = surfaceFormats.front().format;
-			}
-
-			result.colorSpace = surfaceFormats.front().colorSpace;
-
-			return result;
-		}
-
 		///////////////////////////////////////////////////////////////////////////////
 		RenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 		{
@@ -211,116 +92,6 @@ namespace AMD
 			renderPass->initialize();
 
 			return renderPass;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		void CreateSwapchainImageViews(VkDevice device, VkFormat format,
-			const int count, const VkImage* images, VkImageView* imageViews)
-		{
-			for (int i = 0; i < count; ++i)
-			{
-				VkImageViewCreateInfo imageViewCreateInfo = {};
-				imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-				imageViewCreateInfo.image = images[i];
-				imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-				imageViewCreateInfo.format = format;
-				imageViewCreateInfo.subresourceRange.levelCount = 1;
-				imageViewCreateInfo.subresourceRange.layerCount = 1;
-				imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-
-				vkCreateImageView(device, &imageViewCreateInfo, nullptr,
-					&imageViews[i]);
-			}
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		VkSwapchainKHR CreateSwapchain(VkPhysicalDevice physicalDevice, VkDevice device,
-			VkSurfaceKHR surface, const int surfaceWidth, const int surfaceHeight,
-			const int backbufferCount,
-			VkFormat* swapchainFormat)
-		{
-			VkSurfaceCapabilitiesKHR surfaceCapabilities;
-			vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice,
-				surface, &surfaceCapabilities);
-
-			uint32_t presentModeCount;
-			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
-				surface, &presentModeCount, nullptr);
-
-			std::vector<VkPresentModeKHR> presentModes{ presentModeCount };
-
-			vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice,
-				surface, &presentModeCount, presentModes.data());
-
-			VkExtent2D swapChainSize = {};
-			swapChainSize = surfaceCapabilities.currentExtent;
-			assert(static_cast<int> (swapChainSize.width) == surfaceWidth);
-			assert(static_cast<int> (swapChainSize.height) == surfaceHeight);
-
-			uint32_t swapChainImageCount = backbufferCount;
-			assert(swapChainImageCount >= surfaceCapabilities.minImageCount);
-
-			// 0 indicates unlimited number of images
-			if (surfaceCapabilities.maxImageCount != 0)
-			{
-				assert(swapChainImageCount < surfaceCapabilities.maxImageCount);
-			}
-
-			VkSurfaceTransformFlagBitsKHR surfaceTransformFlags;
-
-			if (surfaceCapabilities.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-			{
-				surfaceTransformFlags = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-			}
-			else
-			{
-				surfaceTransformFlags = surfaceCapabilities.currentTransform;
-			}
-
-			auto swapchainFormatColorSpace = GetSwapchainFormatAndColorspace(physicalDevice, surface);
-
-			VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
-			swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-			swapchainCreateInfo.surface = surface;
-			swapchainCreateInfo.minImageCount = swapChainImageCount;
-			swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-			swapchainCreateInfo.preTransform = surfaceTransformFlags;
-			swapchainCreateInfo.imageColorSpace = swapchainFormatColorSpace.colorSpace;
-			swapchainCreateInfo.imageFormat = swapchainFormatColorSpace.format;
-			swapchainCreateInfo.pQueueFamilyIndices = nullptr;
-			swapchainCreateInfo.queueFamilyIndexCount = 0;
-			swapchainCreateInfo.clipped = VK_TRUE;
-			swapchainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
-			swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-			swapchainCreateInfo.imageExtent = swapChainSize;
-			swapchainCreateInfo.imageArrayLayers = 1;
-			swapchainCreateInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
-
-			VkSwapchainKHR swapchain;
-			vkCreateSwapchainKHR(device, &swapchainCreateInfo,
-				nullptr, &swapchain);
-
-			if (swapchainFormat)
-			{
-				*swapchainFormat = swapchainFormatColorSpace.format;
-			}
-
-			return swapchain;
-		}
-
-		///////////////////////////////////////////////////////////////////////////////
-		VkSurfaceKHR CreateSurface(VkInstance instance, HWND hwnd)
-		{
-			VkWin32SurfaceCreateInfoKHR win32surfaceCreateInfo = {};
-			win32surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-			win32surfaceCreateInfo.hwnd = hwnd;
-			win32surfaceCreateInfo.hinstance = ::GetModuleHandle(nullptr);
-
-			VkSurfaceKHR surface = nullptr;
-			vkCreateWin32SurfaceKHR(instance, &win32surfaceCreateInfo, nullptr,
-				&surface);
-
-			return surface;
 		}
 
 	}   // namespace
@@ -361,27 +132,6 @@ namespace AMD
 		vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, 0, surface_, &presentSupported);
 		assert(presentSupported);
 
-		uint32_t swapchainImageCount = 0;
-		vkGetSwapchainImagesKHR(m_device->getDevice(), window_->getSwapchain(), &swapchainImageCount, nullptr);
-		//assert(static_cast<int> (swapchainImageCount) == QUEUE_SLOT_COUNT);
-
-		vkGetSwapchainImagesKHR(m_device->getDevice(), window_->getSwapchain(), &swapchainImageCount, swapchainImages_);
-
-		renderPass = CreateRenderPass(m_device->getDevice(), window_->getSurfaceFormat());
-
-		for (int i = 0; i < QUEUE_SLOT_COUNT; ++i)
-		{
-			// create imageViews
-			VulkanImageView *imageView = new VulkanImageView(m_device->getDevice(), swapchainImages_[i], window_->getSurfaceFormat());
-			swapChainImageViews_[i] = imageView->getHandle();
-			imageViews.push_back(imageView);
-
-			// create framebuffers
-			FrameBuffer *frameBuffer = new FrameBuffer(m_device->getDevice(), *renderPass, swapChainImageViews_[i], window_->getWidth(), window_->getHeight());
-			framebuffer_[i] = frameBuffer->getHandle();
-			frameBuffers.push_back(frameBuffer);
-		}
-
 
 		commandPool = new CommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
 		commandBufferGroup = new CommandBufferGroup(m_device->getDevice(), *commandPool, QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
@@ -409,16 +159,16 @@ namespace AMD
 			frameFences->destroyFenceAtIndex(i);
 		}
 
-		vkDestroyRenderPass(m_device->getDevice(), renderPass->getHandle(), nullptr);
+	//	vkDestroyRenderPass(m_device->getDevice(), renderPass->getHandle(), nullptr);
 
-		for (int i = 0; i < imageViews.size(); ++i)
+	//	for (int i = 0; i < imageViews.size(); ++i)
 		{
-			delete imageViews[i];
+		//	delete imageViews[i];
 		}
 
-		for (int i = 0; i < frameBuffers.size(); ++i)
+	//	for (int i = 0; i < frameBuffers.size(); ++i)
 		{
-			delete frameBuffers[i];
+		//	delete frameBuffers[i];
 		}
 
 		delete commandPool;
@@ -489,11 +239,12 @@ namespace AMD
 			clearValue.color.float32[2] = 0.042f;
 			clearValue.color.float32[3] = 1.0f;
 
-			renderPass->begin(rawCommandBuffer, framebuffer_[currentBackBuffer_], window_->getWidth(), window_->getHeight(), clearValue, 1);
+			window_->beginRenderPass(rawCommandBuffer, currentBackBuffer_);
+			//renderPass->begin(rawCommandBuffer, framebuffer_[currentBackBuffer_], window_->getWidth(), window_->getHeight(), clearValue, 1);
 
 			RenderImpl(rawCommandBuffer);
 
-			renderPass->end(rawCommandBuffer);
+			window_->endRenderPass(rawCommandBuffer);
 			commandBuffer->end();
 
 			VulkanQueueSubmission submission;

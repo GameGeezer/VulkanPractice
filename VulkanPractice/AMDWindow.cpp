@@ -5,6 +5,11 @@
 #include "VulkanDevice.h"
 #include "VulkanPresentationSurface.h"
 #include "VulkanSwapChain.h"
+#include "VulkanSwapchainImages.h"
+
+#include "RenderPass.h"
+#include "RenderSubPass.h"
+#include"AttachmentDescription.h"
 
 namespace AMD
 {
@@ -14,18 +19,41 @@ namespace AMD
 		
 	}
 
+	RenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
+	{
+		AttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
+
+		VkAttachmentReference attachmentReference = {};
+		attachmentReference.attachment = 0;
+		attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+		RenderSubPass subpass;
+		subpass.addColorAttachment(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+		subpass.initialize();
+
+		RenderPass *renderPass = new RenderPass(device);
+		renderPass->addSubPass(subpass);
+		renderPass->addAttachmentDescription(attachmentDescription);
+		renderPass->initialize();
+
+		return renderPass;
+	}
+
 	///////////////////////////////////////////////////////////////////////////////
 	Window::Window(VkInstance instance, VulkanDevice& device, char *title, const uint32_t width, const uint32_t height, uint32_t swapchainImageCount): m_vulkanInstance(instance), m_device(&device), m_title(title), m_width(width), m_height(height), m_swapchainImageCount(swapchainImageCount)
 	{
 		initOsWindow();
 		m_surface = new VulkanPresentationSurface(*m_device, m_vulkanInstance, initOSSurface());
 		m_swapchain = new VulkanSwapchain(*m_device, *m_surface, m_swapchainImageCount);
+		m_renderPass = CreateRenderPass(m_device->getDevice(), m_surface->getFormat()->format);
+
+		m_swapchainImages = new VulkanSwapchainImages(*m_device, *m_swapchain, *m_surface, m_renderPass->getHandle());
 	//	initSwapchainImages();
 	}
 
 	Window::~Window()
 	{
-		deInitSwapchainImages();
+	//	deInitSwapchainImages();
 		delete m_swapchain;
 		delete m_surface;
 		deInitOSWindow();
@@ -37,40 +65,24 @@ namespace AMD
 		return IsClosedImpl();
 	}
 
-	void Window::initSwapchainImages()
+	void
+	Window::beginRenderPass(VkCommandBuffer commandBuffer, uint32_t index)
 	{
-		m_swapchainImages.resize(m_swapchainImageCount);
-		m_swapchainImageViews.resize(m_swapchainImageCount);
+		VkClearValue clearValue = {};
 
-		ErrorCheck(vkGetSwapchainImagesKHR(m_device->getDevice(), m_swapchain->getHandle(), &m_swapchainImageCount, m_swapchainImages.data()));
+		clearValue.color.float32[0] = 0.042f;
+		clearValue.color.float32[1] = 0.042f;
+		clearValue.color.float32[2] = 0.042f;
+		clearValue.color.float32[3] = 1.0f;
 
-		for (uint32_t i = 0; i < m_swapchainImageCount; ++i) {
-			VkImageViewCreateInfo image_view_create_info{};
-			image_view_create_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			image_view_create_info.image = m_swapchainImages[i];
-			image_view_create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			image_view_create_info.format = m_surface->getFormat()->format;
-			image_view_create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-			image_view_create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-			image_view_create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-			image_view_create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-			image_view_create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			image_view_create_info.subresourceRange.baseMipLevel = 0;
-			image_view_create_info.subresourceRange.levelCount = 1;
-			image_view_create_info.subresourceRange.baseArrayLayer = 0;
-			image_view_create_info.subresourceRange.layerCount = 1;
-
-			ErrorCheck(vkCreateImageView(m_device->getDevice(), &image_view_create_info, nullptr, &m_swapchainImageViews[i]));
-		}
+		m_renderPass->begin(commandBuffer, m_swapchainImages->getFrameBuffer(index), m_width, m_height, clearValue, 1);
 	}
 
-	void Window::deInitSwapchainImages()
+	void
+	Window::endRenderPass(VkCommandBuffer commandBuffer)
 	{
-		for (auto view : m_swapchainImageViews) {
-			vkDestroyImageView(m_device->getDevice(), view, nullptr);
-		}
+		m_renderPass->end(commandBuffer);
 	}
-
 
 	VkSurfaceKHR
 	Window::getSurface()
@@ -106,16 +118,10 @@ namespace AMD
 	}
 
 
-	VkImage
-	Window::getSwapchainImage(uint32_t index)
+	RenderPass*
+	Window::getRenderPass()
 	{
-		return m_swapchainImages.at(index);
-	}
-
-	VkImageView
-	Window::getSwapchainImageView(uint32_t index)
-	{
-		return m_swapchainImageViews.at(index);
+		return m_renderPass;
 	}
 
 }   // namespace AMD

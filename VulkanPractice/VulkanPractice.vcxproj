@@ -169,6 +169,7 @@
     <ClCompile Include="VulkanSample.cpp" />
     <ClCompile Include="VulkanSubPassGroup.cpp" />
     <ClCompile Include="VulkanSwapchain.cpp" />
+    <ClCompile Include="VulkanSwapchainImages.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Window_glfw.cpp" />
     <ClCompile Include="Window_win32.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="VulkanSample.h" />
     <ClInclude Include="VulkanSubPassGroup.h" />
     <ClInclude Include="VulkanSwapChain.h" />
+    <ClInclude Include="VulkanSwapchainImages.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

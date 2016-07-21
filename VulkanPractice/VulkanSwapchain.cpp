@@ -91,6 +91,10 @@ VulkanSwapchain::VulkanSwapchain(VulkanDevice &device, VulkanPresentationSurface
 	swapchainCreateInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 
 	vkCreateSwapchainKHR(m_device->getDevice(), &swapchainCreateInfo, nullptr, &m_swapchain);
+
+	// IMAGE VIEWS
+
+
 }
 
 VulkanSwapchain::~VulkanSwapchain()

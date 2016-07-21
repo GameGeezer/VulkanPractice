@@ -10,6 +10,8 @@
 class VulkanDevice;
 class VulkanPresentationSurface;
 class VulkanSwapchain;
+class VulkanSwapchainImages;
+class RenderPass;
 
 namespace AMD
 {
@@ -42,6 +44,14 @@ namespace AMD
 			isClosed_ = true;
 		}
 
+		void
+		beginRenderPass(VkCommandBuffer commandBuffer, uint32_t index);
+
+		void
+		endRenderPass(VkCommandBuffer commandBuffer);
+
+		RenderPass*
+		getRenderPass();
 
 		VkSurfaceKHR
 		getSurface();
@@ -58,12 +68,6 @@ namespace AMD
 		VkFormat
 		getSurfaceFormat();
 
-		VkImage
-		getSwapchainImage(uint32_t index);
-
-		VkImageView
-		getSwapchainImageView(uint32_t index);
-
 	private:
 		bool IsClosedImpl() const override
 		{
@@ -71,12 +75,6 @@ namespace AMD
 		}
 
 		// OS independent methods
-
-		void
-		initSwapchainImages();
-
-		void
-		deInitSwapchainImages();
 
 		// OS depentent methods
 
@@ -101,12 +99,11 @@ namespace AMD
 		VkInstance		m_vulkanInstance;
 
 		VulkanPresentationSurface	*	m_surface;
+		VulkanDevice				*	m_device;
+		VulkanSwapchain				*	m_swapchain;
+		VulkanSwapchainImages		*	m_swapchainImages;
+		RenderPass					*	m_renderPass;
 
-		VulkanDevice *	m_device;
-
-		VulkanSwapchain			*	m_swapchain;
-		std::vector<VkImage>		m_swapchainImages;
-		std::vector<VkImageView>	m_swapchainImageViews;
 		uint32_t					m_swapchainImageCount;
 
 		// Os dependent variables
