@@ -1,7 +1,6 @@
 #ifndef AMD_VULKAN_SAMPLE_H_
 #define AMD_VULKAN_SAMPLE_H_
 
-#define VK_USE_PLATFORM_WIN32_KHR
 #include <vulkan/vulkan.h>
 #include <memory>
 #include <vector>
@@ -10,17 +9,19 @@
 #include "VulkanInstance.h"
 
 class VulkanFenceGroup;
-class CommandPool;
+class VulkanCommandPool;
 class VulkanCommandBufferGroup;
 class VulkanRenderPass;
 class VulkanFrameBuffer;
 class VulkanImageView;
 class VulkanCommandBuffer;
 class VulkanInstance;
+class VulkanEnumeratedPhysicalDevices;
+class Window;
 
 namespace AMD
 {
-	class Window;
+	
 
 	///////////////////////////////////////////////////////////////////////////////
 	class VulkanSample
@@ -52,12 +53,12 @@ namespace AMD
 
 		VulkanInstance *m_instance;
 
-		//VkFence frameFences_[QUEUE_SLOT_COUNT];
-		CommandPool *commandPool;
+		VulkanCommandPool *commandPool;
 		VulkanCommandBufferGroup *commandBufferGroup;
 		VulkanFenceGroup *frameFences;
+		VulkanEnumeratedPhysicalDevices *enumeratedPhysicalDevices;
 
-		std::unique_ptr<Window> window_;
+		Window * m_window;
 
 		virtual void InitializeImpl(VkCommandBuffer commandBuffer);
 		virtual void RenderImpl(VkCommandBuffer commandBuffer);

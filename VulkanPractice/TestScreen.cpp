@@ -25,13 +25,13 @@ TestScreen::onResume()
 }
 
 void
-TestScreen::onUpdate(int delta)
+TestScreen::onUpdate(uint32_t delta)
 {
 
 }
 
 void
-TestScreen::onResize(int width, int height)
+TestScreen::onResize(uint32_t width, uint32_t height)
 {
 
 }

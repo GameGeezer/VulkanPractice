@@ -1,6 +1,8 @@
 #ifndef VALIS_SCREEN_H
 #define VALIS_SCREEN_H
 
+#include <stdint.h>
+
 class Screen
 {
 	friend class Game;
@@ -19,10 +21,10 @@ protected:
 		onResume() = 0;
 
 	virtual void
-		onUpdate(int delta) = 0;
+		onUpdate(uint32_t delta) = 0;
 
 	virtual void
-		onResize(int width, int height) = 0;
+		onResize(uint32_t width, uint32_t height) = 0;
 
 	virtual void
 		onDestroy() = 0;

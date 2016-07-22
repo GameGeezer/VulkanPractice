@@ -22,7 +22,7 @@ protected:
 		onCreate();
 
 	void
-		update(int32_t delta);
+		update(uint32_t delta);
 
 private:
 

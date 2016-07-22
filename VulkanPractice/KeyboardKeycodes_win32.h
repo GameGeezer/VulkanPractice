@@ -3,8 +3,6 @@
 #include "BUILD_OPTIONS.h"
 #include "Platform.h"
 
-#include "Window.h"
-
 #if VK_USE_PLATFORM_WIN32_KHR
 
 enum KeyboardKeycode

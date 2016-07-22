@@ -4,7 +4,7 @@
 
 #include <vector>
 
-class CommandPool;
+class VulkanCommandPool;
 class VulkanCommandBuffer;
 
 class VulkanCommandBufferGroup

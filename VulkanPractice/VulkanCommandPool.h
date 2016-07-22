@@ -2,12 +2,12 @@
 
 #include <vulkan\vulkan.h>
 
-class CommandPool
+class VulkanCommandPool
 {
 public:
-	CommandPool(VkDevice device, bool transient, bool individual, uint32_t queueFamilyIndex);
+	VulkanCommandPool(VkDevice device, bool transient, bool individual, uint32_t queueFamilyIndex);
 
-	~CommandPool();
+	~VulkanCommandPool();
 
 	void
 	reset(bool releaseResources);

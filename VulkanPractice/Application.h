@@ -5,12 +5,20 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include <vector>
 
 //#include "KeyboardCallback.cuh"
 //#include "MouseClickCallback.cuh"
 //#include "MouseMoveCallback.cuh"
 
 class Game;
+class VulkanInstance;
+class VulkanDevice;
+class Window;
+class VulkanCommandPool;
+class VulkanCommandBufferGroup;
+class VulkanFenceGroup;
+class VulkanCommandBuffer;
 
 using namespace std;
 using namespace std::chrono;
@@ -30,17 +38,31 @@ public:
 
 private:
 
-	int				m_windowWidth, m_windowHeight;
+	Window							*	m_window;
+
+	VulkanInstance					*	m_instance;
+	VulkanDevice					*	m_device;
+	VulkanCommandPool				*	m_commandPool;
+	VulkanCommandBufferGroup		*	m_commandBufferGroup;
+	VulkanFenceGroup				*	m_fences;
+
+	VulkanCommandBuffer				*	m_setupCommandBuffer; //delete?
+	uint32_t QUEUE_SLOT_COUNT = 2;								// delete?
+
+
+	uint32_t							m_windowWidth, m_windowHeight;
 	Game*			m_game;
 	string			m_windowTitle;
 	
 	milliseconds	lastFrameTime;
 
-	void
-		init();
+	
 
 	void
-		loop();
+	init();
+
+	void
+	loop();
 };
 
 

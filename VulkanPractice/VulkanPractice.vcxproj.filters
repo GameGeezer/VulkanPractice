@@ -91,6 +91,27 @@
     <Filter Include="src\vulkan\pipelines\private">
       <UniqueIdentifier>{ee9797e1-9e74-4b28-ad27-dd58788dae51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\vulkan\devices">
+      <UniqueIdentifier>{7c53e58a-0bab-43bc-8b4d-983dab4856cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\devices\public">
+      <UniqueIdentifier>{efc1a5ba-90c8-414f-89cb-681f2beebccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\devices\private">
+      <UniqueIdentifier>{31240a0b-5f68-47a6-9f12-b241d3d7434b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\presentation">
+      <UniqueIdentifier>{690c37e2-7a43-47f4-9e6f-d5632d7c6c4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\synchronization">
+      <UniqueIdentifier>{b02e150c-9b4c-42c6-945f-b39eb5cf1fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\synchronization\public">
+      <UniqueIdentifier>{968e7914-479a-4d7b-a55b-121c475d3ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\synchronization\private">
+      <UniqueIdentifier>{63eae3a1-bd7a-4f86-958a-b3bb5d7ab695}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -116,15 +137,6 @@
     </ClCompile>
     <ClCompile Include="Platform.cpp">
       <Filter>src\window\platforms\private</Filter>
-    </ClCompile>
-    <ClCompile Include="AMDWindow.cpp">
-      <Filter>src\window\private</Filter>
-    </ClCompile>
-    <ClCompile Include="AMDWindow_win32.cpp">
-      <Filter>src\window\platforms\win32\private</Filter>
-    </ClCompile>
-    <ClCompile Include="AMDWindow_glfw.cpp">
-      <Filter>src\window\platforms\glfw\private</Filter>
     </ClCompile>
     <ClCompile Include="ComputePipeline.cpp">
       <Filter>src\vulkan\pipelines\private</Filter>
@@ -168,9 +180,6 @@
     <ClCompile Include="VulkanCommandPool.cpp">
       <Filter>src\vulkan\private</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanFenceGroup.cpp">
-      <Filter>src\vulkan\private</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanFrameBuffer.cpp">
       <Filter>src\vulkan\private</Filter>
     </ClCompile>
@@ -187,12 +196,6 @@
       <Filter>src\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanCommandBuffer.cpp">
-      <Filter>src\vulkan\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDevice.cpp">
-      <Filter>src\vulkan\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanDeviceMemory.cpp">
       <Filter>src\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanImageView.cpp">
@@ -215,6 +218,33 @@
     </ClCompile>
     <ClCompile Include="Utility.cpp">
       <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDevice.cpp">
+      <Filter>src\vulkan\devices\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDeviceMemory.cpp">
+      <Filter>src\vulkan\devices\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanEnumeratedPhysicalDevices.cpp">
+      <Filter>src\vulkan\devices\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanPhysicalDevice.cpp">
+      <Filter>src\vulkan\devices\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>src\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Window_win32.cpp">
+      <Filter>src\window\platforms\win32\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Window_glfw.cpp">
+      <Filter>src\window\platforms\glfw\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanSemaphore.cpp">
+      <Filter>src\vulkan\synchronization\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanFenceGroup.cpp">
+      <Filter>src\vulkan\synchronization\private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +286,6 @@
     </ClInclude>
     <ClInclude Include="Platform.h">
       <Filter>src\window\platforms\public</Filter>
-    </ClInclude>
-    <ClInclude Include="AMDWindow.h">
-      <Filter>src\window\public</Filter>
     </ClInclude>
     <ClInclude Include="BUILD_OPTIONS.h">
       <Filter>src\buildoptions</Filter>
@@ -305,12 +332,6 @@
     <ClInclude Include="VulkanImageView.h">
       <Filter>src\vulkan\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanDeviceMemory.h">
-      <Filter>src\vulkan\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanDevice.h">
-      <Filter>src\vulkan\public</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanCommandBuffer.h">
       <Filter>src\vulkan\public</Filter>
     </ClInclude>
@@ -327,9 +348,6 @@
       <Filter>src\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanFrameBuffer.h">
-      <Filter>src\vulkan\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanFenceGroup.h">
       <Filter>src\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanCommandPool.h">
@@ -358,6 +376,27 @@
     </ClInclude>
     <ClInclude Include="Camera.hpp">
       <Filter>Source Files\tutorial</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanEnumeratedPhysicalDevices.h">
+      <Filter>src\vulkan\devices\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDeviceMemory.h">
+      <Filter>src\vulkan\devices\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDevice.h">
+      <Filter>src\vulkan\devices\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanPhysicalDevice.h">
+      <Filter>src\vulkan\devices\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>src\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSemaphore.h">
+      <Filter>src\vulkan\synchronization\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanFenceGroup.h">
+      <Filter>src\vulkan\synchronization\public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

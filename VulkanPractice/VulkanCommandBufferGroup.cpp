@@ -20,7 +20,10 @@ VulkanCommandBufferGroup::VulkanCommandBufferGroup(VkDevice device, VkCommandPoo
 
 VulkanCommandBufferGroup::~VulkanCommandBufferGroup()
 {
-
+	for (uint32_t i = 0; i < m_commandBufferWrappers.size(); ++i)
+	{
+		delete m_commandBufferWrappers.at(i);
+	}
 }
 
 VulkanCommandBuffer*

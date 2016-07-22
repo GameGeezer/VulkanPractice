@@ -125,15 +125,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AMDWindow.cpp" />
-    <ClCompile Include="AMDWindow_glfw.cpp" />
-    <ClCompile Include="AMDWindow_win32.cpp" />
+    <ClCompile Include="VulkanSemaphore.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Window_glfw.cpp" />
+    <ClCompile Include="Window_win32.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="VulkanAttachmentDescription.cpp" />
     <ClCompile Include="VulkanBuffer.cpp" />
     <ClCompile Include="VulkanCommandBufferGroup.cpp" />
     <ClCompile Include="VulkanCommandPool.cpp" />
     <ClCompile Include="ComputePipeline.cpp" />
+    <ClCompile Include="VulkanEnumeratedPhysicalDevices.cpp" />
     <ClCompile Include="VulkanFenceGroup.cpp" />
     <ClCompile Include="VulkanFrameBuffer.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -150,6 +152,7 @@
     <ClCompile Include="PipelineVertexInputState.cpp" />
     <ClCompile Include="PipelineViewportState.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="VulkanPhysicalDevice.cpp" />
     <ClCompile Include="VulkanRenderPass.cpp" />
     <ClCompile Include="VulkanRenderSubPass.cpp" />
     <ClCompile Include="VulkanShaderModule.cpp" />
@@ -168,7 +171,8 @@
     <ClCompile Include="VulkanSwapchainImages.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AMDWindow.h" />
+    <ClInclude Include="VulkanSemaphore.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="VulkanAttachmentDescription.h" />
     <ClInclude Include="VulkanBuffer.h" />
@@ -177,6 +181,7 @@
     <ClInclude Include="VulkanCommandBufferGroup.h" />
     <ClInclude Include="VulkanCommandPool.h" />
     <ClInclude Include="ComputePipeline.h" />
+    <ClInclude Include="VulkanEnumeratedPhysicalDevices.h" />
     <ClInclude Include="VulkanFenceGroup.h" />
     <ClInclude Include="VulkanFrameBuffer.h" />
     <ClInclude Include="Game.h" />
@@ -196,6 +201,7 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformHeaders_glfw.h" />
     <ClInclude Include="PlatformHeaders_win32.h" />
+    <ClInclude Include="VulkanPhysicalDevice.h" />
     <ClInclude Include="VulkanRenderPass.h" />
     <ClInclude Include="VulkanRenderSubPass.h" />
     <ClInclude Include="Screen.h" />

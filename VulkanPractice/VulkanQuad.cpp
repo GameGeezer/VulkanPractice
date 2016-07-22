@@ -2,7 +2,7 @@
 
 #include "Shaders.h"
 #include "Utility.h"
-#include "AMDWindow.h"
+#include "Window.h"
 #include "VulkanShaderModule.h"
 #include "PipelineLayout.h"
 #include "PipelineColorBlendState.h"
@@ -174,7 +174,7 @@ namespace AMD
 		fragmentShader_ = new VulkanShaderModule(m_device->getDevice(), BasicFragmentShader, sizeof(BasicFragmentShader));
 
 		pipelineLayout_ = new PipelineLayout(m_device->getDevice());
-		graphicsPipeline = CreatePipeline(m_device->getDevice(), window_->getRenderPass()->getHandle(), pipelineLayout_->getHandle(),
+		graphicsPipeline = CreatePipeline(m_device->getDevice(), m_window->getRenderPass()->getHandle(), pipelineLayout_->getHandle(),
 			vertexShader_->getHandle(), fragmentShader_->getHandle(),
 			VkExtent2D{ static_cast<uint32_t> (640), static_cast<uint32_t> (480) }
 		);

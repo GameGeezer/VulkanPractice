@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "Utility.h"
-#include "AMDWindow.h"
+#include "Window.h"
 
 #include "VulkanFenceGroup.h"
 #include "VulkanCommandPool.h"
@@ -14,8 +14,13 @@
 #include "VulkanRenderSubPass.h"
 #include "VulkanImageView.h"
 #include "VulkanCommandBuffer.h"
+#include "VulkanSemaphore.h"
 
 #include "VulkanQueueSubmission.h"
+
+#include "VulkanPhysicalDevice.h"
+
+#include "VulkanEnumeratedPhysicalDevices.h"
 
 #include <cassert>
 
@@ -108,24 +113,21 @@ namespace AMD
 			return;
 		}
 
-		uint32_t physicalDeviceCount = 0;
-		vkEnumeratePhysicalDevices(m_instance->getHandle(), &physicalDeviceCount, nullptr);
+		enumeratedPhysicalDevices = new VulkanEnumeratedPhysicalDevices(m_instance->getHandle());
+		std::vector<VulkanPhysicalDevice*> physicalDevices;
+		std::vector<uint32_t> queueIndexes;
+		enumeratedPhysicalDevices->findDevicesWithQueueFlag(VkQueueFlagBits::VK_QUEUE_GRAPHICS_BIT, physicalDevices, queueIndexes);
 
-		std::vector<VkPhysicalDevice> devices{ physicalDeviceCount };
-		vkEnumeratePhysicalDevices(m_instance->getHandle(), &physicalDeviceCount, devices.data());
-
-		VkPhysicalDevice physicalDevice = nullptr;
-		int graphicsQueueIndex = -1;
-
-		FindPhysicalDeviceWithGraphicsQueue(devices, &physicalDevice, &graphicsQueueIndex);
+		VkPhysicalDevice physicalDevice = physicalDevices.at(0)->getHandle();
+		int graphicsQueueIndex = queueIndexes.at(0);
 
 		m_device = new VulkanDevice(physicalDevice, graphicsQueueIndex);
 		m_device->addExtension("VK_KHR_swapchain");
 		m_device->initialize();
 
-		window_.reset(new Window{ m_instance->getHandle(), *m_device,"Hello Vulkan", 640, 480, QUEUE_SLOT_COUNT });
+		m_window = new Window( m_instance->getHandle(), *m_device,"Hello Vulkan", 640, 480, QUEUE_SLOT_COUNT );
 
-		commandPool = new CommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
+		commandPool = new VulkanCommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
 		commandBufferGroup = new VulkanCommandBufferGroup(m_device->getDevice(), commandPool->getHandle(), QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
 		m_setupCommandBuffer = commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
@@ -153,7 +155,7 @@ namespace AMD
 
 		delete commandPool;
 
-		delete window_.get();
+		delete m_window;
 
 		delete m_device;
 		
@@ -186,23 +188,19 @@ namespace AMD
 		}
 		// Wait for queue to finish
 		frameFences->waitForFences(0, 1, VK_TRUE, UINT64_MAX);
-		//vkWaitForFences(device_, 1, &frameFences_[0], VK_TRUE, UINT64_MAX);
 
-		VkSemaphoreCreateInfo semaphoreCreateInfo = {};
-		semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+		VulkanSemaphore imageAcquiredSemaphoreWrapper(m_device->getDevice());
+		VkSemaphore imageAcquiredSemaphore = imageAcquiredSemaphoreWrapper.getHandle();
 
-		VkSemaphore imageAcquiredSemaphore;
-		vkCreateSemaphore(m_device->getDevice(), &semaphoreCreateInfo, nullptr, &imageAcquiredSemaphore);
-
-		VkSemaphore renderingCompleteSemaphore;
-		vkCreateSemaphore(m_device->getDevice(), &semaphoreCreateInfo, nullptr, &renderingCompleteSemaphore);
+		VulkanSemaphore renderingCompleteSemaphoreWrapper(m_device->getDevice());
+		VkSemaphore renderingCompleteSemaphore = renderingCompleteSemaphoreWrapper.getHandle();
 
 		for (int i = 0; i < frameCount; ++i)
 		{
-			vkAcquireNextImageKHR(m_device->getDevice(), window_->getSwapchain(), UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
+			vkAcquireNextImageKHR(m_device->getDevice(), m_window->getSwapchain(), UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
 
-			vkWaitForFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
-			vkResetFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
+			frameFences->waitForFences(currentBackBuffer_, 1, VK_TRUE, UINT64_MAX);
+			frameFences->resetFences(currentBackBuffer_, 1);
 
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -211,11 +209,11 @@ namespace AMD
 			commandBuffer->begin();
 			VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
 
-			window_->beginRenderPass(rawCommandBuffer, currentBackBuffer_);
+			m_window->beginRenderPass(rawCommandBuffer, currentBackBuffer_);
 
 			RenderImpl(rawCommandBuffer);
 
-			window_->endRenderPass(rawCommandBuffer);
+			m_window->endRenderPass(rawCommandBuffer);
 			commandBuffer->end();
 
 			VulkanQueueSubmission submission;
@@ -224,11 +222,10 @@ namespace AMD
 			submission.addSignalSemaphore(renderingCompleteSemaphore);
 			submission.inititialize(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 			// Submit rendering work to the graphics queue
-
-			vkQueueSubmit(m_device->getQueue(), 1, submission.getSubmitInfo(), VK_NULL_HANDLE);
+			m_device->submitToQueue(1, submission.getSubmitInfo(), VK_NULL_HANDLE);
 
 			// Submit present operation to present queue
-			VkSwapchainKHR sc = window_->getSwapchain();
+			VkSwapchainKHR sc = m_window->getSwapchain();
 			VkPresentInfoKHR presentInfo = {};
 			presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 			presentInfo.waitSemaphoreCount = 1;
@@ -238,7 +235,7 @@ namespace AMD
 			presentInfo.pImageIndices = &currentBackBuffer_;
 			vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 
-			vkQueueSubmit(m_device->getQueue(), 0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
+			m_device->submitToQueue(0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
 		};
 
 		// Wait for all rendering to finish

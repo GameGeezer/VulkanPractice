@@ -7,7 +7,7 @@ VulkanCommandBuffer::VulkanCommandBuffer(VkCommandBuffer commandBuffer) : m_comm
 
 VulkanCommandBuffer::~VulkanCommandBuffer()
 {
-
+	
 }
 
 void

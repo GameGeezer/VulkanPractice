@@ -20,7 +20,7 @@ Game::onCreate()
 }
 
 void
-Game::update(int32_t delta)
+Game::update(uint32_t delta)
 {
 	currentScreen->onUpdate(delta);
 }
