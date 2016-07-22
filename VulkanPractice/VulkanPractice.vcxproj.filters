@@ -246,6 +246,9 @@
     <ClCompile Include="VulkanFenceGroup.cpp">
       <Filter>src\vulkan\synchronization\private</Filter>
     </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>src\application\private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">

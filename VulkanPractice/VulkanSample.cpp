@@ -39,43 +39,6 @@ namespace AMD
 
 	namespace
 	{
-		///////////////////////////////////////////////////////////////////////////////
-		void FindPhysicalDeviceWithGraphicsQueue(const std::vector<VkPhysicalDevice>& physicalDevices,
-			VkPhysicalDevice* outputDevice, int* outputGraphicsQueueIndex)
-		{
-			for (auto physicalDevice : physicalDevices)
-			{
-				uint32_t queueFamilyPropertyCount = 0;
-
-				vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice,
-					&queueFamilyPropertyCount, nullptr);
-
-				std::vector<VkQueueFamilyProperties> queueFamilyProperties{ queueFamilyPropertyCount };
-				vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice,
-					&queueFamilyPropertyCount, queueFamilyProperties.data());
-
-				int i = 0;
-				for (const auto& queueFamilyProperty : queueFamilyProperties)
-				{
-					if (queueFamilyProperty.queueFlags & VK_QUEUE_GRAPHICS_BIT)
-					{
-						if (outputDevice)
-						{
-							*outputDevice = physicalDevice;
-						}
-
-						if (outputGraphicsQueueIndex)
-						{
-							*outputGraphicsQueueIndex = i;
-						}
-
-						return;
-					}
-
-					++i;
-				}
-			}
-		}
 
 		///////////////////////////////////////////////////////////////////////////////
 		VulkanRenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
@@ -197,19 +160,20 @@ namespace AMD
 
 		for (int i = 0; i < frameCount; ++i)
 		{
-			vkAcquireNextImageKHR(m_device->getDevice(), m_window->getSwapchain(), UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
+			uint32_t currentBackBuffer = m_window->acquireNextImage(UINT64_MAX, imageAcquiredSemaphore);
+			//vkAcquireNextImageKHR(m_device->getDevice(), m_window->getSwapchain(), UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
 
-			frameFences->waitForFences(currentBackBuffer_, 1, VK_TRUE, UINT64_MAX);
-			frameFences->resetFences(currentBackBuffer_, 1);
+			frameFences->waitForFences(currentBackBuffer, 1, VK_TRUE, UINT64_MAX);
+			frameFences->resetFences(currentBackBuffer, 1);
 
 			VkCommandBufferBeginInfo beginInfo = {};
 			beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-			VulkanCommandBuffer *commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer_);
+			VulkanCommandBuffer *commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer);
 			commandBuffer->begin();
 			VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
 
-			m_window->beginRenderPass(rawCommandBuffer, currentBackBuffer_);
+			m_window->beginRenderPass(rawCommandBuffer, currentBackBuffer);
 
 			RenderImpl(rawCommandBuffer);
 
@@ -232,10 +196,10 @@ namespace AMD
 			presentInfo.pWaitSemaphores = &renderingCompleteSemaphore;
 			presentInfo.swapchainCount = 1;
 			presentInfo.pSwapchains = &sc;
-			presentInfo.pImageIndices = &currentBackBuffer_;
+			presentInfo.pImageIndices = &currentBackBuffer;
 			vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 
-			m_device->submitToQueue(0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
+			m_device->submitToQueue(0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer));
 		};
 
 		// Wait for all rendering to finish

@@ -3,34 +3,54 @@
 
 #include <stdint.h>
 
+class Application;
+class VulkanCommandBuffer;
+
 class Screen
 {
 	friend class Game;
+public:
+	bool
+	isCreated();
+
+	Application*
+	getApplication();
+
 protected:
 
 	virtual void
-		onCreate() = 0;
+	onRender(VulkanCommandBuffer *commandBuffer) = 0;
 
 	virtual void
-		onPause() = 0;
+	onCreate() = 0;
 
 	virtual void
-		onLeave() = 0;
+	onPause() = 0;
 
 	virtual void
-		onResume() = 0;
+	onLeave() = 0;
 
 	virtual void
-		onUpdate(uint32_t delta) = 0;
+	onResume() = 0;
 
 	virtual void
-		onResize(uint32_t width, uint32_t height) = 0;
+	onUpdate(uint32_t delta) = 0;
 
 	virtual void
-		onDestroy() = 0;
+	onResize(uint32_t width, uint32_t height) = 0;
+
+	virtual void
+	onDestroy() = 0;
 
 private:
-	bool isCreated;
+
+	void
+	initialize(Application &application, Game &game);
+
+	bool			m_isCreated;
+
+	Application *	m_application;
+	Game		*	m_game;
 };
 
 #endif

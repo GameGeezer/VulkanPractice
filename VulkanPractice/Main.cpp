@@ -1,4 +1,3 @@
-/*#include "Renderer.h"
 
 #include "Application.h"
 #include "Game.h"
@@ -9,18 +8,19 @@ int main()
 {
 	Screen *screen = new TestScreen();
 	Game *game = new Game(*screen);
-	Application *application = new Application(*game, "Test Screen", 512, 512);
+	Application *application = new Application(*game, "Test Screen", 640, 480);
 
 	application->start();
 
 	return 0;
-}*/
-
+}
+/*
 #include "VulkanQuad.h"
 #include "Platform.h"
 
 int main()
 {
+
 	AMD::VulkanSample* sample = nullptr;
 
 	const auto sampleId = 0;
@@ -40,3 +40,4 @@ int main()
 
 	return 0;
 }
+*/

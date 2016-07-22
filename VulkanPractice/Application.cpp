@@ -16,9 +16,41 @@
 #include "VulkanFenceGroup.h"
 #include "VulkanQueueSubmission.h"
 #include "VulkanCommandBuffer.h"
+#include "VulkanSemaphore.h"
 
 
 Application::Application(Game& game, string windowTitle, int windowWidth, int windowHeight) : m_game(&game), m_windowTitle(windowTitle), m_windowWidth(windowWidth), m_windowHeight(windowHeight)
+{
+	
+}
+
+Application::~Application()
+{
+	delete m_fences;
+
+	delete m_commandPool;
+
+	delete m_commandBufferGroup;
+
+	delete m_window;
+
+	delete m_device;
+
+	delete m_instance;
+}
+
+void
+Application::start()
+{
+	this->init();
+
+	this->m_game->onCreate(*this);
+
+	this->loop();
+}
+
+void
+Application::init()
 {
 	// Create instance
 
@@ -68,107 +100,83 @@ Application::Application(Game& game, string windowTitle, int windowWidth, int wi
 	}
 }
 
-Application::~Application()
-{
-	delete m_fences;
-
-	delete m_commandPool;
-
-	delete m_commandBufferGroup;
-
-	delete m_window;
-
-	delete m_device;
-
-	delete m_instance;
-}
-
-void
-Application::start()
-{
-	this->init();
-
-	this->m_game->onCreate();
-
-	this->loop();
-}
-
-void
-Application::init()
-{
-	m_fences->resetFences(0, 1);
-	{
-		// Start recording to a command buffer
-		m_setupCommandBuffer->begin();
-
-		//InitializeImpl(m_setupCommandBuffer->getHandle());------------------------------------------------------------------------------------ERROR
-		// Finish recording to a command buffer
-		m_setupCommandBuffer->end();
-		// What to submit to the queue
-		VkCommandBuffer buf = m_setupCommandBuffer->getHandle();
-		VulkanQueueSubmission submission;
-		submission.addCommandBuffer(buf);
-		submission.inititialize(0);
-		// Submit the command buffer to the queue
-		m_device->submitToQueue(1, submission.getSubmitInfo(), m_fences->getFenceAtIndex(0));
-	}
-	// Wait for queue to finish
-	m_fences->waitForFences(0, 1, VK_TRUE, UINT64_MAX);
-	//vkWaitForFences(device_, 1, &frameFences_[0], VK_TRUE, UINT64_MAX);
-
-	VkSemaphoreCreateInfo semaphoreCreateInfo = {};
-	semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-	VkSemaphore imageAcquiredSemaphore;
-	vkCreateSemaphore(m_device->getDevice(), &semaphoreCreateInfo, nullptr, &imageAcquiredSemaphore);
-
-	VkSemaphore renderingCompleteSemaphore;
-	vkCreateSemaphore(m_device->getDevice(), &semaphoreCreateInfo, nullptr, &renderingCompleteSemaphore);
-}
-
 void
 Application::loop()
 {
-	/*
-	vkAcquireNextImageKHR(m_device->getDevice(), m_window->getSwapchain(), UINT64_MAX, imageAcquiredSemaphore, VK_NULL_HANDLE, &currentBackBuffer_);
+	VulkanSemaphore imageAcquiredSemaphoreWrapper(m_device->getDevice());
+	VkSemaphore imageAcquiredSemaphore = imageAcquiredSemaphoreWrapper.getHandle();
 
-	vkWaitForFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_), VK_TRUE, UINT64_MAX);
-	vkResetFences(m_device->getDevice(), 1, frameFences->getPointerToFenceAtIndex(currentBackBuffer_));
+	VulkanSemaphore renderingCompleteSemaphoreWrapper(m_device->getDevice());
+	VkSemaphore renderingCompleteSemaphore = renderingCompleteSemaphoreWrapper.getHandle();
 
-	VkCommandBufferBeginInfo beginInfo = {};
-	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	while (m_window->isAlive())
+	{
+		uint32_t currentBackBuffer = m_window->acquireNextImage(UINT64_MAX, imageAcquiredSemaphore);
+		m_fences->waitForFences(currentBackBuffer, 1, VK_TRUE, UINT64_MAX);
+		m_fences->resetFences(currentBackBuffer, 1);
 
-	VulkanCommandBuffer *commandBuffer = commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer_);
-	commandBuffer->begin();
-	VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
+		VkCommandBufferBeginInfo beginInfo = {};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-	m_window->beginRenderPass(rawCommandBuffer, currentBackBuffer_);
+		VulkanCommandBuffer *commandBuffer = m_commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer);
+		commandBuffer->begin();
+		VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
 
-	RenderImpl(rawCommandBuffer);
+		m_window->beginRenderPass(rawCommandBuffer, currentBackBuffer);
 
-	m_window->endRenderPass(rawCommandBuffer);
-	commandBuffer->end();
+		m_game->render(commandBuffer);
 
-	VulkanQueueSubmission submission;
-	submission.addCommandBuffer(rawCommandBuffer);
-	submission.addWaitSemaphore(imageAcquiredSemaphore);
-	submission.addSignalSemaphore(renderingCompleteSemaphore);
-	submission.inititialize(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
-	// Submit rendering work to the graphics queue
+		m_window->endRenderPass(rawCommandBuffer);
+		commandBuffer->end();
 
-	vkQueueSubmit(m_device->getQueue(), 1, submission.getSubmitInfo(), VK_NULL_HANDLE);
+		VulkanQueueSubmission submission;
+		submission.addCommandBuffer(rawCommandBuffer);
+		submission.addWaitSemaphore(imageAcquiredSemaphore);
+		submission.addSignalSemaphore(renderingCompleteSemaphore);
+		submission.inititialize(VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+		// Submit rendering work to the graphics queue
+		m_device->submitToQueue(1, submission.getSubmitInfo(), VK_NULL_HANDLE);
+		// Submit present operation to present queue
+		VkSwapchainKHR sc = m_window->getSwapchain();
+		VkPresentInfoKHR presentInfo = {};
+		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+		presentInfo.waitSemaphoreCount = 1;
+		presentInfo.pWaitSemaphores = &renderingCompleteSemaphore;
+		presentInfo.swapchainCount = 1;
+		presentInfo.pSwapchains = &sc;
+		presentInfo.pImageIndices = &currentBackBuffer;
+		vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 
-	// Submit present operation to present queue
-	VkSwapchainKHR sc = m_window->getSwapchain();
-	VkPresentInfoKHR presentInfo = {};
-	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-	presentInfo.waitSemaphoreCount = 1;
-	presentInfo.pWaitSemaphores = &renderingCompleteSemaphore;
-	presentInfo.swapchainCount = 1;
-	presentInfo.pSwapchains = &sc;
-	presentInfo.pImageIndices = &currentBackBuffer_;
-	vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
+		m_device->submitToQueue(0, nullptr, m_fences->getFenceAtIndex(currentBackBuffer));
+	}
+}
 
-	vkQueueSubmit(m_device->getQueue(), 0, nullptr, frameFences->getFenceAtIndex(currentBackBuffer_));
-	*/
+VulkanInstance*
+Application::getInstance()
+{
+	return m_instance;
+}
+
+VulkanDevice*
+Application::getDevice()
+{
+	return m_device;
+}
+
+VulkanFenceGroup*
+Application::getFences()
+{
+	return m_fences;
+}
+
+Window*
+Application::getWindow()
+{
+	return m_window;
+}
+
+VulkanCommandBufferGroup*
+Application::getCommandBuffers()
+{
+	return m_commandBufferGroup;
 }

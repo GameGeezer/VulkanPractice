@@ -120,7 +120,7 @@ namespace AMD
 	}   // namespace
 
 		///////////////////////////////////////////////////////////////////////////////
-	void VulkanQuad::CreateMeshBuffers(VkCommandBuffer /*uploadCommandBuffer*/)
+	void VulkanQuad::CreateMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 	{
 		struct Vertex
 		{

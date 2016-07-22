@@ -63,6 +63,15 @@ bool IWindow::IsClosed() const
 	return IsClosedImpl();
 }
 
+uint32_t
+Window::acquireNextImage(uint64_t timeout, VkSemaphore imageAcquiredSemaphore)
+{
+	uint32_t imageIndex;
+	vkAcquireNextImageKHR(m_device->getDevice(), m_swapchain->getHandle(), timeout, imageAcquiredSemaphore, VK_NULL_HANDLE, &imageIndex);
+
+	return imageIndex;
+}
+
 void
 Window::beginRenderPass(VkCommandBuffer commandBuffer, uint32_t index)
 {

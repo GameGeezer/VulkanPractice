@@ -34,7 +34,22 @@ public:
 	~Application();
 
 	void
-		start();
+	start();
+
+	VulkanInstance*
+	getInstance();
+
+	VulkanDevice*
+	getDevice();
+
+	VulkanFenceGroup*
+	getFences();
+
+	Window*
+	getWindow();
+
+	VulkanCommandBufferGroup*
+	getCommandBuffers();
 
 private:
 
@@ -55,8 +70,6 @@ private:
 	string			m_windowTitle;
 	
 	milliseconds	lastFrameTime;
-
-	
 
 	void
 	init();

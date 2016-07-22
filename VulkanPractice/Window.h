@@ -41,6 +41,9 @@ public:
 		isClosed_ = true;
 	}
 
+	uint32_t
+	acquireNextImage(uint64_t timeout, VkSemaphore imageAcquiredSemaphore);
+
 	void
 	present();
 
@@ -54,25 +57,25 @@ public:
 	getRenderPass();
 
 	VkSurfaceKHR
-		getSurface();
+	getSurface();
 
 	VkSwapchainKHR
-		getSwapchain();
+	getSwapchain();
 
 	uint32_t
-		getWidth();
+	getWidth();
 
 	uint32_t
-		getHeight();
+	getHeight();
 
 	VkFormat
-		getSurfaceFormat();
+	getSurfaceFormat();
 
 	bool
-		isAlive();
+	isAlive();
 
 	void
-		requestClose();
+	requestClose();
 
 private:
 	bool IsClosedImpl() const override

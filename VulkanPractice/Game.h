@@ -3,7 +3,9 @@
 
 #include <stdint.h>
 
+class Application;
 class Screen;
+class VulkanCommandBuffer;
 
 class Game
 {
@@ -14,21 +16,28 @@ public:
 	Game(Screen& initialScreen);
 
 	void
-		setScreen(Screen& screen);
+	setScreen(Screen& screen);
+
+	bool
+	isCreated();
 
 protected:
 
 	void
-		onCreate();
+	onCreate(Application &application);
 
 	void
-		update(uint32_t delta);
+	update(uint32_t delta);
+
+	void
+	render(VulkanCommandBuffer *commandBuffer);
 
 private:
 
-	bool isCreated;
+	bool			m_isCreated;
 
-	Screen* currentScreen;
+	Application	*	m_application;
+	Screen		*	m_currentScreen;
 };
 
 #endif
