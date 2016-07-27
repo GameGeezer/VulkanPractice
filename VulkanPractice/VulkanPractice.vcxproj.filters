@@ -100,9 +100,6 @@
     <Filter Include="src\vulkan\devices\private">
       <UniqueIdentifier>{31240a0b-5f68-47a6-9f12-b241d3d7434b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\presentation">
-      <UniqueIdentifier>{690c37e2-7a43-47f4-9e6f-d5632d7c6c4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\vulkan\synchronization">
       <UniqueIdentifier>{b02e150c-9b4c-42c6-945f-b39eb5cf1fb8}</UniqueIdentifier>
     </Filter>
@@ -111,6 +108,15 @@
     </Filter>
     <Filter Include="src\vulkan\synchronization\private">
       <UniqueIdentifier>{63eae3a1-bd7a-4f86-958a-b3bb5d7ab695}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\uniformBuffers">
+      <UniqueIdentifier>{3cbd258f-ccf5-4153-80be-b589add78c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\uniformBuffers\public">
+      <UniqueIdentifier>{028c0a5a-2845-47a0-b2eb-171198546aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\vulkan\uniformBuffers\private">
+      <UniqueIdentifier>{3e1cedc1-a323-4b7c-8027-804defb7fad4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -128,12 +134,6 @@
     </ClCompile>
     <ClCompile Include="TestScreen.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanSample.cpp">
-      <Filter>Source Files\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanQuad.cpp">
-      <Filter>Source Files\tutorial</Filter>
     </ClCompile>
     <ClCompile Include="Platform.cpp">
       <Filter>src\window\platforms\private</Filter>
@@ -249,6 +249,18 @@
     <ClCompile Include="Screen.cpp">
       <Filter>src\application\private</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanUniformBuffer.cpp">
+      <Filter>src\vulkan\uniformBuffers\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDescriptorSetLayout.cpp">
+      <Filter>src\vulkan\uniformBuffers\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDescriptorPool.cpp">
+      <Filter>src\vulkan\uniformBuffers\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDescriptorSetGroup.cpp">
+      <Filter>src\vulkan\uniformBuffers\private</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -279,12 +291,6 @@
       <Filter>src\window\platforms\win32</Filter>
     </ClInclude>
     <ClInclude Include="Shaders.h">
-      <Filter>Source Files\tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanQuad.h">
-      <Filter>Source Files\tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanSample.h">
       <Filter>Source Files\tutorial</Filter>
     </ClInclude>
     <ClInclude Include="Platform.h">
@@ -336,9 +342,6 @@
       <Filter>src\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanCommandBuffer.h">
-      <Filter>src\vulkan\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanBuffer.h">
       <Filter>src\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanShaderModule.h">
@@ -401,6 +404,21 @@
     <ClInclude Include="VulkanFenceGroup.h">
       <Filter>src\vulkan\synchronization\public</Filter>
     </ClInclude>
+    <ClInclude Include="VulkanUniformBuffer.h">
+      <Filter>src\vulkan\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDescriptorSetLayout.h">
+      <Filter>src\vulkan\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDescriptorPool.h">
+      <Filter>src\vulkan\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDescriptorSetGroup.h">
+      <Filter>src\vulkan\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanBuffer.h">
+      <Filter>src\vulkan\public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Triangle.vert">
@@ -414,6 +432,12 @@
     </None>
     <None Include="tri.frag">
       <Filter>Source Files\tutorial</Filter>
+    </None>
+    <None Include="BasicShader.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="BasicShader.frag">
+      <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
 </Project>

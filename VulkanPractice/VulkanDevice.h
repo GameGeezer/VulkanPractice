@@ -6,6 +6,8 @@
 
 using namespace std;
 
+class VulkanCommandPool;
+
 struct MemoryTypeInfo
 {
 	bool deviceLocal = false;
@@ -35,8 +37,11 @@ public:
 	void
 	initialize();
 
+	uint32_t
+	getMemoryType(uint32_t typeBits, VkMemoryPropertyFlags properties);
+
 	VkDeviceMemory
-	allocateMemory(uint32_t size);
+	allocateMemory(uint32_t typeBits, VkMemoryPropertyFlags properties, VkDeviceSize size);
 
 	void
 	submitToQueue(uint32_t submitCount, VkSubmitInfo *submitInfo, VkFence fence);
@@ -53,6 +58,9 @@ public:
 	uint32_t
 	getQueueIndex();
 
+	VulkanCommandPool*
+	getCommandPool();
+
 	void
 	addExtension(const char* extension);
 
@@ -64,6 +72,8 @@ private:
 
 	VkQueue								m_queue;
 	uint32_t							m_queueFamilyIndex;
+
+	VulkanCommandPool				*	m_commandPool;
 
 	std::vector<MemoryTypeInfo>			m_heaps;
 	std::vector<const char*>			m_extensions;

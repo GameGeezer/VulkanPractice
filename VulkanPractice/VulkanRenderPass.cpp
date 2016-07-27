@@ -36,6 +36,11 @@ VulkanRenderPass::end(VkCommandBuffer commandBuffer)
 void
 VulkanRenderPass::initialize()
 {
+	if (m_initialized)
+	{
+		throw "VulkanRenderPass has already been initialized";
+	}
+
 	VkRenderPassCreateInfo renderPassCreateInfo = {};
 	renderPassCreateInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	renderPassCreateInfo.attachmentCount = static_cast<uint32_t> (m_attachmentDescriptions.size());
@@ -44,6 +49,8 @@ VulkanRenderPass::initialize()
 	renderPassCreateInfo.pAttachments = m_attachmentDescriptions.data();
 
 	vkCreateRenderPass(m_device, &renderPassCreateInfo, nullptr, &m_renderPass);
+
+	m_initialized = true;
 }
 
 void

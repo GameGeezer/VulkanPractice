@@ -36,4 +36,5 @@ private:
 	VkRenderPass							m_renderPass;
 	std::vector<VkSubpassDescription>		m_subpasses;
 	std::vector<VkAttachmentDescription>	m_attachmentDescriptions;
+	bool									m_initialized = false;
 };

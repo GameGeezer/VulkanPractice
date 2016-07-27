@@ -12,7 +12,7 @@ public:
 	~VulkanInstance();
 
 	bool
-	instantiate();
+	initialize();
 
 	void
 	addExtension(const char* extension);
@@ -27,4 +27,6 @@ private:
 	VkInstance					m_instance;
 	std::vector<const char*>	m_extensions;
 	std::vector<const char*>	m_layers;
+
+	bool						m_initialzed = false;
 };

@@ -21,6 +21,6 @@ public:
 	getDescription();
 
 private:
-	VkSubpassDescription				m_description = {};;
+	VkSubpassDescription				m_description = {};
 	std::vector<VkAttachmentReference>	m_colorAttachments;
 };

@@ -4,7 +4,6 @@
 
 #include <vector>
 
-class VulkanCommandPool;
 class VulkanCommandBuffer;
 
 class VulkanCommandBufferGroup
@@ -19,9 +18,13 @@ public:
 	VulkanCommandBuffer*
 	getCommandBufferAtIndex(uint32_t index);
 
+	void
+	freeBuffers();
+
 private:
-	VkDevice			m_device;
-	VkCommandBuffer*	m_commandBuffers;
+	VkDevice				m_device;
+	VkCommandBuffer		*	m_commandBuffers;
+	VkCommandPool			m_commandPool;
 
 	std::vector<VulkanCommandBuffer*> m_commandBufferWrappers;
 };

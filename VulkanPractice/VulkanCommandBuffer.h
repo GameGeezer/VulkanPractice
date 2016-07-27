@@ -10,7 +10,7 @@ public:
 	~VulkanCommandBuffer();
 
 	void
-	begin();
+	begin(VkCommandBufferUsageFlagBits flags);
 
 	void
 	end();

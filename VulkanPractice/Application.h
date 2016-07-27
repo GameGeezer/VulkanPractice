@@ -57,7 +57,7 @@ private:
 
 	VulkanInstance					*	m_instance;
 	VulkanDevice					*	m_device;
-	VulkanCommandPool				*	m_commandPool;
+	
 	VulkanCommandBufferGroup		*	m_commandBufferGroup;
 	VulkanFenceGroup				*	m_fences;
 

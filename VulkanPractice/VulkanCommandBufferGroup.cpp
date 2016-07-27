@@ -2,7 +2,7 @@
 
 #include "VulkanCommandBuffer.h"
 
-VulkanCommandBufferGroup::VulkanCommandBufferGroup(VkDevice device, VkCommandPool commandPool, uint32_t buffersToAllocate, VkCommandBufferLevel level) : m_device(device), count(buffersToAllocate), m_commandBuffers(new VkCommandBuffer[buffersToAllocate])
+VulkanCommandBufferGroup::VulkanCommandBufferGroup(VkDevice device, VkCommandPool commandPool, uint32_t buffersToAllocate, VkCommandBufferLevel level) : m_device(device), count(buffersToAllocate), m_commandPool(commandPool), m_commandBuffers(new VkCommandBuffer[buffersToAllocate])
 {
 	VkCommandBufferAllocateInfo commandBufferAllocateInfo = {};
 	commandBufferAllocateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -30,4 +30,11 @@ VulkanCommandBuffer*
 VulkanCommandBufferGroup::getCommandBufferAtIndex(uint32_t index)
 {
 	return m_commandBufferWrappers.at(index);
+}
+
+
+void
+VulkanCommandBufferGroup::freeBuffers()
+{
+	vkFreeCommandBuffers(m_device, m_commandPool, count, m_commandBuffers);
 }

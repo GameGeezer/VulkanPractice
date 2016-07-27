@@ -28,8 +28,6 @@ Application::~Application()
 {
 	delete m_fences;
 
-	delete m_commandPool;
-
 	delete m_commandBufferGroup;
 
 	delete m_window;
@@ -58,7 +56,7 @@ Application::init()
 	m_instance->addExtension("VK_KHR_surface");
 	m_instance->addExtension("VK_KHR_win32_surface");
 
-	if (!m_instance->instantiate())
+	if (!m_instance->initialize())
 	{
 		return;
 	}
@@ -86,9 +84,7 @@ Application::init()
 
 	m_window = new Window(m_instance->getHandle(), *m_device, "Hello Vulkan", m_windowWidth, m_windowHeight, QUEUE_SLOT_COUNT);
 
-	m_commandPool = new VulkanCommandPool(m_device->getDevice(), false, true, m_device->getQueueIndex());
-
-	m_commandBufferGroup = new VulkanCommandBufferGroup(m_device->getDevice(), m_commandPool->getHandle(), QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+	m_commandBufferGroup = new VulkanCommandBufferGroup(m_device->getDevice(), m_device->getCommandPool()->getHandle(), QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
 	m_setupCommandBuffer = m_commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
 
@@ -119,7 +115,7 @@ Application::loop()
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
 		VulkanCommandBuffer *commandBuffer = m_commandBufferGroup->getCommandBufferAtIndex(currentBackBuffer);
-		commandBuffer->begin();
+		commandBuffer->begin(VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT);
 		VkCommandBuffer rawCommandBuffer = commandBuffer->getHandle();
 
 		m_window->beginRenderPass(rawCommandBuffer, currentBackBuffer);

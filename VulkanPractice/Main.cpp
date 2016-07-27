@@ -12,32 +12,9 @@ int main()
 
 	application->start();
 
-	return 0;
-}
-/*
-#include "VulkanQuad.h"
-#include "Platform.h"
-
-int main()
-{
-
-	AMD::VulkanSample* sample = nullptr;
-
-	const auto sampleId = 0;
-
-	switch (sampleId)
-	{
-	case 0: sample = new AMD::VulkanQuad; break;
-	}
-
-	if (sample == nullptr || sample->IsInitialized() == false)
-	{
-		return 1;
-	}
-
-	sample->Run(512);
-	delete sample;
+	delete screen;
+	delete game;
+	delete application;
 
 	return 0;
 }
-*/

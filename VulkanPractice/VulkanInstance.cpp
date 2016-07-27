@@ -13,8 +13,13 @@ VulkanInstance::~VulkanInstance()
 }
 
 bool
-VulkanInstance::instantiate()
+VulkanInstance::initialize()
 {
+	if (m_initialzed)
+	{
+		throw "Vulkan instance has already been initialized";
+	}
+
 	VkInstanceCreateInfo instanceCreateInfo = {};
 	instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 
@@ -35,7 +40,9 @@ VulkanInstance::instantiate()
 
 	vkCreateInstance(&instanceCreateInfo, nullptr, &m_instance);
 
-	return m_instance != VK_NULL_HANDLE;
+	m_initialzed = m_instance != VK_NULL_HANDLE;
+
+	return m_initialzed;
 }
 
 void

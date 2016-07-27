@@ -11,10 +11,11 @@ VulkanCommandBuffer::~VulkanCommandBuffer()
 }
 
 void
-VulkanCommandBuffer::begin()
+VulkanCommandBuffer::begin(VkCommandBufferUsageFlagBits flags)
 {
 	VkCommandBufferBeginInfo beginInfo = {};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = flags;
 
 	vkBeginCommandBuffer(m_commandBuffer, &beginInfo);
 }

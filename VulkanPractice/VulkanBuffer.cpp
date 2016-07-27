@@ -2,29 +2,36 @@
 
 #include "Shared.h"
 
-#include "VulkanMemoryAllocateInfo.h"
+#include "VulkanDevice.h"
 
-VulkanBuffer::VulkanBuffer(VkDevice device, uint32_t sizeBytes, VkBufferUsageFlagBits usage) : m_device(device)
+VulkanBuffer::VulkanBuffer(VulkanDevice &device, uint32_t sizeBytes, uint32_t usage) : m_device(&device)
 {
 	VkBufferCreateInfo bufferCreateInfo = {};
 	bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	bufferCreateInfo.size = sizeBytes;
 	bufferCreateInfo.usage = usage;
 
-	ErrorCheck(vkCreateBuffer(device, &bufferCreateInfo, nullptr, &m_buffer));
+	ErrorCheck(vkCreateBuffer(m_device->getDevice(), &bufferCreateInfo, nullptr, &m_buffer));
 
-	vkGetBufferMemoryRequirements(m_device, m_buffer, &m_bufferMemoryRequirements);
+	vkGetBufferMemoryRequirements(m_device->getDevice(), m_buffer, &m_bufferMemoryRequirements);
 }
 
 VulkanBuffer::~VulkanBuffer()
 {
-	vkDestroyBuffer(m_device, m_buffer, nullptr);
+	vkDestroyBuffer(m_device->getDevice(), m_buffer, nullptr);
 }
+
 
 VkBuffer
 VulkanBuffer::getHandle()
 {
 	return m_buffer;
+}
+
+uint32_t
+VulkanBuffer::getMemoryTypeBits()
+{
+	return m_bufferMemoryRequirements.memoryTypeBits;
 }
 
 VkDeviceSize
@@ -42,5 +49,5 @@ VulkanBuffer::getAlignment()
 void
 VulkanBuffer::bindToMemory(VkDeviceMemory deviceMemory, uint32_t offset)
 {
-	vkBindBufferMemory(m_device, m_buffer, deviceMemory, offset);
+	vkBindBufferMemory(m_device->getDevice(), m_buffer, deviceMemory, offset);
 }

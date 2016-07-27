@@ -27,6 +27,13 @@
 
 #include "Utility.h"
 
+#include <glm\mat4x4.hpp>
+
+struct {
+	glm::mat4 projectionMatrix;
+	glm::mat4 modelMatrix;
+	glm::mat4 viewMatrix;
+} uboVS;
 
 void
 TestScreen::onCreate()
@@ -36,7 +43,7 @@ TestScreen::onCreate()
 
 	fences->resetFences(0, 1);
 	{
-		setupCommandBuffer->begin();
+		setupCommandBuffer->begin(VkCommandBufferUsageFlagBits::VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
 		createPipelineStateObject();
 		createMeshBuffers(setupCommandBuffer->getHandle());
 		setupCommandBuffer->end();
@@ -168,8 +175,10 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 
 	VulkanDevice *device = getApplication()->getDevice();
 
-	m_vertexBuffer = new VulkanBuffer(device->getDevice(), sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
-	m_indexBuffer = new VulkanBuffer(device->getDevice(), sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+	m_vertexBuffer = new VulkanBuffer(*device, sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+	m_indexBuffer = new VulkanBuffer(*device, sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+	m_uniformBuffer = new VulkanBuffer(*device, sizeof(uboVS), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
+	//m_uniformMemory = device->allocateMemory(m_uniformBuffer->getSize());
 
 
 	VkDeviceSize bufferSize = m_vertexBuffer->getSize();
@@ -178,7 +187,7 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 	VkDeviceSize indexBufferOffset = RoundToNextMultiple(bufferSize, m_indexBuffer->getAlignment());
 
 	bufferSize = indexBufferOffset + m_indexBuffer->getSize();
-	m_meshMemory = device->allocateMemory(static_cast<uint32_t>(bufferSize));
+	m_meshMemory = device->allocateMemory(m_vertexBuffer->getMemoryTypeBits(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,bufferSize);
 
 	VulkanDeviceMemory deviceMemory(device->getDevice(), m_meshMemory);
 	deviceMemory.map(0, VK_WHOLE_SIZE);

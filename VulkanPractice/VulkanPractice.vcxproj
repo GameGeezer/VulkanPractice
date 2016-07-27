@@ -125,8 +125,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="VulkanDescriptorPool.cpp" />
+    <ClCompile Include="VulkanDescriptorSetGroup.cpp" />
+    <ClCompile Include="VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="VulkanSemaphore.cpp" />
+    <ClCompile Include="VulkanUniformBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Window_glfw.cpp" />
     <ClCompile Include="Window_win32.cpp" />
@@ -165,18 +169,20 @@
     <ClCompile Include="VulkanInstance.cpp" />
     <ClCompile Include="VulkanMemoryAllocateInfo.cpp" />
     <ClCompile Include="VulkanPresentationSurface.cpp" />
-    <ClCompile Include="VulkanQuad.cpp" />
     <ClCompile Include="VulkanQueueSubmission.cpp" />
-    <ClCompile Include="VulkanSample.cpp" />
     <ClCompile Include="VulkanSwapchain.cpp" />
     <ClCompile Include="VulkanSwapchainImages.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="VulkanBuffer.h" />
+    <ClInclude Include="VulkanDescriptorPool.h" />
+    <ClInclude Include="VulkanDescriptorSetGroup.h" />
+    <ClInclude Include="VulkanDescriptorSetLayout.h" />
     <ClInclude Include="VulkanSemaphore.h" />
+    <ClInclude Include="VulkanUniformBuffer.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="VulkanAttachmentDescription.h" />
-    <ClInclude Include="VulkanBuffer.h" />
     <ClInclude Include="BUILD_OPTIONS.h" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="VulkanCommandBufferGroup.h" />
@@ -217,13 +223,13 @@
     <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="VulkanMemoryAllocateInfo.h" />
     <ClInclude Include="VulkanPresentationSurface.h" />
-    <ClInclude Include="VulkanQuad.h" />
     <ClInclude Include="VulkanQueueSubmission.h" />
-    <ClInclude Include="VulkanSample.h" />
     <ClInclude Include="VulkanSwapChain.h" />
     <ClInclude Include="VulkanSwapchainImages.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BasicShader.frag" />
+    <None Include="BasicShader.vert" />
     <None Include="tri.frag" />
     <None Include="tri.vert" />
     <None Include="Triangle.frag" />

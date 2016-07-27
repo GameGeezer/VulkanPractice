@@ -1,5 +1,7 @@
 #include "VulkanDevice.h"
 
+#include "VulkanCommandPool.h"
+
 VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex) :  m_physicalDevice(physicalDevice), m_queueFamilyIndex(queueIndex)
 {
 
@@ -8,6 +10,27 @@ VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex)
 VulkanDevice::~VulkanDevice()
 {
 	vkDestroyDevice(m_device, nullptr);
+
+	delete m_commandPool;
+}
+
+uint32_t
+VulkanDevice::getMemoryType(uint32_t typeBits, VkMemoryPropertyFlags properties)
+{
+	// Iterate over all memory types available for the device used in this example
+	for (uint32_t i = 0; i < m_physicalDeviceMemoryProperties.memoryTypeCount; i++)
+	{
+		if ((typeBits & 1) == 1)
+		{
+			if ((m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			{
+				return i;
+			}
+		}
+		typeBits >>= 1;
+	}
+
+	throw "Could not find a suitable memory type!";
 }
 
 void
@@ -42,10 +65,12 @@ VulkanDevice::initialize()
 	vkGetPhysicalDeviceProperties(m_physicalDevice, &m_physicalDeviceProperties);
 	// List all of the available heaps and their properties
 	setupEnumerateHeaps();
+
+	m_commandPool = new VulkanCommandPool(m_device, false, true, m_queueFamilyIndex);
 }
 
 VkDeviceMemory
-VulkanDevice::allocateMemory(uint32_t size)
+VulkanDevice::allocateMemory(uint32_t typeBits, VkMemoryPropertyFlags properties, VkDeviceSize size)
 {
 	// We take the first HOST_VISIBLE memory
 	for (auto& memoryInfo : m_heaps)
@@ -57,7 +82,7 @@ VulkanDevice::allocateMemory(uint32_t size)
 
 		VkMemoryAllocateInfo memoryAllocateInfo = {};
 		memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		memoryAllocateInfo.memoryTypeIndex = memoryInfo.index;
+		memoryAllocateInfo.memoryTypeIndex = getMemoryType(typeBits, properties);
 		memoryAllocateInfo.allocationSize = size;
 
 		VkDeviceMemory deviceMemory;
@@ -97,6 +122,12 @@ uint32_t
 VulkanDevice::getQueueIndex()
 {
 	return m_queueFamilyIndex;
+}
+
+VulkanCommandPool*
+VulkanDevice::getCommandPool()
+{
+	return m_commandPool;
 }
 
 void
