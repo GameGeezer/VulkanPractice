@@ -3,6 +3,7 @@
 #include <vulkan\vulkan.h>
 
 class VulkanDevice;
+class VulkanCommandBuffer;
 
 class VulkanBuffer
 {
@@ -11,6 +12,8 @@ public:
 
 	~VulkanBuffer();
 
+	void
+	copyInto(VkBuffer dstBuffer, uint64_t size, VulkanCommandBuffer &commandBuffer);
 
 	VkBuffer
 	getHandle();

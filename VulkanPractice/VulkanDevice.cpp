@@ -100,6 +100,12 @@ VulkanDevice::submitToQueue(uint32_t submitCount, VkSubmitInfo *submitInfo, VkFe
 	vkQueueSubmit(m_queue, submitCount, submitInfo, fence);
 }
 
+void
+VulkanDevice::waitOnQueue()
+{
+	vkQueueWaitIdle(m_queue);
+}
+
 VkDevice
 VulkanDevice::getDevice()
 {

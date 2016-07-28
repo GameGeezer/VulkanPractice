@@ -1,5 +1,9 @@
 #include "TestScreen.h"
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Window.h"
 #include "PipelineVertexInputState.h"
 #include "PipelineInputAssemblyState.h"
@@ -17,6 +21,10 @@
 #include "VulkanCommandBufferGroup.h"
 #include "VulkanCommandBuffer.h"
 #include "VulkanQueueSubmission.h"
+#include "VulkanStagedBuffer.h"
+#include "VulkanDescriptorSetLayout.h"
+#include "VulkanDescriptorPool.h"
+#include "VulkanDescriptorSet.h"
 
 #include "Application.h"
 #include "VulkanDevice.h"
@@ -24,16 +32,17 @@
 
 #include "Shaders.h"
 
+#include "FileUtil.hpp"
 
 #include "Utility.h"
 
 #include <glm\mat4x4.hpp>
 
-struct {
-	glm::mat4 projectionMatrix;
-	glm::mat4 modelMatrix;
-	glm::mat4 viewMatrix;
-} uboVS;
+struct UniformBufferObject {
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 proj;
+};
 
 void
 TestScreen::onCreate()
@@ -55,6 +64,36 @@ TestScreen::onCreate()
 		submission.inititialize(0);
 		// Submit the command buffer to the queue
 		getApplication()->getDevice()->submitToQueue(1, submission.getSubmitInfo(), fences->getFenceAtIndex(0));
+
+		m_descriptorPool = new VulkanDescriptorPool(getApplication()->getDevice()->getDevice());
+		m_descriptorPool->addSize(1);
+		m_descriptorPool->initialize(1);
+
+		VulkanDescriptorSetLayout layout(getApplication()->getDevice()->getDevice());
+		layout.addBinding(0, 1, VK_SHADER_STAGE_VERTEX_BIT);
+		layout.initialize();
+
+		m_descriptorSet = new VulkanDescriptorSet(getApplication()->getDevice()->getDevice());
+		m_descriptorSet->addLayout(layout.getHandle());
+		m_descriptorSet->initialize(m_descriptorPool->getHandle(), 1);
+
+		VkDescriptorBufferInfo bufferInfo = {};
+		bufferInfo.buffer = m_uniformBuffer->getBuffer();
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(UniformBufferObject);
+
+		VkWriteDescriptorSet descriptorWrite = {};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = m_descriptorSet->getHandle();
+		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pBufferInfo = &bufferInfo;
+
+		vkUpdateDescriptorSets(getApplication()->getDevice()->getDevice(), 1, &descriptorWrite, 0, nullptr);
+		
+
 	}
 }
 
@@ -79,12 +118,28 @@ TestScreen::onResume()
 void
 TestScreen::onUpdate(uint32_t delta)
 {
+	static auto startTime = std::chrono::high_resolution_clock::now();
 
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count() / 1000.0f;
+
+	UniformBufferObject ubo = {};
+	ubo.model = glm::rotate(glm::mat4(), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.proj = glm::perspective(glm::radians(45.0f), getApplication()->getWindow()->getWidth() / (float)getApplication()->getWindow()->getHeight(), 0.1f, 10.0f);
+	ubo.proj[1][1] *= -1;
+	VulkanCommandBuffer *commandBuffer = getApplication()->getCommandBuffers()->getCommandBufferAtIndex(1);
+
+	m_uniformBuffer->update(&ubo, sizeof(ubo), *commandBuffer);
 }
 
 void
 TestScreen::onRender(VulkanCommandBuffer *commandBufferWrapper)
 {
+	VkDescriptorSet destSet = m_descriptorSet->getHandle();
+	VkCommandBuffer cmdBuf = getApplication()->getCommandBuffers()->getCommandBufferAtIndex(0)->getHandle();
+	vkCmdBindDescriptorSets(cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout->getHandle(), 0, 1, &destSet, 0, nullptr);
+
 	VkCommandBuffer commandBuffer = commandBufferWrapper->getHandle();
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphicsPipeline->getHandle());
 	VkDeviceSize offsets[] = { 0 };
@@ -159,13 +214,13 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 	static const Vertex vertices[4] =
 	{
 		// Upper Left
-		{ { -1.0f,  1.0f, 0 },{ 0, 0 } },
+		{ { -0.5f,  0.5f, 0 },{ 0, 0 } },
 		// Upper Right
-		{ { 1.0f,  1.0f, 0 },{ 1, 0 } },
+		{ { 0.5f,  0.5f, 0 },{ 1, 0 } },
 		// Bottom right
-		{ { 1.0f, -1.0f, 0 },{ 1, 1 } },
+		{ { 0.5f, -0.5f, 0 },{ 1, 1 } },
 		// Bottom left
-		{ { -1.0f, -1.0f, 0 },{ 0, 1 } }
+		{ { -0.5f, -0.5f, 0 },{ 0, 1 } }
 	};
 
 	static const int indices[6] =
@@ -177,8 +232,7 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 
 	m_vertexBuffer = new VulkanBuffer(*device, sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
 	m_indexBuffer = new VulkanBuffer(*device, sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
-	m_uniformBuffer = new VulkanBuffer(*device, sizeof(uboVS), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
-	//m_uniformMemory = device->allocateMemory(m_uniformBuffer->getSize());
+	m_uniformBuffer = new VulkanStagedBuffer(*device, sizeof(UniformBufferObject), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 
 
 	VkDeviceSize bufferSize = m_vertexBuffer->getSize();
@@ -203,11 +257,22 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 void TestScreen::createPipelineStateObject()
 {
 	VulkanDevice *device = getApplication()->getDevice();
-	m_vertexShader = new VulkanShaderModule(device->getDevice(), BasicVertexShader, sizeof(BasicVertexShader));
-	m_fragmentShader = new VulkanShaderModule(device->getDevice(), BasicFragmentShader, sizeof(BasicFragmentShader));
+	std::vector<char> vertShader = FileUtil::readFile("vert.spv");
+	std::vector<char> fragShader = FileUtil::readFile("frag.spv");
+	m_vertexShader = new VulkanShaderModule(device->getDevice(), vertShader.data(), static_cast<uint32_t>(vertShader.size()));
+	//m_vertexShader = new VulkanShaderModule(device->getDevice(), BasicVertexShader, sizeof(BasicVertexShader));
+	m_fragmentShader = new VulkanShaderModule(device->getDevice(), fragShader.data(), static_cast<uint32_t>(fragShader.size()));
 
 	Window *window = getApplication()->getWindow();
 	
+
+	VulkanDescriptorSetLayout uniformLayout(device->getDevice());
+	uniformLayout.addBinding(0, 1, VK_SHADER_STAGE_VERTEX_BIT);
+	uniformLayout.initialize();
+
 	m_pipelineLayout = new PipelineLayout(device->getDevice());
+	m_pipelineLayout->addDescriptorSetLayout(uniformLayout.getHandle());
+	m_pipelineLayout->initialize();
+
 	m_graphicsPipeline = createPipeline(device->getDevice(), window->getRenderPass()->getHandle(), m_pipelineLayout->getHandle(), m_vertexShader->getHandle(), m_fragmentShader->getHandle(), VkExtent2D{window->getWidth(), window->getHeight() });
 }

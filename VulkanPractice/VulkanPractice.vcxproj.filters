@@ -249,16 +249,16 @@
     <ClCompile Include="Screen.cpp">
       <Filter>src\application\private</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanUniformBuffer.cpp">
-      <Filter>src\vulkan\uniformBuffers\private</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanDescriptorSetLayout.cpp">
       <Filter>src\vulkan\uniformBuffers\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanDescriptorPool.cpp">
       <Filter>src\vulkan\uniformBuffers\private</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanDescriptorSetGroup.cpp">
+    <ClCompile Include="VulkanStagedBuffer.cpp">
+      <Filter>src\vulkan\uniformBuffers\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDescriptorSet.cpp">
       <Filter>src\vulkan\uniformBuffers\private</Filter>
     </ClCompile>
   </ItemGroup>
@@ -404,20 +404,23 @@
     <ClInclude Include="VulkanFenceGroup.h">
       <Filter>src\vulkan\synchronization\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanUniformBuffer.h">
-      <Filter>src\vulkan\uniformBuffers\public</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanDescriptorSetLayout.h">
       <Filter>src\vulkan\uniformBuffers\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanDescriptorPool.h">
       <Filter>src\vulkan\uniformBuffers\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanDescriptorSetGroup.h">
-      <Filter>src\vulkan\uniformBuffers\public</Filter>
-    </ClInclude>
     <ClInclude Include="VulkanBuffer.h">
       <Filter>src\vulkan\public</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtil.hpp">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanStagedBuffer.h">
+      <Filter>src\vulkan\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDescriptorSet.h">
+      <Filter>src\vulkan\uniformBuffers\public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -437,6 +440,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="BasicShader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="BasicShaderVert.spv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="BasicShaderFrag.spv">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

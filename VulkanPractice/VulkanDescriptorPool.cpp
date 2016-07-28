@@ -2,7 +2,7 @@
 
 #include "Shared.h"
 
-VulkanDescriptorPool::VulkanDescriptorPool()
+VulkanDescriptorPool::VulkanDescriptorPool(VkDevice device) : m_device(device)
 {
 
 }
@@ -39,4 +39,11 @@ VulkanDescriptorPool::addSize(uint32_t descriptorCount)
 	poolSize.descriptorCount = descriptorCount;
 
 	m_poolSizes.push_back(poolSize);
+}
+
+
+VkDescriptorPool
+VulkanDescriptorPool::getHandle()
+{
+	return m_descriptorPool;
 }

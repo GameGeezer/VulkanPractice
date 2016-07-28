@@ -46,6 +46,7 @@ VulkanDescriptorSetLayout::addBinding(uint32_t binding, uint32_t count, VkShader
 	layoutBinding.binding = binding;
 	layoutBinding.descriptorCount = count;
 	layoutBinding.stageFlags = stageflags;
+	layoutBinding.pImmutableSamplers = nullptr;
 
 	m_bindings.push_back(layoutBinding);
 }

@@ -18,6 +18,9 @@ public:
 	void
 	copyInto(const void *data, uint32_t offset, size_t size);
 
+	VkDeviceMemory
+	getHandle();
+
 private:
 	VkDevice		m_device;
 	VkDeviceMemory	m_deviceMemory;

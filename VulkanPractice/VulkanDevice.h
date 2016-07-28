@@ -46,6 +46,9 @@ public:
 	void
 	submitToQueue(uint32_t submitCount, VkSubmitInfo *submitInfo, VkFence fence);
 
+	void
+	waitOnQueue();
+
 	VkDevice
 	getDevice();
 

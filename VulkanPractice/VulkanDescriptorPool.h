@@ -7,7 +7,7 @@
 class VulkanDescriptorPool
 {
 public:
-	VulkanDescriptorPool();
+	VulkanDescriptorPool(VkDevice device);
 
 	~VulkanDescriptorPool();
 
@@ -16,6 +16,9 @@ public:
 
 	void
 	addSize(uint32_t descriptorCount);
+
+	VkDescriptorPool
+	getHandle();
 
 private:
 	VkDevice							m_device;

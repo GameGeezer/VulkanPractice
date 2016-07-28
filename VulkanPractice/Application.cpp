@@ -107,6 +107,7 @@ Application::loop()
 
 	while (m_window->isAlive())
 	{
+		
 		uint32_t currentBackBuffer = m_window->acquireNextImage(UINT64_MAX, imageAcquiredSemaphore);
 		m_fences->waitForFences(currentBackBuffer, 1, VK_TRUE, UINT64_MAX);
 		m_fences->resetFences(currentBackBuffer, 1);
@@ -144,6 +145,8 @@ Application::loop()
 		vkQueuePresentKHR(m_device->getQueue(), &presentInfo);
 
 		m_device->submitToQueue(0, nullptr, m_fences->getFenceAtIndex(currentBackBuffer));
+
+		m_game->update(0);
 	}
 }
 

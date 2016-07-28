@@ -33,3 +33,9 @@ VulkanDeviceMemory::copyInto(const void *data, uint32_t offset, size_t size)
 {
 	::memcpy(static_cast<uint8_t*> (m_mapping) + offset, data, size);
 }
+
+VkDeviceMemory
+VulkanDeviceMemory::getHandle()
+{
+	return m_deviceMemory;
+}

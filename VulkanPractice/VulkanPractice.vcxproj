@@ -126,11 +126,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="VulkanDescriptorPool.cpp" />
-    <ClCompile Include="VulkanDescriptorSetGroup.cpp" />
+    <ClCompile Include="VulkanDescriptorSet.cpp" />
     <ClCompile Include="VulkanDescriptorSetLayout.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="VulkanSemaphore.cpp" />
-    <ClCompile Include="VulkanUniformBuffer.cpp" />
+    <ClCompile Include="VulkanStagedBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="Window_glfw.cpp" />
     <ClCompile Include="Window_win32.cpp" />
@@ -174,12 +174,13 @@
     <ClCompile Include="VulkanSwapchainImages.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileUtil.hpp" />
     <ClInclude Include="VulkanBuffer.h" />
     <ClInclude Include="VulkanDescriptorPool.h" />
-    <ClInclude Include="VulkanDescriptorSetGroup.h" />
+    <ClInclude Include="VulkanDescriptorSet.h" />
     <ClInclude Include="VulkanDescriptorSetLayout.h" />
     <ClInclude Include="VulkanSemaphore.h" />
-    <ClInclude Include="VulkanUniformBuffer.h" />
+    <ClInclude Include="VulkanStagedBuffer.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="VulkanAttachmentDescription.h" />
@@ -230,6 +231,8 @@
   <ItemGroup>
     <None Include="BasicShader.frag" />
     <None Include="BasicShader.vert" />
+    <None Include="BasicShaderFrag.spv" />
+    <None Include="BasicShaderVert.spv" />
     <None Include="tri.frag" />
     <None Include="tri.vert" />
     <None Include="Triangle.frag" />

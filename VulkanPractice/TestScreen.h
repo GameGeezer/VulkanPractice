@@ -16,6 +16,9 @@ class GraphicsPipeline;
 class VulkanBuffer;
 class VulkanShaderModule;
 class PipelineLayout;
+class VulkanStagedBuffer;
+class VulkanDescriptorPool;
+class VulkanDescriptorSet;
 
 class TestScreen : public Screen
 {
@@ -61,11 +64,13 @@ private:
 	VulkanBuffer		*	m_vertexBuffer;
 	VulkanBuffer		*	m_indexBuffer;
 
-	VkDeviceMemory			m_uniformMemory;
-	VulkanBuffer		*	m_uniformBuffer;
+	VulkanStagedBuffer	*	m_uniformBuffer;
 
 	VulkanShaderModule	*	m_vertexShader;
 	VulkanShaderModule	*	m_fragmentShader;
 
 	VkDeviceMemory			m_meshMemory;
+
+	VulkanDescriptorPool	*	m_descriptorPool;
+	VulkanDescriptorSet	*	m_descriptorSet;
 };
