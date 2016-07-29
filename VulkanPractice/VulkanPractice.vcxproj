@@ -125,6 +125,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="KeyboardCallback.cpp" />
+    <ClCompile Include="MouseClickCallback.cpp" />
+    <ClCompile Include="MouseMoveCallback.cpp" />
+    <ClCompile Include="Nova.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SDCircle.cpp" />
     <ClCompile Include="VulkanDescriptorPool.cpp" />
     <ClCompile Include="VulkanDescriptorSet.cpp" />
     <ClCompile Include="VulkanDescriptorSetLayout.cpp" />
@@ -175,6 +182,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileUtil.hpp" />
+    <ClInclude Include="KeyboardCallback.h" />
+    <ClInclude Include="KeyboardListener.h" />
+    <ClInclude Include="Morton30.hpp" />
+    <ClInclude Include="Morton64.hpp" />
+    <ClInclude Include="MouseClickCallback.h" />
+    <ClInclude Include="MouseClickListener.h" />
+    <ClInclude Include="MouseCodes.h" />
+    <ClInclude Include="MouseMoveCallback.h" />
+    <ClInclude Include="MouseMoveListener.h" />
+    <ClInclude Include="Nova.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="SDCircle.h" />
     <ClInclude Include="VulkanBuffer.h" />
     <ClInclude Include="VulkanDescriptorPool.h" />
     <ClInclude Include="VulkanDescriptorSet.h" />
@@ -185,7 +204,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="VulkanAttachmentDescription.h" />
     <ClInclude Include="BUILD_OPTIONS.h" />
-    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="VulkanCommandBufferGroup.h" />
     <ClInclude Include="VulkanCommandPool.h" />
     <ClInclude Include="ComputePipeline.h" />
@@ -196,8 +215,7 @@
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="VulkanCommandBuffer.h" />
     <ClInclude Include="VulkanImageView.h" />
-    <ClInclude Include="KeyboardKeycodes_glfw.h" />
-    <ClInclude Include="KeyboardKeycodes_win32.h" />
+    <ClInclude Include="KeyboardKeycodes.h" />
     <ClInclude Include="PipelineInputAssemblyState.h" />
     <ClInclude Include="PipelineColorBlendState.h" />
     <ClInclude Include="PipelineDepthStencilState.h" />

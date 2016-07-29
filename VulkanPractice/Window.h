@@ -7,45 +7,35 @@
 
 #include "Platform.h"
 
+#include "KeyboardCallback.h"
+#include "MouseClickCallback.h"
+#include "MouseMoveCallback.h"
+
 class VulkanDevice;
 class VulkanPresentationSurface;
 class VulkanSwapchain;
 class VulkanSwapchainImages;
 class VulkanRenderPass;
 
-struct IWindow
+class Window
 {
 public:
-	IWindow() = default;
-	IWindow(const IWindow&) = delete;
-	IWindow& operator=(const IWindow&) = delete;
+	static KeyboardCallback* KEYBOARD;
+	static MouseClickCallback* MOUSE_CLICK;
+	static MouseMoveCallback* MOUSE_MOVE;
 
-	virtual ~IWindow();
-
-	bool IsClosed() const;
-	virtual void OnClose() = 0;
-
-private:
-	virtual bool IsClosedImpl() const = 0;
-};
-
-class Window : public IWindow
-{
-public:
 	Window(VkInstance instance, VulkanDevice& device, char *title, uint32_t width, uint32_t height, uint32_t swapchainImageCount);
 
 	~Window();
-
-	void OnClose() override
-	{
-		isClosed_ = true;
-	}
 
 	uint32_t
 	acquireNextImage(uint64_t timeout, VkSemaphore imageAcquiredSemaphore);
 
 	void
 	present();
+
+	void
+	update();
 
 	void
 	beginRenderPass(VkCommandBuffer commandBuffer, uint32_t index);
@@ -78,25 +68,20 @@ public:
 	requestClose();
 
 private:
-	bool IsClosedImpl() const override
-	{
-		return isClosed_;
-	}
-
 
 	// OS depentent methods
 
 	void
-		initOsWindow();
+	initOsWindow();
 
 	void
-		deInitOSWindow();
+	deInitOSWindow();
 
 	void
-		updateOSWindow();
+	updateOSWindow();
 
 	VkSurfaceKHR
-		initOSSurface();
+	initOSSurface();
 
 	// OS independent variables
 

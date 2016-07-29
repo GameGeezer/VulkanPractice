@@ -30,11 +30,15 @@
 #include "VulkanDevice.h"
 #include "PipelineLayout.h"
 
+#include "Player.h"
+
 #include "Shaders.h"
 
 #include "FileUtil.hpp"
 
 #include "Utility.h"
+
+#include "Camera.h"
 
 #include <glm\mat4x4.hpp>
 
@@ -95,6 +99,8 @@ TestScreen::onCreate()
 		
 
 	}
+
+	m_player = new Player();
 }
 
 void
@@ -118,6 +124,8 @@ TestScreen::onResume()
 void
 TestScreen::onUpdate(uint32_t delta)
 {
+	m_player->update(delta);
+
 	static auto startTime = std::chrono::high_resolution_clock::now();
 
 	auto currentTime = std::chrono::high_resolution_clock::now();
@@ -125,8 +133,8 @@ TestScreen::onUpdate(uint32_t delta)
 
 	UniformBufferObject ubo = {};
 	ubo.model = glm::rotate(glm::mat4(), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), getApplication()->getWindow()->getWidth() / (float)getApplication()->getWindow()->getHeight(), 0.1f, 10.0f);
+	ubo.view = *(m_player->getCamera()->getView());
+	ubo.proj = *(m_player->getCamera()->getProjection());
 	ubo.proj[1][1] *= -1;
 	VulkanCommandBuffer *commandBuffer = getApplication()->getCommandBuffers()->getCommandBufferAtIndex(1);
 

@@ -11,10 +11,11 @@
 #include "VulkanRenderSubPass.h"
 #include "VulkanAttachmentDescription.h"
 
-IWindow::~IWindow()
-{
+KeyboardCallback* Window::KEYBOARD = new KeyboardCallback();
 
-}
+MouseClickCallback* Window::MOUSE_CLICK = new MouseClickCallback();
+
+MouseMoveCallback* Window::MOUSE_MOVE = new MouseMoveCallback();
 
 VulkanRenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 {
@@ -36,6 +37,12 @@ VulkanRenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
 	return renderPass;
 }
 
+void
+Window::update()
+{
+	updateOSWindow();
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 Window::Window(VkInstance instance, VulkanDevice& device, char *title, const uint32_t width, const uint32_t height, uint32_t swapchainImageCount) : m_vulkanInstance(instance), m_device(&device), m_title(title), m_width(width), m_height(height), m_swapchainImageCount(swapchainImageCount)
 {
@@ -55,12 +62,6 @@ Window::~Window()
 	delete m_swapchain;
 	delete m_surface;
 	deInitOSWindow();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-bool IWindow::IsClosed() const
-{
-	return IsClosedImpl();
 }
 
 uint32_t

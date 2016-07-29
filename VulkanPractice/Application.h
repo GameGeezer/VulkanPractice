@@ -7,7 +7,6 @@
 #include <iostream>
 #include <vector>
 
-//#include "KeyboardCallback.cuh"
 //#include "MouseClickCallback.cuh"
 //#include "MouseMoveCallback.cuh"
 

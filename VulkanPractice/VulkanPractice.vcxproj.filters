@@ -16,411 +16,486 @@
     <Filter Include="src">
       <UniqueIdentifier>{722584e4-a801-403f-8265-5d4e876f03ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window">
-      <UniqueIdentifier>{76e9dcf0-19a3-4c8b-b3eb-863a94cd8f4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\util">
-      <UniqueIdentifier>{dca789f5-10c2-4100-9274-f8990a5c8814}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\tutorial">
       <UniqueIdentifier>{623abd02-bb55-492c-908f-5e202a4f6521}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\platforms">
-      <UniqueIdentifier>{193d0feb-daaf-4384-b213-7c9cdd12426d}</UniqueIdentifier>
+    <Filter Include="src\framework">
+      <UniqueIdentifier>{d2569348-7a1f-4fe9-86cb-ca05bb63e98b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\platforms\win32">
-      <UniqueIdentifier>{a5964250-b711-4c69-ab85-282170d444e6}</UniqueIdentifier>
+    <Filter Include="src\framework\math">
+      <UniqueIdentifier>{88df3c8b-15cc-4539-a32d-bbfff49da468}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\platforms\win32\private">
-      <UniqueIdentifier>{45de71b1-f217-4e8d-8602-f46208609ee3}</UniqueIdentifier>
+    <Filter Include="src\framework\math\signedDistance">
+      <UniqueIdentifier>{0b27985f-feef-4507-8512-d097e2e1a129}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\platforms\win32\public">
-      <UniqueIdentifier>{544a848a-8b41-4045-8e89-355920a1b238}</UniqueIdentifier>
+    <Filter Include="src\framework\graphics">
+      <UniqueIdentifier>{ba3c4b6b-2e46-4459-ad41-2d5f8e75df3f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\platforms\glfw">
-      <UniqueIdentifier>{a3bfd5b0-d8b9-416f-84ab-f444e3ba8049}</UniqueIdentifier>
+    <Filter Include="src\framework\util">
+      <UniqueIdentifier>{dca789f5-10c2-4100-9274-f8990a5c8814}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\window\platforms\glfw\private">
-      <UniqueIdentifier>{f8c11af5-8e9c-44f6-b026-6299c963b557}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\platforms\glfw\public">
-      <UniqueIdentifier>{b5469bed-83e9-4287-b9d1-726c7b5bff4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\platforms\public">
-      <UniqueIdentifier>{10f7de08-2f7e-4ed2-96bb-e5da36fb202b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\platforms\private">
-      <UniqueIdentifier>{ae0879fd-f54e-402d-9ade-144582fa8a29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\application">
-      <UniqueIdentifier>{9818c41f-c993-4c4e-acb1-78dad6fe9ee8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\application\public">
-      <UniqueIdentifier>{263a2e08-105d-4fc5-8616-20a2081a155f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\application\private">
-      <UniqueIdentifier>{6e46ef89-de93-4935-a844-221db97ed63a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\public">
-      <UniqueIdentifier>{d9d7a36e-4668-435b-9678-ec413571b066}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\window\private">
-      <UniqueIdentifier>{c890e3be-2094-4d0a-a5e0-e0f8fa7edba3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\buildoptions">
-      <UniqueIdentifier>{9714d77e-2f2b-4755-b4d9-f0ea8912b3b2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\vulkan">
+    <Filter Include="src\framework\vulkan">
       <UniqueIdentifier>{af37e74b-2638-4fe8-aba9-4c908ee373b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\public">
+    <Filter Include="src\framework\vulkan\public">
       <UniqueIdentifier>{5231932d-9a7e-4004-ae85-9d82dd932530}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\private">
+    <Filter Include="src\framework\vulkan\private">
       <UniqueIdentifier>{6d3a2878-240b-4189-8b9d-66b98b39d7f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\helper">
+    <Filter Include="src\framework\vulkan\helper">
       <UniqueIdentifier>{03f6e428-00b0-4a7c-a4c4-2d085f026732}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\pipelines">
+    <Filter Include="src\framework\vulkan\pipelines">
       <UniqueIdentifier>{f4bb233b-6976-4432-b37f-3a5abdadef0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\pipelines\public">
+    <Filter Include="src\framework\vulkan\pipelines\public">
       <UniqueIdentifier>{5c3aca6a-5210-4b1b-b144-4cd382e0479b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\pipelines\private">
+    <Filter Include="src\framework\vulkan\pipelines\private">
       <UniqueIdentifier>{ee9797e1-9e74-4b28-ad27-dd58788dae51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\devices">
+    <Filter Include="src\framework\vulkan\devices">
       <UniqueIdentifier>{7c53e58a-0bab-43bc-8b4d-983dab4856cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\devices\public">
+    <Filter Include="src\framework\vulkan\devices\public">
       <UniqueIdentifier>{efc1a5ba-90c8-414f-89cb-681f2beebccb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\devices\private">
+    <Filter Include="src\framework\vulkan\devices\private">
       <UniqueIdentifier>{31240a0b-5f68-47a6-9f12-b241d3d7434b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\synchronization">
+    <Filter Include="src\framework\vulkan\synchronization">
       <UniqueIdentifier>{b02e150c-9b4c-42c6-945f-b39eb5cf1fb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\synchronization\public">
+    <Filter Include="src\framework\vulkan\synchronization\public">
       <UniqueIdentifier>{968e7914-479a-4d7b-a55b-121c475d3ecd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\synchronization\private">
+    <Filter Include="src\framework\vulkan\synchronization\private">
       <UniqueIdentifier>{63eae3a1-bd7a-4f86-958a-b3bb5d7ab695}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\uniformBuffers">
+    <Filter Include="src\framework\vulkan\uniformBuffers">
       <UniqueIdentifier>{3cbd258f-ccf5-4153-80be-b589add78c2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\uniformBuffers\public">
+    <Filter Include="src\framework\vulkan\uniformBuffers\public">
       <UniqueIdentifier>{028c0a5a-2845-47a0-b2eb-171198546aea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\vulkan\uniformBuffers\private">
+    <Filter Include="src\framework\vulkan\uniformBuffers\private">
       <UniqueIdentifier>{3e1cedc1-a323-4b7c-8027-804defb7fad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window">
+      <UniqueIdentifier>{76e9dcf0-19a3-4c8b-b3eb-863a94cd8f4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms">
+      <UniqueIdentifier>{193d0feb-daaf-4384-b213-7c9cdd12426d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\win32">
+      <UniqueIdentifier>{a5964250-b711-4c69-ab85-282170d444e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\win32\private">
+      <UniqueIdentifier>{45de71b1-f217-4e8d-8602-f46208609ee3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\win32\public">
+      <UniqueIdentifier>{544a848a-8b41-4045-8e89-355920a1b238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\glfw">
+      <UniqueIdentifier>{a3bfd5b0-d8b9-416f-84ab-f444e3ba8049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\glfw\private">
+      <UniqueIdentifier>{f8c11af5-8e9c-44f6-b026-6299c963b557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\glfw\public">
+      <UniqueIdentifier>{b5469bed-83e9-4287-b9d1-726c7b5bff4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\public">
+      <UniqueIdentifier>{10f7de08-2f7e-4ed2-96bb-e5da36fb202b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\platforms\private">
+      <UniqueIdentifier>{ae0879fd-f54e-402d-9ade-144582fa8a29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\public">
+      <UniqueIdentifier>{d9d7a36e-4668-435b-9678-ec413571b066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\private">
+      <UniqueIdentifier>{c890e3be-2094-4d0a-a5e0-e0f8fa7edba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\options">
+      <UniqueIdentifier>{b2a1cb65-e661-4ced-8c3d-22271ef339da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\game">
+      <UniqueIdentifier>{02ea8159-e795-4367-95c4-e8b26e36bdb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\graphics\public">
+      <UniqueIdentifier>{6b3830f9-8320-4918-812d-64a1010e070a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\graphics\private">
+      <UniqueIdentifier>{c2d97435-a5e3-4c52-86dd-5a80e6636792}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\callbacks">
+      <UniqueIdentifier>{58ba7d41-36f5-4dcb-ac39-570c254cdbee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\callbacks\public">
+      <UniqueIdentifier>{92e1437b-e292-4015-9fe0-e7e10d3a2e02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\window\callbacks\private">
+      <UniqueIdentifier>{c94a5780-eaa1-400f-8223-00746e41afe1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>src\application\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>src\application\private</Filter>
-    </ClCompile>
     <ClCompile Include="Shared.cpp">
-      <Filter>src\vulkan\helper</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScreen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src\framework\vulkan\helper</Filter>
     </ClCompile>
     <ClCompile Include="Platform.cpp">
-      <Filter>src\window\platforms\private</Filter>
+      <Filter>src\framework\window\platforms\private</Filter>
     </ClCompile>
     <ClCompile Include="ComputePipeline.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsPipeline.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineColorBlendState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineDepthStencilState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineInputAssemblyeState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineLayout.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineMultisampleState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineRasterizationState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineVertexInputState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="PipelineViewportState.cpp">
-      <Filter>src\vulkan\pipelines\private</Filter>
+      <Filter>src\framework\vulkan\pipelines\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanQueueSubmission.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanAttachmentDescription.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanCommandBufferGroup.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanCommandPool.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanFrameBuffer.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanRenderPass.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanRenderSubPass.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanShaderModule.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanBuffer.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanCommandBuffer.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanImageView.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanInstance.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanMemoryAllocateInfo.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanSwapchain.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanSwapchainImages.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanPresentationSurface.cpp">
-      <Filter>src\vulkan\private</Filter>
+      <Filter>src\framework\vulkan\private</Filter>
     </ClCompile>
     <ClCompile Include="Utility.cpp">
-      <Filter>src\util</Filter>
+      <Filter>src\framework\util</Filter>
     </ClCompile>
     <ClCompile Include="VulkanDevice.cpp">
-      <Filter>src\vulkan\devices\private</Filter>
+      <Filter>src\framework\vulkan\devices\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanDeviceMemory.cpp">
-      <Filter>src\vulkan\devices\private</Filter>
+      <Filter>src\framework\vulkan\devices\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanEnumeratedPhysicalDevices.cpp">
-      <Filter>src\vulkan\devices\private</Filter>
+      <Filter>src\framework\vulkan\devices\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanPhysicalDevice.cpp">
-      <Filter>src\vulkan\devices\private</Filter>
+      <Filter>src\framework\vulkan\devices\private</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>src\window\private</Filter>
+      <Filter>src\framework\window\private</Filter>
     </ClCompile>
     <ClCompile Include="Window_win32.cpp">
-      <Filter>src\window\platforms\win32\private</Filter>
+      <Filter>src\framework\window\platforms\win32\private</Filter>
     </ClCompile>
     <ClCompile Include="Window_glfw.cpp">
-      <Filter>src\window\platforms\glfw\private</Filter>
+      <Filter>src\framework\window\platforms\glfw\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanSemaphore.cpp">
-      <Filter>src\vulkan\synchronization\private</Filter>
+      <Filter>src\framework\vulkan\synchronization\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanFenceGroup.cpp">
-      <Filter>src\vulkan\synchronization\private</Filter>
-    </ClCompile>
-    <ClCompile Include="Screen.cpp">
-      <Filter>src\application\private</Filter>
+      <Filter>src\framework\vulkan\synchronization\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanDescriptorSetLayout.cpp">
-      <Filter>src\vulkan\uniformBuffers\private</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanDescriptorPool.cpp">
-      <Filter>src\vulkan\uniformBuffers\private</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanStagedBuffer.cpp">
-      <Filter>src\vulkan\uniformBuffers\private</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanDescriptorSet.cpp">
-      <Filter>src\vulkan\uniformBuffers\private</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\private</Filter>
+    </ClCompile>
+    <ClCompile Include="SDCircle.cpp">
+      <Filter>src\framework\math\signedDistance</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>src\framework\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>src\framework\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.cpp">
+      <Filter>src\framework\window\private</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScreen.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>src\framework\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="Nova.cpp">
+      <Filter>src\framework\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardCallback.cpp">
+      <Filter>src\framework\window\callbacks\private</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseMoveCallback.cpp">
+      <Filter>src\framework\window\callbacks\private</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseClickCallback.cpp">
+      <Filter>src\framework\window\callbacks\private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>src\application\public</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>src\application\public</Filter>
-    </ClInclude>
-    <ClInclude Include="Screen.h">
-      <Filter>src\application\public</Filter>
-    </ClInclude>
     <ClInclude Include="Shared.h">
-      <Filter>src\vulkan\helper</Filter>
-    </ClInclude>
-    <ClInclude Include="TestScreen.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardKeycodes_glfw.h">
-      <Filter>src\window\platforms\glfw\public</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardKeycodes_win32.h">
-      <Filter>src\window\platforms\win32\public</Filter>
+      <Filter>src\framework\vulkan\helper</Filter>
     </ClInclude>
     <ClInclude Include="PlatformHeaders_glfw.h">
-      <Filter>src\window\platforms\glfw</Filter>
+      <Filter>src\framework\window\platforms\glfw</Filter>
     </ClInclude>
     <ClInclude Include="PlatformHeaders_win32.h">
-      <Filter>src\window\platforms\win32</Filter>
+      <Filter>src\framework\window\platforms\win32</Filter>
     </ClInclude>
     <ClInclude Include="Shaders.h">
       <Filter>Source Files\tutorial</Filter>
     </ClInclude>
     <ClInclude Include="Platform.h">
-      <Filter>src\window\platforms\public</Filter>
-    </ClInclude>
-    <ClInclude Include="BUILD_OPTIONS.h">
-      <Filter>src\buildoptions</Filter>
+      <Filter>src\framework\window\platforms\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineViewportState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineVertexInputState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineRasterizationState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineMultisampleState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineLayout.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineInputAssemblyState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineDepthStencilState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="PipelineColorBlendState.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsPipeline.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="ComputePipeline.h">
-      <Filter>src\vulkan\pipelines\public</Filter>
+      <Filter>src\framework\vulkan\pipelines\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanQueueSubmission.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanMemoryAllocateInfo.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanInstance.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanImageView.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanCommandBuffer.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanShaderModule.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanRenderSubPass.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanRenderPass.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanFrameBuffer.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanCommandPool.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanCommandBufferGroup.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanAttachmentDescription.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanSwapchainImages.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanSwapChain.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanPresentationSurface.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
-      <Filter>src\util</Filter>
+      <Filter>src\framework\util</Filter>
     </ClInclude>
     <ClInclude Include="VulkanHelper.h">
-      <Filter>src\vulkan\helper</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.hpp">
-      <Filter>Source Files\tutorial</Filter>
+      <Filter>src\framework\vulkan\helper</Filter>
     </ClInclude>
     <ClInclude Include="VulkanEnumeratedPhysicalDevices.h">
-      <Filter>src\vulkan\devices\public</Filter>
+      <Filter>src\framework\vulkan\devices\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanDeviceMemory.h">
-      <Filter>src\vulkan\devices\public</Filter>
+      <Filter>src\framework\vulkan\devices\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanDevice.h">
-      <Filter>src\vulkan\devices\public</Filter>
+      <Filter>src\framework\vulkan\devices\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanPhysicalDevice.h">
-      <Filter>src\vulkan\devices\public</Filter>
+      <Filter>src\framework\vulkan\devices\public</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>src\window\public</Filter>
+      <Filter>src\framework\window\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanSemaphore.h">
-      <Filter>src\vulkan\synchronization\public</Filter>
+      <Filter>src\framework\vulkan\synchronization\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanFenceGroup.h">
-      <Filter>src\vulkan\synchronization\public</Filter>
+      <Filter>src\framework\vulkan\synchronization\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanDescriptorSetLayout.h">
-      <Filter>src\vulkan\uniformBuffers\public</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanDescriptorPool.h">
-      <Filter>src\vulkan\uniformBuffers\public</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanBuffer.h">
-      <Filter>src\vulkan\public</Filter>
+      <Filter>src\framework\vulkan\public</Filter>
     </ClInclude>
     <ClInclude Include="FileUtil.hpp">
-      <Filter>src\util</Filter>
+      <Filter>src\framework\util</Filter>
     </ClInclude>
     <ClInclude Include="VulkanStagedBuffer.h">
-      <Filter>src\vulkan\uniformBuffers\public</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanDescriptorSet.h">
-      <Filter>src\vulkan\uniformBuffers\public</Filter>
+      <Filter>src\framework\vulkan\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Morton64.hpp">
+      <Filter>src\framework\math</Filter>
+    </ClInclude>
+    <ClInclude Include="Morton30.hpp">
+      <Filter>src\framework\math</Filter>
+    </ClInclude>
+    <ClInclude Include="SDCircle.h">
+      <Filter>src\framework\math\signedDistance</Filter>
+    </ClInclude>
+    <ClInclude Include="BUILD_OPTIONS.h">
+      <Filter>src\options</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>src\framework\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>src\framework\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>src\framework\window\public</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScreen.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Nova.h">
+      <Filter>src\framework\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>src\framework\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseMoveListener.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardCallback.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardKeycodes.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardListener.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseMoveCallback.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseClickListener.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseCodes.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseClickCallback.h">
+      <Filter>src\framework\window\callbacks\public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

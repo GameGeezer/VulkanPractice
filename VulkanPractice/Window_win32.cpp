@@ -8,6 +8,8 @@ LRESULT CALLBACK WindowsEventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 {
 	Window * window = reinterpret_cast<Window*>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
 
+	int32_t param = static_cast<int32_t>(static_cast<int64_t>(wParam));
+
 	switch (uMsg)
 	{
 	case WM_CLOSE:
@@ -15,9 +17,11 @@ LRESULT CALLBACK WindowsEventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		return 0;
 
 	case WM_KEYDOWN:
+		Window::KEYBOARD->onKeyPressed(param);
 		break;
 
 	case WM_KEYUP:
+		Window::KEYBOARD->onKeyReleased(param);
 		break;
 
 	case WM_SIZE:

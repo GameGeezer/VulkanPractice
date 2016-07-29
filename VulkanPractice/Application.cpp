@@ -19,6 +19,7 @@
 #include "VulkanSemaphore.h"
 
 
+
 Application::Application(Game& game, string windowTitle, int windowWidth, int windowHeight) : m_game(&game), m_windowTitle(windowTitle), m_windowWidth(windowWidth), m_windowHeight(windowHeight)
 {
 	
@@ -107,7 +108,8 @@ Application::loop()
 
 	while (m_window->isAlive())
 	{
-		
+		m_window->update();
+
 		uint32_t currentBackBuffer = m_window->acquireNextImage(UINT64_MAX, imageAcquiredSemaphore);
 		m_fences->waitForFences(currentBackBuffer, 1, VK_TRUE, UINT64_MAX);
 		m_fences->resetFences(currentBackBuffer, 1);

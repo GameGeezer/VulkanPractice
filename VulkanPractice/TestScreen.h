@@ -19,6 +19,7 @@ class PipelineLayout;
 class VulkanStagedBuffer;
 class VulkanDescriptorPool;
 class VulkanDescriptorSet;
+class Player;
 
 class TestScreen : public Screen
 {
@@ -73,4 +74,6 @@ private:
 
 	VulkanDescriptorPool	*	m_descriptorPool;
 	VulkanDescriptorSet	*	m_descriptorSet;
+
+	Player				*	m_player;
 };

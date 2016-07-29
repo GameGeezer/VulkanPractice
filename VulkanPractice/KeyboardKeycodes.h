@@ -1,0 +1,98 @@
+#pragma once
+
+#include "BUILD_OPTIONS.h"
+#include "Platform.h"
+
+#if VK_USE_PLATFORM_WIN32_KHR
+
+enum KeyboardKeycode
+{
+	KEY_LEFT = VK_LEFT,
+	KEY_RIGHT = VK_RIGHT,
+	KEY_UP = VK_UP,
+	KEY_DOWN = VK_DOWN,
+	KEY_NUM_0 = 0x30,
+	KEY_NUM_1 = 0x31,
+	KEY_NUM_2 = 0x32,
+	KEY_NUM_3 = 0x33,
+	KEY_NUM_4 = 0x34,
+	KEY_NUM_5 = 0x35,
+	KEY_NUM_6 = 0x36,
+	KEY_NUM_7 = 0x37,
+	KEY_NUM_8 = 0x38,
+	KEY_NUM_9 = 0x39,
+	KEY_A = 0x41,
+	KEY_B = 0x42,
+	KEY_C = 0x43,
+	KEY_D = 0x44,
+	KEY_E = 0x45,
+	KEY_F = 0x46,
+	KEY_G = 0x47,
+	KEY_H = 0x48,
+	KEY_I = 0x49,
+	KEY_J = 0x4A,
+	KEY_K = 0x4B,
+	KEY_L = 0x4C,
+	KEY_M = 0x4D,
+	KEY_N = 0x4E,
+	KEY_O = 0x4F,
+	KEY_P = 0x50,
+	KEY_Q = 0x51,
+	KEY_R = 0x52,
+	KEY_S = 0x53,
+	KEY_T = 0x54,
+	KEY_U = 0x55,
+	KEY_V = 0x56,
+	KEY_W = 0x57,
+	KEY_X = 0x58,
+	KEY_Y = 0x59,
+	KEY_Z = 0x5A
+};
+
+#elif USE_FRAMEWORK_GLFW
+
+enum KeyboardKeycode
+{
+	KEY_LEFT = GLFW_KEY_LEFT,
+	KEY_RIGHT = GLFW_KEY_RIGHT,
+	KEY_UP = GLFW_KEY_UP,
+	KEY_DOWN = GLFW_KEY_DOWN,
+	KEY_NUM_0 = GLFW_KEY_0,
+	KEY_NUM_1 = GLFW_KEY_1,
+	KEY_NUM_2 = GLFW_KEY_2,
+	KEY_NUM_3 = GLFW_KEY_3,
+	KEY_NUM_4 = GLFW_KEY_4,
+	KEY_NUM_5 = GLFW_KEY_5,
+	KEY_NUM_6 = GLFW_KEY_6,
+	KEY_NUM_7 = GLFW_KEY_7,
+	KEY_NUM_8 = GLFW_KEY_8,
+	KEY_NUM_9 = GLFW_KEY_9,
+	KEY_A = GLFW_KEY_A,
+	KEY_B = GLFW_KEY_B,
+	KEY_C = GLFW_KEY_C,
+	KEY_D = GLFW_KEY_D,
+	KEY_E = GLFW_KEY_E,
+	KEY_F = GLFW_KEY_F,
+	KEY_G = GLFW_KEY_G,
+	KEY_H = GLFW_KEY_H,
+	KEY_I = GLFW_KEY_I,
+	KEY_J = GLFW_KEY_J,
+	KEY_K = GLFW_KEY_K,
+	KEY_L = GLFW_KEY_L,
+	KEY_M = GLFW_KEY_M,
+	KEY_N = GLFW_KEY_N,
+	KEY_O = GLFW_KEY_O,
+	KEY_P = GLFW_KEY_P,
+	KEY_Q = GLFW_KEY_Q,
+	KEY_R = GLFW_KEY_R,
+	KEY_S = GLFW_KEY_S,
+	KEY_T = GLFW_KEY_T,
+	KEY_U = GLFW_KEY_U,
+	KEY_V = GLFW_KEY_V,
+	KEY_W = GLFW_KEY_W,
+	KEY_X = GLFW_KEY_X,
+	KEY_Y = GLFW_KEY_Y,
+	KEY_Z = GLFW_KEY_Z
+};
+
+#endif
