@@ -7,8 +7,8 @@
 
 enum MouseButton
 {
-	LEFT = GLFW_MOUSE_BUTTON_LEFT,
-	RIGHT = GLFW_MOUSE_BUTTON_RIGHT
+	LEFT = 0x1,
+	RIGHT = 0x2
 };
 
 #elif USE_FRAMEWORK_GLFW

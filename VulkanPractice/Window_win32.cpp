@@ -4,11 +4,21 @@
 
 #include "Window.h"
 
+#include "MouseCodes.h"
+
 LRESULT CALLBACK WindowsEventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (uMsg == WM_NCCREATE)
+	{
+		return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+	}
+
 	Window * window = reinterpret_cast<Window*>(GetWindowLongPtrW(hWnd, GWLP_USERDATA));
 
 	int32_t param = static_cast<int32_t>(static_cast<int64_t>(wParam));
+
+	float lowWord = LOWORD(lParam);
+	float highWord = HIWORD(lParam);
 
 	switch (uMsg)
 	{
@@ -24,6 +34,28 @@ LRESULT CALLBACK WindowsEventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 		Window::KEYBOARD->onKeyReleased(param);
 		break;
 
+	case WM_LBUTTONDOWN:
+
+		Window::MOUSE_CLICK->onButtonPress(MouseButton::LEFT, lowWord, highWord);
+		break;
+
+	case WM_LBUTTONUP:
+		Window::MOUSE_CLICK->onButtonRelease(MouseButton::LEFT, lowWord, highWord);
+		break;
+
+	case WM_RBUTTONDOWN:
+
+		Window::MOUSE_CLICK->onButtonPress(MouseButton::RIGHT, lowWord, highWord);
+		break;
+
+	case WM_RBUTTONUP:
+		Window::MOUSE_CLICK->onButtonRelease(MouseButton::RIGHT, lowWord, highWord);
+		break;
+
+	case WM_MOUSEMOVE:
+		Window::MOUSE_MOVE->invoke(lowWord, highWord);
+		break;
+
 	case WM_SIZE:
 		// we get here if the window has changed size, we should rebuild most
 		// of our window resources before rendering to this window again.
@@ -35,7 +67,7 @@ LRESULT CALLBACK WindowsEventHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-	}
+}
 
 void
 Window::initOsWindow()
