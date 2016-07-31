@@ -1,8 +1,9 @@
 #include "VulkanDevice.h"
 
+#include "VulkanPhysicalDevice.h"
 #include "VulkanCommandPool.h"
 
-VulkanDevice::VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t queueIndex) :  m_physicalDevice(physicalDevice), m_queueFamilyIndex(queueIndex)
+VulkanDevice::VulkanDevice(VulkanPhysicalDevice &physicalDevice, uint32_t queueIndex) :  m_physicalDevice(&physicalDevice), m_queueFamilyIndex(queueIndex)
 {
 
 }
@@ -18,11 +19,13 @@ uint32_t
 VulkanDevice::getMemoryType(uint32_t typeBits, VkMemoryPropertyFlags properties)
 {
 	// Iterate over all memory types available for the device used in this example
-	for (uint32_t i = 0; i < m_physicalDeviceMemoryProperties.memoryTypeCount; i++)
+	uint32_t memoryTypeCount = m_physicalDevice->getMemoryProperties()->memoryTypeCount;
+	VkMemoryType *memoryTypes = m_physicalDevice->getMemoryProperties()->memoryTypes;
+	for (uint32_t i = 0; i < memoryTypeCount; i++)
 	{
 		if ((typeBits & 1) == 1)
 		{
-			if ((m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			if ((memoryTypes[i].propertyFlags & properties) == properties)
 			{
 				return i;
 			}
@@ -56,13 +59,12 @@ VulkanDevice::initialize()
 	deviceCreateInfo.enabledLayerCount = static_cast<uint32_t> (deviceLayers.size());
 	deviceCreateInfo.ppEnabledExtensionNames = m_extensions.data();
 	deviceCreateInfo.enabledExtensionCount = static_cast<uint32_t> (m_extensions.size());
+	deviceCreateInfo.pEnabledFeatures = m_physicalDevice->getFeatures();
 
-	vkCreateDevice(m_physicalDevice, &deviceCreateInfo, nullptr, &m_device);
+	vkCreateDevice(m_physicalDevice->getHandle(), &deviceCreateInfo, nullptr, &m_device);
 
 	vkGetDeviceQueue(m_device, m_queueFamilyIndex, 0, &m_queue);
 
-	// Get the device properties
-	vkGetPhysicalDeviceProperties(m_physicalDevice, &m_physicalDeviceProperties);
 	// List all of the available heaps and their properties
 	setupEnumerateHeaps();
 
@@ -112,7 +114,7 @@ VulkanDevice::getDevice()
 	return m_device;
 }
 
-VkPhysicalDevice
+VulkanPhysicalDevice*
 VulkanDevice::getPhysicalDevice()
 {
 	return m_physicalDevice;
@@ -146,30 +148,33 @@ VulkanDevice::addExtension(const char* extension)
 void
 VulkanDevice::setupEnumerateHeaps()
 {
-	vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &m_physicalDeviceMemoryProperties);
-
+	
 	std::vector<MemoryTypeInfo::Heap> heaps;
 
-	for (uint32_t i = 0; i < m_physicalDeviceMemoryProperties.memoryHeapCount; ++i)
+	uint32_t memoryHeapCount = m_physicalDevice->getMemoryProperties()->memoryHeapCount;
+	VkMemoryHeap *memoryHeaps = m_physicalDevice->getMemoryProperties()->memoryHeaps;
+	for (uint32_t i = 0; i < memoryHeapCount; ++i)
 	{
 		MemoryTypeInfo::Heap info;
-		info.size = m_physicalDeviceMemoryProperties.memoryHeaps[i].size;
-		info.deviceLocal = (m_physicalDeviceMemoryProperties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) != 0;
+		info.size = memoryHeaps[i].size;
+		info.deviceLocal = (memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) != 0;
 
 		heaps.push_back(info);
 	}
 
-	for (uint32_t i = 0; i < m_physicalDeviceMemoryProperties.memoryTypeCount; ++i)
+	uint32_t memoryTypeCount = m_physicalDevice->getMemoryProperties()->memoryTypeCount;
+	VkMemoryType *memoryTypes = m_physicalDevice->getMemoryProperties()->memoryTypes;
+	for (uint32_t i = 0; i < memoryTypeCount; ++i)
 	{
 		MemoryTypeInfo typeInfo;
 
-		typeInfo.deviceLocal = (m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0;
-		typeInfo.hostVisible = (m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
-		typeInfo.hostCoherent = (m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
-		typeInfo.hostCached = (m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT) != 0;
-		typeInfo.lazilyAllocated = (m_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT) != 0;
+		typeInfo.deviceLocal = (memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0;
+		typeInfo.hostVisible = (memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0;
+		typeInfo.hostCoherent = (memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
+		typeInfo.hostCached = (memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_CACHED_BIT) != 0;
+		typeInfo.lazilyAllocated = (memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT) != 0;
 
-		typeInfo.heap = heaps[m_physicalDeviceMemoryProperties.memoryTypes[i].heapIndex];
+		typeInfo.heap = heaps[memoryTypes[i].heapIndex];
 
 		typeInfo.index = static_cast<int> (i);
 

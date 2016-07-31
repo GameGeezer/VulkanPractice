@@ -138,7 +138,8 @@ TestScreen::onUpdate(uint32_t delta)
 	ubo.proj[1][1] *= -1;
 	VulkanCommandBuffer *commandBuffer = getApplication()->getCommandBuffers()->getCommandBufferAtIndex(1);
 
-	m_uniformBuffer->update(&ubo, sizeof(ubo), *commandBuffer);
+	m_uniformBuffer->stage(&ubo, sizeof(ubo));
+	m_uniformBuffer->update(*commandBuffer);
 }
 
 void

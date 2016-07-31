@@ -4,10 +4,11 @@
 
 #include <string>
 
+class VulkanDevice;
+
 class TextureLoader
 {
 public:
 	void
-	load(std::string fileName, VkFormat format);
-
+	load(VulkanDevice &device, std::string fileName, VkFormat format);
 };

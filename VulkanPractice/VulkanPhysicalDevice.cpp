@@ -7,6 +7,12 @@ VulkanPhysicalDevice::VulkanPhysicalDevice(VkPhysicalDevice physicalDevice) : m_
 	m_queueFamilyProperties.resize(m_queueFamilyPropertyCount);
 
 	vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &m_queueFamilyPropertyCount, m_queueFamilyProperties.data());
+
+	vkGetPhysicalDeviceProperties(m_physicalDevice, &m_physicalDeviceProperties);
+
+	vkGetPhysicalDeviceFeatures(m_physicalDevice, &m_physicalDeviceFeatures);
+
+	vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &m_physicalDeviceMemoryProperties);
 }
 
 VulkanPhysicalDevice::~VulkanPhysicalDevice()
@@ -37,4 +43,22 @@ VkPhysicalDevice
 VulkanPhysicalDevice::getHandle()
 {
 	return m_physicalDevice;
+}
+
+VkPhysicalDeviceProperties*
+VulkanPhysicalDevice::getProperties()
+{
+	return &m_physicalDeviceProperties;
+}
+
+VkPhysicalDeviceMemoryProperties*
+VulkanPhysicalDevice::getMemoryProperties()
+{
+	return &m_physicalDeviceMemoryProperties;
+}
+
+VkPhysicalDeviceFeatures*
+VulkanPhysicalDevice::getFeatures()
+{
+	return &m_physicalDeviceFeatures;
 }

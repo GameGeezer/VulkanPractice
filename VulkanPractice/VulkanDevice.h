@@ -6,6 +6,7 @@
 
 using namespace std;
 
+class VulkanPhysicalDevice;
 class VulkanCommandPool;
 
 struct MemoryTypeInfo
@@ -30,7 +31,7 @@ class VulkanDevice
 {
 public:
 
-	VulkanDevice(VkPhysicalDevice physicalDevice, uint32_t graphicsQueueIndex);
+	VulkanDevice(VulkanPhysicalDevice &physicalDevice, uint32_t graphicsQueueIndex);
 
 	~VulkanDevice();
 
@@ -52,7 +53,7 @@ public:
 	VkDevice
 	getDevice();
 
-	VkPhysicalDevice
+	VulkanPhysicalDevice*
 	getPhysicalDevice();
 
 	VkQueue
@@ -69,9 +70,7 @@ public:
 
 private:
 	VkDevice							m_device;
-	VkPhysicalDevice					m_physicalDevice;
-	VkPhysicalDeviceProperties			m_physicalDeviceProperties;
-	VkPhysicalDeviceMemoryProperties	m_physicalDeviceMemoryProperties;
+	VulkanPhysicalDevice			*	m_physicalDevice;
 
 	VkQueue								m_queue;
 	uint32_t							m_queueFamilyIndex;

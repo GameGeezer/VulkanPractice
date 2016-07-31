@@ -145,6 +145,9 @@
     <Filter Include="src\framework\vulkan\graphics">
       <UniqueIdentifier>{537e2738-5388-4a77-a640-cabf896c982e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\framework\vulkan\base\images">
+      <UniqueIdentifier>{bf48f5ca-dc8c-4892-aeb1-800b077fccb4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared.cpp">
@@ -314,6 +317,12 @@
     </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
       <Filter>src\framework\util</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImage.cpp">
+      <Filter>src\framework\vulkan\base\images</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanSampler.cpp">
+      <Filter>src\framework\vulkan\base\images</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -514,6 +523,12 @@
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>src\framework\util</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImage.h">
+      <Filter>src\framework\vulkan\base\images</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanSampler.h">
+      <Filter>src\framework\vulkan\base\images</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,10 @@ public:
 	~VulkanStagedBuffer();
 
 	void
-	update(void *start, size_t size, VulkanCommandBuffer &commandBuffer);
+	stage(void *start, size_t size);
+
+	void
+	update(VulkanCommandBuffer &commandBuffer);
 
 	VkBuffer
 	getBuffer();

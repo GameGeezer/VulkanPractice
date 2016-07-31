@@ -76,10 +76,10 @@ Application::init()
 
 	// Set up the virtual device that we're going to use
 
-	VkPhysicalDevice physicalDevice = physicalDevices.at(0)->getHandle();
+	VulkanPhysicalDevice *physicalDevice = physicalDevices.at(0);
 	uint32_t graphicsQueueIndex = queueIndexes.at(0);
 
-	m_device = new VulkanDevice(physicalDevice, graphicsQueueIndex);
+	m_device = new VulkanDevice(*physicalDevice, graphicsQueueIndex);
 	m_device->addExtension("VK_KHR_swapchain");
 	m_device->initialize();
 

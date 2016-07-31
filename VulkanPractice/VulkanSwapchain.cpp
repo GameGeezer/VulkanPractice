@@ -1,6 +1,7 @@
 #include "VulkanSwapChain.h"
 
 #include "VulkanDevice.h"
+#include "VulkanPhysicalDevice.h"
 
 #include "VulkanPresentationSurface.h"
 
@@ -39,11 +40,11 @@ SwapchainFormatColorSpace GetSwapchainFormatAndColorspace(VkPhysicalDevice physi
 VulkanSwapchain::VulkanSwapchain(VulkanDevice &device, VulkanPresentationSurface &surface, uint32_t imageCount) : m_device(&device), m_surface(&surface), m_imageCount(imageCount)
 {
 	uint32_t presentModeCount;
-	vkGetPhysicalDeviceSurfacePresentModesKHR(m_device->getPhysicalDevice(), m_surface->getHandle(), &presentModeCount, nullptr);
+	vkGetPhysicalDeviceSurfacePresentModesKHR(m_device->getPhysicalDevice()->getHandle(), m_surface->getHandle(), &presentModeCount, nullptr);
 
 	std::vector<VkPresentModeKHR> presentModes{ presentModeCount };
 
-	vkGetPhysicalDeviceSurfacePresentModesKHR(m_device->getPhysicalDevice(), m_surface->getHandle(), &presentModeCount, presentModes.data());
+	vkGetPhysicalDeviceSurfacePresentModesKHR(m_device->getPhysicalDevice()->getHandle(), m_surface->getHandle(), &presentModeCount, presentModes.data());
 
 	VkSurfaceCapabilitiesKHR *surfaceCapibilities = m_surface->getCapabilities();
 	VkExtent2D swapChainSize = {};
@@ -71,7 +72,7 @@ VulkanSwapchain::VulkanSwapchain(VulkanDevice &device, VulkanPresentationSurface
 		surfaceTransformFlags = surfaceCapibilities->currentTransform;
 	}
 
-	auto swapchainFormatColorSpace = GetSwapchainFormatAndColorspace(m_device->getPhysicalDevice(), m_surface->getHandle());
+	auto swapchainFormatColorSpace = GetSwapchainFormatAndColorspace(m_device->getPhysicalDevice()->getHandle(), m_surface->getHandle());
 
 	VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
 	swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

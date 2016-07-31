@@ -2,9 +2,11 @@
 
 #include "VulkanDevice.h"
 
+#include "VulkanPhysicalDevice.h"
+
 VulkanPresentationSurface::VulkanPresentationSurface(VulkanDevice &device, VkInstance instance, VkSurfaceKHR surface) : m_device(&device), m_instance(instance), m_surface(surface)
 {
-	auto gpu = m_device->getPhysicalDevice();
+	auto gpu = m_device->getPhysicalDevice()->getHandle();
 
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, m_surface, &m_capabilities);
 	if (m_capabilities.currentExtent.width < UINT32_MAX)

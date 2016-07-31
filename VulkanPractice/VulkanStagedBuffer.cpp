@@ -29,15 +29,20 @@ VulkanStagedBuffer::~VulkanStagedBuffer()
 }
 
 void
-VulkanStagedBuffer::update(void *start, size_t size, VulkanCommandBuffer &commandBuffer)
+VulkanStagedBuffer::stage(void *start, size_t size)
 {
 	void *pData = nullptr;
 	m_stagingMemory->map(0, VK_WHOLE_SIZE);
 	m_stagingMemory->copyInto(start, 0, size);
 	m_stagingMemory->unmap();
+}
 
+void
+VulkanStagedBuffer::update(VulkanCommandBuffer &commandBuffer)
+{
 	m_stagingBuffer->copyInto(m_buffer->getHandle(), m_buffer->getSize(), commandBuffer);
 }
+
 
 VkBuffer
 VulkanStagedBuffer::getBuffer()
