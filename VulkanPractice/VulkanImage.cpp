@@ -27,13 +27,19 @@ VulkanImage::VulkanImage(VkDevice device, VkFormat format, uint32_t mipMapLevels
 
 VulkanImage::~VulkanImage()
 {
-
+	vkDestroyImage(m_device, m_image, nullptr);
 }
 
 void
 VulkanImage::bindToMemory(VkDeviceMemory deviceMemory, uint32_t memoryOffset)
 {
 	ErrorCheck(vkBindImageMemory(m_device, m_image, deviceMemory, memoryOffset));
+}
+
+void
+VulkanImage::copyFromBuffer(VkCommandBuffer commandBuffer, VkBuffer stagingBuffer, std::vector<VkBufferImageCopy> &bufferCopyRegions)
+{
+	vkCmdCopyBufferToImage(commandBuffer, stagingBuffer, m_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>(bufferCopyRegions.size()), bufferCopyRegions.data());
 }
 
 VkImage

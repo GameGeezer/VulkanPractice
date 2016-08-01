@@ -18,6 +18,7 @@ class VulkanCommandPool;
 class VulkanCommandBufferGroup;
 class VulkanFenceGroup;
 class VulkanCommandBuffer;
+class VulkanEnumeratedPhysicalDevices;
 
 using namespace std;
 using namespace std::chrono;
@@ -51,6 +52,8 @@ public:
 	getCommandBuffers();
 
 private:
+
+	VulkanEnumeratedPhysicalDevices	*	m_enumeratedPhysicalDevices;
 
 	Window							*	m_window;
 

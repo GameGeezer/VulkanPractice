@@ -1,11 +1,11 @@
 #include "VulkanImageView.h"
 
-VulkanImageView::VulkanImageView(VkDevice device, VkImage image, VkFormat format) : m_device(device)
+VulkanImageView::VulkanImageView(VkDevice device, VkImage image, VkFormat format, VkImageViewType type, VkImageSubresourceRange &subresourceRange) : m_device(device)
 {
 	VkImageViewCreateInfo imageViewCreateInfo = {};
 	imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	imageViewCreateInfo.image = image;
-	imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	imageViewCreateInfo.viewType = type;
 	imageViewCreateInfo.format = format;
 	imageViewCreateInfo.subresourceRange.levelCount = 1;
 	imageViewCreateInfo.subresourceRange.layerCount = 1;

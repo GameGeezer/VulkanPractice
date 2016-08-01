@@ -10,9 +10,9 @@ VulkanDevice::VulkanDevice(VulkanPhysicalDevice &physicalDevice, uint32_t queueI
 
 VulkanDevice::~VulkanDevice()
 {
-	vkDestroyDevice(m_device, nullptr);
-
 	delete m_commandPool;
+
+	vkDestroyDevice(m_device, nullptr);
 }
 
 uint32_t
@@ -109,7 +109,7 @@ VulkanDevice::waitOnQueue()
 }
 
 VkDevice
-VulkanDevice::getDevice()
+VulkanDevice::getHandle()
 {
 	return m_device;
 }

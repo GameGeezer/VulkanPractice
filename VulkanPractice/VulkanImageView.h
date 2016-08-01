@@ -5,7 +5,7 @@
 class VulkanImageView
 {
 public:
-	VulkanImageView(VkDevice device, VkImage image, VkFormat format);
+	VulkanImageView(VkDevice device, VkImage image, VkFormat format, VkImageViewType type, VkImageSubresourceRange &subresourceRange);
 
 	~VulkanImageView();
 

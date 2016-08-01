@@ -15,7 +15,7 @@ public:
 	~VulkanStagedBuffer();
 
 	void
-	stage(void *start, size_t size);
+	stage(void *data, uint32_t offset, size_t size);
 
 	void
 	update(VulkanCommandBuffer &commandBuffer);
@@ -24,13 +24,13 @@ public:
 	getBuffer();
 
 private:
-	VulkanDevice		*	m_device;
+	VulkanDevice			*	m_device;
 
-	VulkanBuffer		*	m_stagingBuffer;
-	VulkanDeviceMemory	*	m_stagingMemory;
+	VulkanBuffer			*	m_stagingBuffer;
+	VulkanDeviceMemory		*	m_stagingMemory;
 
-	VulkanBuffer		*	m_buffer;
-	VulkanDeviceMemory	*	m_memory;
+	VulkanBuffer			*	m_buffer;
+	VulkanDeviceMemory		*	m_memory;
 
-	VkDescriptorBufferInfo	m_descriptor;
+	VkDescriptorBufferInfo		m_descriptor;
 };

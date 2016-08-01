@@ -26,6 +26,12 @@ VulkanCommandBuffer::end()
 	vkEndCommandBuffer(m_commandBuffer);
 }
 
+void
+VulkanCommandBuffer::addBarriers(VkPipelineStageFlags srcFlags, VkPipelineStageFlags dstFlags, VkDependencyFlags depFlags, VkMemoryBarrier *memoryBarriers, uint32_t memoryBarriersCount, VkBufferMemoryBarrier *bufferMemoryBarriers, uint32_t bufferMemoryBarriersCount, VkImageMemoryBarrier *imageBarriers, uint32_t imageBarriersCount)
+{
+	vkCmdPipelineBarrier(m_commandBuffer, srcFlags, dstFlags, dstFlags, memoryBarriersCount, memoryBarriers, bufferMemoryBarriersCount, bufferMemoryBarriers, imageBarriersCount, imageBarriers);
+}
+
 VkCommandBuffer
 VulkanCommandBuffer::getHandle()
 {

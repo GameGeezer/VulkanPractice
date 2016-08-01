@@ -17,7 +17,7 @@ VulkanPhysicalDevice::VulkanPhysicalDevice(VkPhysicalDevice physicalDevice) : m_
 
 VulkanPhysicalDevice::~VulkanPhysicalDevice()
 {
-
+	
 }
 
 bool

@@ -18,7 +18,11 @@ VulkanEnumeratedPhysicalDevices::VulkanEnumeratedPhysicalDevices(VkInstance inst
 
 VulkanEnumeratedPhysicalDevices::~VulkanEnumeratedPhysicalDevices()
 {
-
+	//	Delete each VulkanPhysicalDevice
+	for (auto physicalDevice : m_physicalDevices)
+	{
+//		delete physicalDevice;
+	}
 }
 
 void

@@ -7,9 +7,12 @@ class VulkanDevice;
 class VulkanSampler
 {
 public:
-	VulkanSampler(VulkanDevice &device, uint32_t mipMapLevels);
+	VulkanSampler(VulkanDevice &device, float maxLod);
 
 	~VulkanSampler();
+
+	VkSampler
+	getHandle();
 
 private:
 	VulkanDevice	*	m_device;

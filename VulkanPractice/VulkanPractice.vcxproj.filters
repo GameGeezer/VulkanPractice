@@ -148,6 +148,12 @@
     <Filter Include="src\framework\vulkan\base\images">
       <UniqueIdentifier>{bf48f5ca-dc8c-4892-aeb1-800b077fccb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\framework\vulkan\base\images\public">
+      <UniqueIdentifier>{c8ac105c-8c13-4b8c-85ec-688622eb1bb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\framework\vulkan\base\images\private">
+      <UniqueIdentifier>{8268b826-8f28-46aa-bc94-356ceb155b60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared.cpp">
@@ -210,13 +216,7 @@
     <ClCompile Include="VulkanShaderModule.cpp">
       <Filter>src\framework\vulkan\base\private</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanBuffer.cpp">
-      <Filter>src\framework\vulkan\base\private</Filter>
-    </ClCompile>
     <ClCompile Include="VulkanCommandBuffer.cpp">
-      <Filter>src\framework\vulkan\base\private</Filter>
-    </ClCompile>
-    <ClCompile Include="VulkanImageView.cpp">
       <Filter>src\framework\vulkan\base\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanInstance.cpp">
@@ -318,11 +318,26 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>src\framework\util</Filter>
     </ClCompile>
+    <ClCompile Include="VulkanBuffer.cpp">
+      <Filter>src\framework\vulkan\base\uniformBuffers\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImageMemoryBarrier.cpp">
+      <Filter>src\framework\vulkan\base\synchronization\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanDescriptorImageInfo.cpp">
+      <Filter>src\framework\vulkan\base\images\private</Filter>
+    </ClCompile>
     <ClCompile Include="VulkanImage.cpp">
-      <Filter>src\framework\vulkan\base\images</Filter>
+      <Filter>src\framework\vulkan\base\images\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImageView.cpp">
+      <Filter>src\framework\vulkan\base\images\private</Filter>
     </ClCompile>
     <ClCompile Include="VulkanSampler.cpp">
-      <Filter>src\framework\vulkan\base\images</Filter>
+      <Filter>src\framework\vulkan\base\images\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImageSubResourceRange.cpp">
+      <Filter>src\framework\vulkan\base\images\private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,9 +393,6 @@
       <Filter>src\framework\vulkan\base\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanInstance.h">
-      <Filter>src\framework\vulkan\base\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanImageView.h">
       <Filter>src\framework\vulkan\base\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanCommandBuffer.h">
@@ -448,9 +460,6 @@
     </ClInclude>
     <ClInclude Include="VulkanDescriptorPool.h">
       <Filter>src\framework\vulkan\base\uniformBuffers\public</Filter>
-    </ClInclude>
-    <ClInclude Include="VulkanBuffer.h">
-      <Filter>src\framework\vulkan\base\public</Filter>
     </ClInclude>
     <ClInclude Include="FileUtil.hpp">
       <Filter>src\framework\util</Filter>
@@ -524,11 +533,26 @@
     <ClInclude Include="TextureLoader.h">
       <Filter>src\framework\util</Filter>
     </ClInclude>
+    <ClInclude Include="VulkanBuffer.h">
+      <Filter>src\framework\vulkan\base\uniformBuffers\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImageMemoryBarrier.h">
+      <Filter>src\framework\vulkan\base\synchronization\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanDescriptorImageInfo.h">
+      <Filter>src\framework\vulkan\base\images\public</Filter>
+    </ClInclude>
     <ClInclude Include="VulkanImage.h">
-      <Filter>src\framework\vulkan\base\images</Filter>
+      <Filter>src\framework\vulkan\base\images\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImageView.h">
+      <Filter>src\framework\vulkan\base\images\public</Filter>
     </ClInclude>
     <ClInclude Include="VulkanSampler.h">
-      <Filter>src\framework\vulkan\base\images</Filter>
+      <Filter>src\framework\vulkan\base\images\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImageSubResourceRange.h">
+      <Filter>src\framework\vulkan\base\images\public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

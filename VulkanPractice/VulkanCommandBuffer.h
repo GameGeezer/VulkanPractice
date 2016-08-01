@@ -15,6 +15,9 @@ public:
 	void
 	end();
 
+	void
+	addBarriers(VkPipelineStageFlags srcFlags, VkPipelineStageFlags dstFlags, VkDependencyFlags depFlags, VkMemoryBarrier *memoryBarriers, uint32_t memoryBarriersCount, VkBufferMemoryBarrier *bufferMemoryBarriers, uint32_t bufferMemoryBarriersCount,VkImageMemoryBarrier *imageBarriers, uint32_t imageBarriersCount);
+
 	VkCommandBuffer
 	getHandle();
 

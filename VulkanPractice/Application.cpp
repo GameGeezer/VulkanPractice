@@ -36,6 +36,8 @@ Application::~Application()
 	delete m_device;
 
 	delete m_instance;
+
+	delete m_enumeratedPhysicalDevices;
 }
 
 void
@@ -52,7 +54,6 @@ void
 Application::init()
 {
 	// Create instance
-
 	m_instance = new VulkanInstance();
 	m_instance->addExtension("VK_KHR_surface");
 	m_instance->addExtension("VK_KHR_win32_surface");
@@ -63,11 +64,10 @@ Application::init()
 	}
 
 	// List all physical devices on the machine
-
-	VulkanEnumeratedPhysicalDevices enumeratedPhysicalDevices(m_instance->getHandle());
+	m_enumeratedPhysicalDevices = new VulkanEnumeratedPhysicalDevices(m_instance->getHandle());
 	std::vector<VulkanPhysicalDevice*> physicalDevices;
 	std::vector<uint32_t> queueIndexes;
-	enumeratedPhysicalDevices.findDevicesWithQueueFlag(VkQueueFlagBits::VK_QUEUE_GRAPHICS_BIT, physicalDevices, queueIndexes);
+	m_enumeratedPhysicalDevices->findDevicesWithQueueFlag(VkQueueFlagBits::VK_QUEUE_GRAPHICS_BIT, physicalDevices, queueIndexes);
 
 	if (physicalDevices.size() == 0)
 	{
@@ -85,11 +85,11 @@ Application::init()
 
 	m_window = new Window(m_instance->getHandle(), *m_device, "Hello Vulkan", m_windowWidth, m_windowHeight, QUEUE_SLOT_COUNT);
 
-	m_commandBufferGroup = new VulkanCommandBufferGroup(m_device->getDevice(), m_device->getCommandPool()->getHandle(), QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
+	m_commandBufferGroup = new VulkanCommandBufferGroup(m_device->getHandle(), m_device->getCommandPool()->getHandle(), QUEUE_SLOT_COUNT + 1, VkCommandBufferLevel::VK_COMMAND_BUFFER_LEVEL_PRIMARY);
 
 	m_setupCommandBuffer = m_commandBufferGroup->getCommandBufferAtIndex(QUEUE_SLOT_COUNT);
 
-	m_fences = new VulkanFenceGroup(m_device->getDevice(), QUEUE_SLOT_COUNT);
+	m_fences = new VulkanFenceGroup(m_device->getHandle(), QUEUE_SLOT_COUNT);
 
 	for (uint32_t i = 0; i < QUEUE_SLOT_COUNT; ++i)
 	{
@@ -100,10 +100,10 @@ Application::init()
 void
 Application::loop()
 {
-	VulkanSemaphore imageAcquiredSemaphoreWrapper(m_device->getDevice());
+	VulkanSemaphore imageAcquiredSemaphoreWrapper(m_device->getHandle());
 	VkSemaphore imageAcquiredSemaphore = imageAcquiredSemaphoreWrapper.getHandle();
 
-	VulkanSemaphore renderingCompleteSemaphoreWrapper(m_device->getDevice());
+	VulkanSemaphore renderingCompleteSemaphoreWrapper(m_device->getHandle());
 	VkSemaphore renderingCompleteSemaphore = renderingCompleteSemaphoreWrapper.getHandle();
 
 	while (m_window->isAlive())

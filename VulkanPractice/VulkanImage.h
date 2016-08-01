@@ -2,6 +2,8 @@
 
 #include <vulkan\vulkan.h>
 
+#include <vector>
+
 class VulkanImage
 {
 public:
@@ -11,6 +13,9 @@ public:
 
 	void
 	bindToMemory(VkDeviceMemory deviceMemory, uint32_t memoryOffset);
+
+	void
+	copyFromBuffer(VkCommandBuffer commandBuffer, VkBuffer stagingBuffer, std::vector<VkBufferImageCopy> &bufferCopyRegions);
 
 	VkImage
 	getHandle();

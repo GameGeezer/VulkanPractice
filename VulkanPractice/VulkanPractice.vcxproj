@@ -133,8 +133,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SDCircle.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="VulkanDescriptorImageInfo.cpp" />
     <ClCompile Include="VulkanImage.cpp" />
+    <ClCompile Include="VulkanImageMemoryBarrier.cpp" />
     <ClCompile Include="VulkanSampler.cpp" />
+    <ClCompile Include="VulkanImageSubResourceRange.cpp" />
     <ClCompile Include="VulkanTexture.cpp" />
     <ClCompile Include="VulkanDescriptorPool.cpp" />
     <ClCompile Include="VulkanDescriptorSet.cpp" />
@@ -199,8 +202,11 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SDCircle.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="VulkanDescriptorImageInfo.h" />
     <ClInclude Include="VulkanImage.h" />
+    <ClInclude Include="VulkanImageMemoryBarrier.h" />
     <ClInclude Include="VulkanSampler.h" />
+    <ClInclude Include="VulkanImageSubResourceRange.h" />
     <ClInclude Include="VulkanTexture.h" />
     <ClInclude Include="VulkanBuffer.h" />
     <ClInclude Include="VulkanDescriptorPool.h" />

@@ -91,7 +91,7 @@ VulkanSwapchain::VulkanSwapchain(VulkanDevice &device, VulkanPresentationSurface
 	swapchainCreateInfo.imageArrayLayers = 1;
 	swapchainCreateInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 
-	vkCreateSwapchainKHR(m_device->getDevice(), &swapchainCreateInfo, nullptr, &m_swapchain);
+	vkCreateSwapchainKHR(m_device->getHandle(), &swapchainCreateInfo, nullptr, &m_swapchain);
 
 	// IMAGE VIEWS
 
@@ -100,7 +100,7 @@ VulkanSwapchain::VulkanSwapchain(VulkanDevice &device, VulkanPresentationSurface
 
 VulkanSwapchain::~VulkanSwapchain()
 {
-	vkDestroySwapchainKHR(m_device->getDevice(), m_swapchain, nullptr);
+	vkDestroySwapchainKHR(m_device->getHandle(), m_swapchain, nullptr);
 }
 
 VkSwapchainKHR

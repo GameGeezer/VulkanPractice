@@ -51,7 +51,7 @@ public:
 	waitOnQueue();
 
 	VkDevice
-	getDevice();
+	getHandle();
 
 	VulkanPhysicalDevice*
 	getPhysicalDevice();

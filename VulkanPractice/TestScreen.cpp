@@ -69,15 +69,15 @@ TestScreen::onCreate()
 		// Submit the command buffer to the queue
 		getApplication()->getDevice()->submitToQueue(1, submission.getSubmitInfo(), fences->getFenceAtIndex(0));
 
-		m_descriptorPool = new VulkanDescriptorPool(getApplication()->getDevice()->getDevice());
+		m_descriptorPool = new VulkanDescriptorPool(getApplication()->getDevice()->getHandle());
 		m_descriptorPool->addSize(1);
 		m_descriptorPool->initialize(1);
 
-		VulkanDescriptorSetLayout layout(getApplication()->getDevice()->getDevice());
+		VulkanDescriptorSetLayout layout(getApplication()->getDevice()->getHandle());
 		layout.addBinding(0, 1, VK_SHADER_STAGE_VERTEX_BIT);
 		layout.initialize();
 
-		m_descriptorSet = new VulkanDescriptorSet(getApplication()->getDevice()->getDevice());
+		m_descriptorSet = new VulkanDescriptorSet(getApplication()->getDevice()->getHandle());
 		m_descriptorSet->addLayout(layout.getHandle());
 		m_descriptorSet->initialize(m_descriptorPool->getHandle(), 1);
 
@@ -95,7 +95,7 @@ TestScreen::onCreate()
 		descriptorWrite.descriptorCount = 1;
 		descriptorWrite.pBufferInfo = &bufferInfo;
 
-		vkUpdateDescriptorSets(getApplication()->getDevice()->getDevice(), 1, &descriptorWrite, 0, nullptr);
+		vkUpdateDescriptorSets(getApplication()->getDevice()->getHandle(), 1, &descriptorWrite, 0, nullptr);
 		
 
 	}
@@ -138,7 +138,7 @@ TestScreen::onUpdate(uint32_t delta)
 	ubo.proj[1][1] *= -1;
 	VulkanCommandBuffer *commandBuffer = getApplication()->getCommandBuffers()->getCommandBufferAtIndex(1);
 
-	m_uniformBuffer->stage(&ubo, sizeof(ubo));
+	m_uniformBuffer->stage(&ubo, 0, sizeof(ubo));
 	m_uniformBuffer->update(*commandBuffer);
 }
 
@@ -252,10 +252,10 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 	bufferSize = indexBufferOffset + m_indexBuffer->getSize();
 	m_meshMemory = device->allocateMemory(m_vertexBuffer->getMemoryTypeBits(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,bufferSize);
 
-	VulkanDeviceMemory deviceMemory(device->getDevice(), m_meshMemory);
-	deviceMemory.map(0, VK_WHOLE_SIZE);
-	deviceMemory.copyInto(vertices, 0, sizeof(vertices));
-	deviceMemory.copyInto(indices, static_cast<uint32_t>(indexBufferOffset), sizeof(indices));
+	VulkanDeviceMemory deviceMemory(device->getHandle(), m_meshMemory);
+	void *mapping = deviceMemory.map(0, VK_WHOLE_SIZE);
+	deviceMemory.copyFrom(mapping, vertices, 0, sizeof(vertices));
+	deviceMemory.copyFrom(mapping, indices, static_cast<uint32_t>(indexBufferOffset), sizeof(indices));
 	deviceMemory.unmap();
 
 	m_vertexBuffer->bindToMemory(m_meshMemory, 0);
@@ -268,20 +268,20 @@ void TestScreen::createPipelineStateObject()
 	VulkanDevice *device = getApplication()->getDevice();
 	std::vector<char> vertShader = FileUtil::readFile("vert.spv");
 	std::vector<char> fragShader = FileUtil::readFile("frag.spv");
-	m_vertexShader = new VulkanShaderModule(device->getDevice(), vertShader.data(), static_cast<uint32_t>(vertShader.size()));
+	m_vertexShader = new VulkanShaderModule(device->getHandle(), vertShader.data(), static_cast<uint32_t>(vertShader.size()));
 	//m_vertexShader = new VulkanShaderModule(device->getDevice(), BasicVertexShader, sizeof(BasicVertexShader));
-	m_fragmentShader = new VulkanShaderModule(device->getDevice(), fragShader.data(), static_cast<uint32_t>(fragShader.size()));
+	m_fragmentShader = new VulkanShaderModule(device->getHandle(), fragShader.data(), static_cast<uint32_t>(fragShader.size()));
 
 	Window *window = getApplication()->getWindow();
 	
 
-	VulkanDescriptorSetLayout uniformLayout(device->getDevice());
+	VulkanDescriptorSetLayout uniformLayout(device->getHandle());
 	uniformLayout.addBinding(0, 1, VK_SHADER_STAGE_VERTEX_BIT);
 	uniformLayout.initialize();
 
-	m_pipelineLayout = new PipelineLayout(device->getDevice());
+	m_pipelineLayout = new PipelineLayout(device->getHandle());
 	m_pipelineLayout->addDescriptorSetLayout(uniformLayout.getHandle());
 	m_pipelineLayout->initialize();
 
-	m_graphicsPipeline = createPipeline(device->getDevice(), window->getRenderPass()->getHandle(), m_pipelineLayout->getHandle(), m_vertexShader->getHandle(), m_fragmentShader->getHandle(), VkExtent2D{window->getWidth(), window->getHeight() });
+	m_graphicsPipeline = createPipeline(device->getHandle(), window->getRenderPass()->getHandle(), m_pipelineLayout->getHandle(), m_vertexShader->getHandle(), m_fragmentShader->getHandle(), VkExtent2D{window->getWidth(), window->getHeight() });
 }

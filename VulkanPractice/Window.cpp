@@ -50,7 +50,7 @@ Window::Window(VkInstance instance, VulkanDevice& device, char *title, const uin
 	initOsWindow();
 	m_surface = new VulkanPresentationSurface(*m_device, m_vulkanInstance, initOSSurface());
 	m_swapchain = new VulkanSwapchain(*m_device, *m_surface, m_swapchainImageCount);
-	m_renderPass = CreateRenderPass(m_device->getDevice(), m_surface->getFormat()->format);
+	m_renderPass = CreateRenderPass(m_device->getHandle(), m_surface->getFormat()->format);
 
 	m_swapchainImages = new VulkanSwapchainImages(*m_device, *m_swapchain, *m_surface, m_renderPass->getHandle());
 }
@@ -68,7 +68,7 @@ uint32_t
 Window::acquireNextImage(uint64_t timeout, VkSemaphore imageAcquiredSemaphore)
 {
 	uint32_t imageIndex;
-	vkAcquireNextImageKHR(m_device->getDevice(), m_swapchain->getHandle(), timeout, imageAcquiredSemaphore, VK_NULL_HANDLE, &imageIndex);
+	vkAcquireNextImageKHR(m_device->getHandle(), m_swapchain->getHandle(), timeout, imageAcquiredSemaphore, VK_NULL_HANDLE, &imageIndex);
 
 	return imageIndex;
 }

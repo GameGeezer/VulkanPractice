@@ -6,7 +6,7 @@
 #include "VulkanPhysicalDevice.h"
 
 
-VulkanSampler::VulkanSampler(VulkanDevice &device, uint32_t mipMapLevels) : m_device(&device)
+VulkanSampler::VulkanSampler(VulkanDevice &device, float maxLod) : m_device(&device)
 {
 	VkSamplerCreateInfo sampler = {};
 	sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -20,7 +20,7 @@ VulkanSampler::VulkanSampler(VulkanDevice &device, uint32_t mipMapLevels) : m_de
 	sampler.compareOp = VK_COMPARE_OP_NEVER;
 	sampler.minLod = 0.0f;
 	// Set max level-of-detail to mip level count of the texture
-	sampler.maxLod = mipMapLevels;
+	sampler.maxLod = maxLod;
 	// Enable anisotropic filtering
 	// This feature is optional, so we must check if it's supported on the device
 	VkBool32 samplerAnisotropy = m_device->getPhysicalDevice()->getFeatures()->samplerAnisotropy;
@@ -39,11 +39,17 @@ VulkanSampler::VulkanSampler(VulkanDevice &device, uint32_t mipMapLevels) : m_de
 	}
 
 	sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
-	ErrorCheck(vkCreateSampler(m_device->getDevice(), &sampler, nullptr, &m_sampler));
+	ErrorCheck(vkCreateSampler(m_device->getHandle(), &sampler, nullptr, &m_sampler));
 	
 }
 
 VulkanSampler::~VulkanSampler()
 {
+	vkDestroySampler(m_device->getHandle(), m_sampler, nullptr);
+}
 
+VkSampler
+VulkanSampler::getHandle()
+{
+	return m_sampler;
 }
