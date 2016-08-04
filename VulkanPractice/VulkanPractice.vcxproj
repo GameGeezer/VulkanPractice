@@ -73,7 +73,7 @@
     <LibraryPath>C:\VulkanSDK\1.0.13.0\Bin32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\VulkanSDK\1.0.13.0\Include;C:\Programming\Libraries\glfw-3.2.bin.WIN64\include;C:\Programming\Libraries\glm-0.9.7.2\glm;C:\Programming\Libraries\gli\gli;$(IncludePath)</IncludePath>
+    <IncludePath>C:\VulkanSDK\1.0.13.0\Include;C:\Programming\Libraries\glfw-3.2.bin.WIN64\include;C:\Programming\Libraries\glm-0.9.7.2\glm;C:\Programming\Libraries\gli\gli;C:\Programming\Libraries\stb\stb-master-version-1-e75ca42;$(IncludePath)</IncludePath>
     <LibraryPath>C:\VulkanSDK\1.0.13.0\Bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

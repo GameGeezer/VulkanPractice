@@ -53,6 +53,12 @@ public:
 	void
 	waitOnQueue();
 
+	VkCommandBuffer
+	beginSingleTimeCommands();
+
+	void
+	endSingleTimeCommands(VkCommandBuffer commandBuffer);
+
 	VkDevice
 	getHandle();
 

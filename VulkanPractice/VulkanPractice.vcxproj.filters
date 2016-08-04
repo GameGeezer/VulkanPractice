@@ -154,6 +154,9 @@
     <Filter Include="src\framework\vulkan\base\images\private">
       <UniqueIdentifier>{8268b826-8f28-46aa-bc94-356ceb155b60}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{a7434bef-496e-4821-ac00-c5df4e4552c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shared.cpp">

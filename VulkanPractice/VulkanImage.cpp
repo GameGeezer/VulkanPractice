@@ -19,9 +19,7 @@ VulkanImage::VulkanImage(
 		uint32_t height,
 		uint32_t depth): m_device(device), m_currentLayout(initialLayout), m_mipMapLevels(mipMapLevels)
 {
-	// Create optimal tiled target image
 	VkImageCreateInfo imageCreateInfo = {};
-
 	imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageCreateInfo.imageType = imageType;
 	imageCreateInfo.extent.width = width;
@@ -35,11 +33,6 @@ VulkanImage::VulkanImage(
 	imageCreateInfo.usage = usage;
 	imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
 	imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-	if (tiling == VkImageTiling::VK_IMAGE_TILING_LINEAR)
-	{
-		imageCreateInfo.mipLevels = 1;
-	}
 
 	ErrorCheck(vkCreateImage(m_device, &imageCreateInfo, nullptr, &m_image));
 
@@ -74,9 +67,11 @@ VulkanImage::copyFromBuffer(VkCommandBuffer commandBuffer, VkBuffer stagingBuffe
 VkImageMemoryBarrier
 VulkanImage::createSetLayoutBarrier(VkImageAspectFlags aspectFlags, VkImageLayout newLayout, VkImageSubresourceRange &subresourceRange)
 {
-	VulkanImageSubResourceRange subResourceRange(VK_IMAGE_ASPECT_COLOR_BIT, 0, m_mipMapLevels, 0, 1);
+	VulkanImageSubResourceRange subResourceRange(VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1);
 
 	VulkanImageMemoryBarrier imageMemoryBarrier(m_image, aspectFlags, m_currentLayout, newLayout, subresourceRange);
+
+	m_currentLayout = newLayout;
 
 	return *(imageMemoryBarrier.getRaw());
 }

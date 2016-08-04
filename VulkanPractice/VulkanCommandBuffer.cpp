@@ -37,7 +37,6 @@ VulkanCommandBuffer::commandCopyBuffer(VkBuffer srcBuffer, VkDeviceSize srcOffse
 
 	vkCmdCopyBuffer(m_commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
 }
-
 void
 VulkanCommandBuffer::commandCopyImage2D(uint32_t width, uint32_t height, VkImage srcImage, int32_t srcX, int32_t srcY, VkImage dstImage, int32_t dstX, int32_t dstY)
 {

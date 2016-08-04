@@ -12,5 +12,5 @@ class TextureLoader
 {
 public:
 	VulkanTexture2D*
-	load(VulkanDevice &device, std::string fileName, VkFormat format, bool forceLinearTiling, VulkanCommandBuffer &commandBuffer, VkFence copyFence, uint64_t timeout);
+	load(VulkanDevice &device, std::string fileName, VkFormat format);
 };

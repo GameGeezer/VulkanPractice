@@ -7,9 +7,7 @@ VulkanImageView::VulkanImageView(VkDevice device, VkImage image, VkFormat format
 	imageViewCreateInfo.image = image;
 	imageViewCreateInfo.viewType = type;
 	imageViewCreateInfo.format = format;
-	imageViewCreateInfo.subresourceRange.levelCount = 1;
-	imageViewCreateInfo.subresourceRange.layerCount = 1;
-	imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	imageViewCreateInfo.subresourceRange = subresourceRange;
 
 	vkCreateImageView(m_device, &imageViewCreateInfo, nullptr, &m_imageView);
 }

@@ -5,24 +5,24 @@
 #include "VulkanDevice.h"
 #include "VulkanPhysicalDevice.h"
 
-
 VulkanSampler::VulkanSampler(VulkanDevice &device, float maxLod) : m_device(&device)
 {
 	VkSamplerCreateInfo sampler = {};
 	sampler.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 	sampler.magFilter = VK_FILTER_LINEAR;
-	sampler.minFilter = VK_FILTER_LINEAR;
-	sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	sampler.minFilter = VK_FILTER_LINEAR;	
 	sampler.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 	sampler.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
 	sampler.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+	sampler.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+	sampler.unnormalizedCoordinates = VK_FALSE;
+	sampler.compareEnable = VK_FALSE;
+	sampler.compareOp = VK_COMPARE_OP_ALWAYS;
+	sampler.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 	sampler.mipLodBias = 0.0f;
-	sampler.compareOp = VK_COMPARE_OP_NEVER;
 	sampler.minLod = 0.0f;
-	// Set max level-of-detail to mip level count of the texture
-	sampler.maxLod = maxLod;
-	// Enable anisotropic filtering
-	// This feature is optional, so we must check if it's supported on the device
+	sampler.maxLod = 0.0f;
+
 	VkBool32 samplerAnisotropy = m_device->getPhysicalDevice()->getFeatures()->samplerAnisotropy;
 
 	if (samplerAnisotropy)
@@ -38,9 +38,7 @@ VulkanSampler::VulkanSampler(VulkanDevice &device, float maxLod) : m_device(&dev
 		sampler.anisotropyEnable = VK_FALSE;
 	}
 
-	sampler.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 	ErrorCheck(vkCreateSampler(m_device->getHandle(), &sampler, nullptr, &m_sampler));
-	
 }
 
 VulkanSampler::~VulkanSampler()

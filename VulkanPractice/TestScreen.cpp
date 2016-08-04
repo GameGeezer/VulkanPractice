@@ -128,10 +128,11 @@ TestScreen::onCreate()
 		bufferInfo.buffer = m_uniformBuffer->getBuffer();
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
+		
 
 		VkFence fence = fences->getFenceAtIndex(0);
 		TextureLoader textureLoader;
-		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "pattern_02_bc2.ktx", VK_FORMAT_BC2_UNORM_BLOCK, false, *setupCommandBuffer, fence, 1000);
+		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "res/textures/texture.jpg", VK_FORMAT_R8G8B8A8_UNORM);
 
 		std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
 
@@ -151,9 +152,7 @@ TestScreen::onCreate()
 		descriptorWrites[1].descriptorCount = 1;
 		descriptorWrites[1].pImageInfo = drawTexture->getImageInfo();
 
-		vkUpdateDescriptorSets(getApplication()->getDevice()->getHandle(), 1, descriptorWrites.data(), 0, nullptr);
-		
-
+		vkUpdateDescriptorSets(getApplication()->getDevice()->getHandle(), static_cast<uint32_t>(descriptorWrites.size()), descriptorWrites.data(), 0, nullptr);
 	}
 	
 
@@ -232,10 +231,10 @@ GraphicsPipeline* TestScreen::
 createPipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout, VkShaderModule vertexShader, VkShaderModule fragmentShader, VkExtent2D viewportSize)
 {
 	PipelineVertexInputState vertexInputState;
-	vertexInputState.addVertexBindingDescription(0, VK_VERTEX_INPUT_RATE_VERTEX, sizeof(float) * 7);
-	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 0, 0);
-	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32B32_SFLOAT, 1, sizeof(float) * 2);
-	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 2, sizeof(float) * 5);
+	vertexInputState.addVertexBindingDescription(0, VK_VERTEX_INPUT_RATE_VERTEX, sizeof(Vertex));
+	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 0, offsetof(Vertex, pos));
+	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32B32_SFLOAT, 1, offsetof(Vertex, color));
+	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 2, offsetof(Vertex, texCoord));
 	vertexInputState.initialize();
 
 	PipelineInputAssemblyState assemblyState(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
@@ -325,6 +324,7 @@ void TestScreen::createPipelineStateObject()
 	
 	VulkanDescriptorSetLayout uniformLayout(device->getHandle());
 	uniformLayout.addBinding(0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT);
+	uniformLayout.addBinding(1, 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
 	uniformLayout.initialize();
 
 	m_pipelineLayout = new PipelineLayout(device->getHandle());
