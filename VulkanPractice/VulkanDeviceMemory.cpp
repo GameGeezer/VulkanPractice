@@ -9,7 +9,6 @@ VulkanDeviceMemory::VulkanDeviceMemory(VkDevice device, VkDeviceMemory deviceMem
 
 VulkanDeviceMemory::~VulkanDeviceMemory()
 {
-	//	Release the device memory
 	vkFreeMemory(m_device, m_deviceMemory, nullptr);
 }
 

@@ -11,11 +11,11 @@
 
 VulkanStagedBuffer::VulkanStagedBuffer(VulkanDevice &device, uint32_t sizeInBytes, VkBufferUsageFlagBits usage) : m_device(&device)
 {
-	m_stagingBuffer = new VulkanBuffer(device, sizeInBytes, VK_BUFFER_USAGE_TRANSFER_SRC_BIT);
+	m_stagingBuffer = new VulkanBuffer(device, sizeInBytes, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
 	VkDeviceMemory memory = m_device->allocateMemory(m_stagingBuffer->getMemoryTypeBits(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, sizeInBytes);
 	m_stagingMemory = new VulkanDeviceMemory(m_device->getHandle(), memory);
 
-	m_buffer = new VulkanBuffer(device, sizeInBytes, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage);
+	m_buffer = new VulkanBuffer(device, sizeInBytes, VK_BUFFER_USAGE_TRANSFER_DST_BIT | usage, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
 	memory = m_device->allocateMemory(m_buffer->getMemoryTypeBits(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, sizeInBytes);
 	m_memory = new VulkanDeviceMemory(m_device->getHandle(), memory);
 
@@ -40,7 +40,22 @@ VulkanStagedBuffer::stage(void *data, uint32_t offset, size_t size)
 void
 VulkanStagedBuffer::update(VulkanCommandBuffer &commandBuffer)
 {
-	m_stagingBuffer->copyInto(m_buffer->getSize(), 0, 0, m_buffer->getHandle(), commandBuffer);
+	commandBuffer.begin(0);
+
+	commandBuffer.commandCopyBuffer(m_stagingBuffer->getHandle(), 0, m_buffer->getHandle(), 0, m_buffer->getSize());
+
+	commandBuffer.end();
+
+	VkCommandBuffer rawCommandBuffer = commandBuffer.getHandle();
+
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &rawCommandBuffer;
+
+	m_device->submitToQueue(1, &submitInfo, VK_NULL_HANDLE);
+
+	m_device->waitOnQueue();
 }
 
 

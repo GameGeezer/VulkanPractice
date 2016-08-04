@@ -45,6 +45,9 @@ public:
 	allocateMemory(uint32_t typeBits, VkMemoryPropertyFlags properties, VkDeviceSize size);
 
 	void
+	allocateCommandBufferS();
+
+	void
 	submitToQueue(uint32_t submitCount, VkSubmitInfo *submitInfo, VkFence fence);
 
 	void

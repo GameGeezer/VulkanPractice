@@ -12,6 +12,8 @@ VulkanImageMemoryBarrier::VulkanImageMemoryBarrier(
 	m_imageMemoryBarrier.newLayout = newImageLayout;
 	m_imageMemoryBarrier.image = image;
 	m_imageMemoryBarrier.subresourceRange = subresourceRange;
+	m_imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	m_imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
 	// Source layouts (old)
 	// Source access mask controls actions that have to be finished on the old layout

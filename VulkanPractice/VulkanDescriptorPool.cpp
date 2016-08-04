@@ -32,11 +32,11 @@ VulkanDescriptorPool::initialize(uint32_t maxSets)
 }
 
 void
-VulkanDescriptorPool::addSize(uint32_t descriptorCount)
+VulkanDescriptorPool::addSize(VkDescriptorType type, uint32_t count)
 {
 	VkDescriptorPoolSize poolSize = {};
-	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = descriptorCount;
+	poolSize.type = type;
+	poolSize.descriptorCount = type;
 
 	m_poolSizes.push_back(poolSize);
 }

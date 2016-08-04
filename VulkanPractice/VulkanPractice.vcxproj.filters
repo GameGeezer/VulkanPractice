@@ -312,9 +312,6 @@
     <ClCompile Include="MouseClickCallback.cpp">
       <Filter>src\framework\window\callbacks\private</Filter>
     </ClCompile>
-    <ClCompile Include="VulkanTexture.cpp">
-      <Filter>src\framework\vulkan\graphics</Filter>
-    </ClCompile>
     <ClCompile Include="TextureLoader.cpp">
       <Filter>src\framework\util</Filter>
     </ClCompile>
@@ -338,6 +335,12 @@
     </ClCompile>
     <ClCompile Include="VulkanImageSubResourceRange.cpp">
       <Filter>src\framework\vulkan\base\images\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanImage2D.cpp">
+      <Filter>src\framework\vulkan\base\images\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VulkanTexture2D.cpp">
+      <Filter>src\framework\vulkan\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +530,6 @@
     <ClInclude Include="MouseClickCallback.h">
       <Filter>src\framework\window\callbacks\public</Filter>
     </ClInclude>
-    <ClInclude Include="VulkanTexture.h">
-      <Filter>src\framework\vulkan\graphics</Filter>
-    </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>src\framework\util</Filter>
     </ClInclude>
@@ -553,6 +553,12 @@
     </ClInclude>
     <ClInclude Include="VulkanImageSubResourceRange.h">
       <Filter>src\framework\vulkan\base\images\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanImage2D.h">
+      <Filter>src\framework\vulkan\base\images\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VulkanTexture2D.h">
+      <Filter>src\framework\vulkan\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -578,6 +584,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="BasicShaderFrag.spv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pattern_02_bc2.ktx">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

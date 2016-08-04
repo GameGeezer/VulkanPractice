@@ -8,12 +8,13 @@
 
 #include "VulkanDeviceMemory.h"
 
-VulkanBuffer::VulkanBuffer(VulkanDevice &device, uint32_t sizeBytes, uint32_t usage) : m_device(&device)
+VulkanBuffer::VulkanBuffer(VulkanDevice &device, uint32_t sizeBytes, uint32_t usage, VkSharingMode sharingMode) : m_device(&device)
 {
 	VkBufferCreateInfo bufferCreateInfo = {};
 	bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	bufferCreateInfo.size = sizeBytes;
 	bufferCreateInfo.usage = usage;
+	bufferCreateInfo.sharingMode = sharingMode;
 
 	ErrorCheck(vkCreateBuffer(m_device->getHandle(), &bufferCreateInfo, nullptr, &m_buffer));
 
@@ -23,36 +24,6 @@ VulkanBuffer::VulkanBuffer(VulkanDevice &device, uint32_t sizeBytes, uint32_t us
 VulkanBuffer::~VulkanBuffer()
 {
 	vkDestroyBuffer(m_device->getHandle(), m_buffer, nullptr);
-}
-
-void
-VulkanBuffer::copyInto(VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkBuffer dstBuffer, VulkanCommandBuffer &commandBuffer)
-{
-	//	Define the region of the buffer to copy and where to place
-	VkBufferCopy copyRegion = {};
-	copyRegion.size = size;
-	copyRegion.srcOffset = srcOffset;
-	copyRegion.dstOffset = dstOffset;
-
-	// Start recording commands
-	commandBuffer.begin(VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT);
-
-	// Add a copy buffer command
-	vkCmdCopyBuffer(commandBuffer.getHandle(), m_buffer, dstBuffer, 1, &copyRegion);
-
-	// Stop recording commands
-	commandBuffer.end();
-
-	VkCommandBuffer rawCommandBuffer = commandBuffer.getHandle();
-
-	VkSubmitInfo submitInfo = {};
-	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &rawCommandBuffer;
-
-	m_device->submitToQueue(1, &submitInfo, VK_NULL_HANDLE);
-
-	m_device->waitOnQueue();
 }
 
 void

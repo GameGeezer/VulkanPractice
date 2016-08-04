@@ -8,17 +8,9 @@ class VulkanCommandBuffer;
 class VulkanBuffer
 {
 public:
-	VulkanBuffer(VulkanDevice &device, uint32_t sizeBytes, uint32_t usage);
+	VulkanBuffer(VulkanDevice &device, uint32_t sizeBytes, uint32_t usage, VkSharingMode sharingMode);
 
 	~VulkanBuffer();
-
-	//	size - The ammount of memory in byes inwhich to copy
-	//	srcOffset - The offset into the source buffer that the copy should start at
-	//	dstOffset - The offset into the destination buffer that the copy should start at
-	//	commandBuffer - The command buffer that the copy command will be added to
-	//	post - dst buffer now contains the coppied data
-	void
-	copyInto(VkDeviceSize size, VkDeviceSize srcOffset, VkDeviceSize dstOffset, VkBuffer dstBuffer, VulkanCommandBuffer &commandBuffer);
 
 	void
 	setMemory(void *data, uint32_t offset, size_t size);

@@ -2,6 +2,7 @@
 
 #include "VulkanPhysicalDevice.h"
 #include "VulkanCommandPool.h"
+#include "VulkanCommandBufferGroup.h"
 
 VulkanDevice::VulkanDevice(VulkanPhysicalDevice &physicalDevice, uint32_t queueIndex) :  m_physicalDevice(&physicalDevice), m_queueFamilyIndex(queueIndex)
 {
@@ -94,6 +95,12 @@ VulkanDevice::allocateMemory(uint32_t typeBits, VkMemoryPropertyFlags properties
 	}
 
 	return VK_NULL_HANDLE;
+}
+
+void
+VulkanDevice::allocateCommandBufferS()
+{
+	
 }
 
 void

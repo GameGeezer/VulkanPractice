@@ -25,6 +25,9 @@
 #include "VulkanDescriptorSetLayout.h"
 #include "VulkanDescriptorPool.h"
 #include "VulkanDescriptorSet.h"
+#include "VulkanTexture2D.h"
+#include "TextureLoader.h"
+
 
 #include "Application.h"
 #include "VulkanDevice.h"
@@ -42,10 +45,48 @@
 
 #include <glm\mat4x4.hpp>
 
+#include <array>
+
 struct UniformBufferObject {
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 proj;
+};
+
+struct Vertex {
+	glm::vec2 pos;
+	glm::vec3 color;
+	glm::vec2 texCoord;
+
+	static VkVertexInputBindingDescription getBindingDescription() {
+		VkVertexInputBindingDescription bindingDescription = {};
+		bindingDescription.binding = 0;
+		bindingDescription.stride = sizeof(Vertex);
+		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return bindingDescription;
+	}
+
+	static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
+		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = {};
+
+		attributeDescriptions[0].binding = 0;
+		attributeDescriptions[0].location = 0;
+		attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+		attributeDescriptions[1].binding = 0;
+		attributeDescriptions[1].location = 1;
+		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+		attributeDescriptions[2].binding = 0;
+		attributeDescriptions[2].location = 2;
+		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+		attributeDescriptions[2].offset = offsetof(Vertex, texCoord);
+
+		return attributeDescriptions;
+	}
 };
 
 void
@@ -70,11 +111,13 @@ TestScreen::onCreate()
 		getApplication()->getDevice()->submitToQueue(1, submission.getSubmitInfo(), fences->getFenceAtIndex(0));
 
 		m_descriptorPool = new VulkanDescriptorPool(getApplication()->getDevice()->getHandle());
-		m_descriptorPool->addSize(1);
+		m_descriptorPool->addSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1);
+		m_descriptorPool->addSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1);
 		m_descriptorPool->initialize(1);
 
 		VulkanDescriptorSetLayout layout(getApplication()->getDevice()->getHandle());
-		layout.addBinding(0, 1, VK_SHADER_STAGE_VERTEX_BIT);
+		layout.addBinding(0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT);
+		layout.addBinding(1, 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT);
 		layout.initialize();
 
 		m_descriptorSet = new VulkanDescriptorSet(getApplication()->getDevice()->getHandle());
@@ -86,19 +129,34 @@ TestScreen::onCreate()
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
 
-		VkWriteDescriptorSet descriptorWrite = {};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = m_descriptorSet->getHandle();
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;
+		VkFence fence = fences->getFenceAtIndex(0);
+		TextureLoader textureLoader;
+		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "pattern_02_bc2.ktx", VK_FORMAT_BC2_UNORM_BLOCK, false, *setupCommandBuffer, fence, 1000);
 
-		vkUpdateDescriptorSets(getApplication()->getDevice()->getHandle(), 1, &descriptorWrite, 0, nullptr);
+		std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
+
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = m_descriptorSet->getHandle();
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[1].dstSet = m_descriptorSet->getHandle();
+		descriptorWrites[1].dstBinding = 1;
+		descriptorWrites[1].dstArrayElement = 0;
+		descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptorWrites[1].descriptorCount = 1;
+		descriptorWrites[1].pImageInfo = drawTexture->getImageInfo();
+
+		vkUpdateDescriptorSets(getApplication()->getDevice()->getHandle(), 1, descriptorWrites.data(), 0, nullptr);
 		
 
 	}
+	
+
 
 	m_player = new Player();
 }
@@ -174,9 +232,10 @@ GraphicsPipeline* TestScreen::
 createPipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout, VkShaderModule vertexShader, VkShaderModule fragmentShader, VkExtent2D viewportSize)
 {
 	PipelineVertexInputState vertexInputState;
-	vertexInputState.addVertexBindingDescription(0, VK_VERTEX_INPUT_RATE_VERTEX, sizeof(float) * 5);
-	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32B32_SFLOAT, 0, 0);
-	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 1, sizeof(float) * 3);
+	vertexInputState.addVertexBindingDescription(0, VK_VERTEX_INPUT_RATE_VERTEX, sizeof(float) * 7);
+	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 0, 0);
+	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32B32_SFLOAT, 1, sizeof(float) * 2);
+	vertexInputState.addVertexInputAttributeDescription(0, VK_FORMAT_R32G32_SFLOAT, 2, sizeof(float) * 5);
 	vertexInputState.initialize();
 
 	PipelineInputAssemblyState assemblyState(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
@@ -213,34 +272,24 @@ createPipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout
 void
 TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 {
-	
-	struct Vertex
-	{
-		float position[3];
-		float uv[2];
-	};
 
 	static const Vertex vertices[4] =
 	{
-		// Upper Left
-		{ { -0.5f,  0.5f, 0 },{ 0, 0 } },
-		// Upper Right
-		{ { 0.5f,  0.5f, 0 },{ 1, 0 } },
-		// Bottom right
-		{ { 0.5f, -0.5f, 0 },{ 1, 1 } },
-		// Bottom left
-		{ { -0.5f, -0.5f, 0 },{ 0, 1 } }
+		{ { -0.5f, -0.5f },{ 1.0f, 0.0f, 0.0f },{ 0.0f, 0.0f } },
+		{ { 0.5f, -0.5f },{ 0.0f, 1.0f, 0.0f },{ 1.0f, 0.0f } },
+		{ { 0.5f, 0.5f },{ 0.0f, 0.0f, 1.0f },{ 1.0f, 1.0f } },
+		{ { -0.5f, 0.5f },{ 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f } }
 	};
 
 	static const int indices[6] =
 	{
-		0, 1, 2, 2, 3, 0
+		0, 1, 2, 0, 3, 2
 	};
 
 	VulkanDevice *device = getApplication()->getDevice();
 
-	m_vertexBuffer = new VulkanBuffer(*device, sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
-	m_indexBuffer = new VulkanBuffer(*device, sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+	m_vertexBuffer = new VulkanBuffer(*device, sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
+	m_indexBuffer = new VulkanBuffer(*device, sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
 	m_uniformBuffer = new VulkanStagedBuffer(*device, sizeof(UniformBufferObject), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 
 
@@ -274,9 +323,8 @@ void TestScreen::createPipelineStateObject()
 
 	Window *window = getApplication()->getWindow();
 	
-
 	VulkanDescriptorSetLayout uniformLayout(device->getHandle());
-	uniformLayout.addBinding(0, 1, VK_SHADER_STAGE_VERTEX_BIT);
+	uniformLayout.addBinding(0, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT);
 	uniformLayout.initialize();
 
 	m_pipelineLayout = new PipelineLayout(device->getHandle());

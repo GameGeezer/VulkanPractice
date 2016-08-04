@@ -15,7 +15,7 @@ public:
 	initialize(uint32_t maxSets);
 
 	void
-	addSize(uint32_t descriptorCount);
+	addSize(VkDescriptorType type, uint32_t descriptorCount);
 
 	VkDescriptorPool
 	getHandle();

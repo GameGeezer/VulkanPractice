@@ -39,10 +39,10 @@ VulkanDescriptorSetLayout::initialize()
 }
 
 void
-VulkanDescriptorSetLayout::addBinding(uint32_t binding, uint32_t count, VkShaderStageFlags stageflags)
+VulkanDescriptorSetLayout::addBinding(uint32_t binding, uint32_t count, VkDescriptorType type, VkShaderStageFlags stageflags)
 {
 	VkDescriptorSetLayoutBinding layoutBinding = {};
-	layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	layoutBinding.descriptorType = type;
 	layoutBinding.binding = binding;
 	layoutBinding.descriptorCount = count;
 	layoutBinding.stageFlags = stageflags;

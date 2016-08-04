@@ -1,6 +1,6 @@
 #include "VulkanImageSubResourceRange.h"
 
-VulkanImageSubResourceRange::VulkanImageSubResourceRange(VkImageAspectFlagBits aspectMask, uint32_t baseMipLevel, uint32_t levelCount, uint32_t baseArrayLayer, uint32_t layerCount)
+VulkanImageSubResourceRange::VulkanImageSubResourceRange(VkImageAspectFlags aspectMask, uint32_t baseMipLevel, uint32_t levelCount, uint32_t baseArrayLayer, uint32_t layerCount)
 {
 	m_imageSubResourceRange.aspectMask = aspectMask;
 	m_imageSubResourceRange.baseMipLevel = baseMipLevel;

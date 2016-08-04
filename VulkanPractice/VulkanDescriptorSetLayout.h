@@ -17,11 +17,12 @@ public:
 	initialize();
 
 	//
-	//	binding		- binding number of the entry which corresponds to the resource with the same binding number (in the shader stages)
-	//	count		- the number of descriptors contained within the binding
+	//	binding		- Binding number of the entry which corresponds to the resource with the same binding number (in the shader stages)
+	//	count		- The number of descriptors contained within the binding
+	//	type		- 
 	//	stageflags	- Which shader stages can access the resources for the binding
 	void
-	addBinding(uint32_t binding, uint32_t count, VkShaderStageFlags stageflags);
+	addBinding(uint32_t binding, uint32_t count, VkDescriptorType type, VkShaderStageFlags stageflags);
 
 	VkDescriptorSetLayout
 	getHandle();

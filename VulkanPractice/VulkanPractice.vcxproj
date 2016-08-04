@@ -135,10 +135,11 @@
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="VulkanDescriptorImageInfo.cpp" />
     <ClCompile Include="VulkanImage.cpp" />
+    <ClCompile Include="VulkanImage2D.cpp" />
     <ClCompile Include="VulkanImageMemoryBarrier.cpp" />
     <ClCompile Include="VulkanSampler.cpp" />
     <ClCompile Include="VulkanImageSubResourceRange.cpp" />
-    <ClCompile Include="VulkanTexture.cpp" />
+    <ClCompile Include="VulkanTexture2D.cpp" />
     <ClCompile Include="VulkanDescriptorPool.cpp" />
     <ClCompile Include="VulkanDescriptorSet.cpp" />
     <ClCompile Include="VulkanDescriptorSetLayout.cpp" />
@@ -204,10 +205,11 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="VulkanDescriptorImageInfo.h" />
     <ClInclude Include="VulkanImage.h" />
+    <ClInclude Include="VulkanImage2D.h" />
     <ClInclude Include="VulkanImageMemoryBarrier.h" />
     <ClInclude Include="VulkanSampler.h" />
     <ClInclude Include="VulkanImageSubResourceRange.h" />
-    <ClInclude Include="VulkanTexture.h" />
+    <ClInclude Include="VulkanTexture2D.h" />
     <ClInclude Include="VulkanBuffer.h" />
     <ClInclude Include="VulkanDescriptorPool.h" />
     <ClInclude Include="VulkanDescriptorSet.h" />
@@ -265,6 +267,7 @@
     <None Include="BasicShader.vert" />
     <None Include="BasicShaderFrag.spv" />
     <None Include="BasicShaderVert.spv" />
+    <None Include="pattern_02_bc2.ktx" />
     <None Include="tri.frag" />
     <None Include="tri.vert" />
     <None Include="Triangle.frag" />
