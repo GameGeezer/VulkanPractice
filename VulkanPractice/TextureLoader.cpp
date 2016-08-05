@@ -27,7 +27,7 @@ VulkanTexture2D*
 TextureLoader::load(VulkanDevice &device, std::string fileName, VkFormat format)
 {
 	int32_t texWidth, texHeight, texChannels;
-	stbi_uc* pixels = stbi_load("res/textures/texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load(fileName.c_str(), &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 
 	int32_t mipMapLevels = 1;

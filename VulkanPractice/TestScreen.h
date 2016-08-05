@@ -59,21 +59,23 @@ private:
 	void
 	createMeshBuffers(VkCommandBuffer uploadCommandBuffer);
 
-	GraphicsPipeline	*	m_graphicsPipeline;
-	PipelineLayout		*	m_pipelineLayout;
+	GraphicsPipeline		*	m_graphicsPipeline;
+	PipelineLayout			*	m_pipelineLayout;
 
-	VulkanBuffer		*	m_vertexBuffer;
-	VulkanBuffer		*	m_indexBuffer;
+	VulkanBuffer			*	m_vertexBuffer;
+	VulkanBuffer			*	m_indexBuffer;
 
-	VulkanStagedBuffer	*	m_uniformBuffer;
+	VulkanStagedBuffer		*	m_uniformBuffer;
 
-	VulkanShaderModule	*	m_vertexShader;
-	VulkanShaderModule	*	m_fragmentShader;
+	VulkanShaderModule		*	m_vertexShader;
+	VulkanShaderModule		*	m_fragmentShader;
 
-	VkDeviceMemory			m_meshMemory;
+	VkDeviceMemory				m_meshMemory;
 
 	VulkanDescriptorPool	*	m_descriptorPool;
-	VulkanDescriptorSet	*	m_descriptorSet;
+	VulkanDescriptorSet		*	m_descriptorSet;
 
-	Player				*	m_player;
+	Player					*	m_player;
+
+	uint32_t					m_indicesCount; // delete
 };

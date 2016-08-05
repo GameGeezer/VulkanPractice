@@ -50,11 +50,51 @@
 
 #include <array>
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+
+
 struct UniformBufferObject {
 	glm::mat4 model;
 	glm::mat4 view;
 	glm::mat4 proj;
 };
+
+void
+loadModel(VulkanDevice &device, std::vector<VertexPos3Col3Tex2> &vertices, std::vector<uint32_t> &indices) {
+
+	const std::string MODEL_PATH = "res/models/chalet.obj";
+
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string err;
+
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &err, MODEL_PATH.c_str())) {
+		throw std::runtime_error(err);
+	}
+
+
+	for (const auto& shape : shapes) {
+		for (const auto& index : shape.mesh.indices) {
+			VertexPos3Col3Tex2 vertex = {};
+
+			vertex.position = {
+				attrib.vertices[3 * index.vertex_index + 0],
+				attrib.vertices[3 * index.vertex_index + 1],
+				attrib.vertices[3 * index.vertex_index + 2]
+			};
+
+			vertex.texCoord = {
+				attrib.texcoords[2 * index.texcoord_index + 0],
+				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
+			};
+
+			vertices.push_back(vertex);
+			indices.push_back(static_cast<uint32_t>(indices.size()));
+		}
+	}
+}
 
 void
 TestScreen::onCreate()
@@ -99,7 +139,7 @@ TestScreen::onCreate()
 
 		VkFence fence = fences->getFenceAtIndex(0);
 		TextureLoader textureLoader;
-		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "res/textures/texture.jpg", VK_FORMAT_R8G8B8A8_UNORM);
+		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "res/textures/chalet.jpg", VK_FORMAT_R8G8B8A8_UNORM);
 
 		std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
 
@@ -156,7 +196,7 @@ TestScreen::onUpdate(uint32_t delta)
 	float time = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count() / 1000.0f;
 
 	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.model = glm::rotate(glm::mat4(), time * glm::radians(20.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.view = *(m_player->getCamera()->getView());
 	ubo.proj = *(m_player->getCamera()->getProjection());
 	ubo.proj[1][1] *= -1;
@@ -179,7 +219,7 @@ TestScreen::onRender(VulkanCommandBuffer *commandBufferWrapper)
 	vkCmdBindIndexBuffer(commandBuffer, m_indexBuffer->getHandle(), 0, VK_INDEX_TYPE_UINT32);
 	VkBuffer vertBuffer = m_vertexBuffer->getHandle();
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, const_cast<const VkBuffer*>(&vertBuffer), offsets);
-	vkCmdDrawIndexed(commandBuffer, 12, 1, 0, 0, 0);
+	vkCmdDrawIndexed(commandBuffer, m_indicesCount, 1, 0, 0, 0);
 }
 
 void
@@ -236,29 +276,17 @@ void
 TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 {
 
-	static const VertexPos3Col3Tex2 vertices[8] =
-	{
-		{ { -0.5f, -0.5f, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 0.0f, 0.0f } },
-		{ { 0.5f, -0.5f, 0.0f },{ 0.0f, 1.0f, 0.0f },{ 1.0f, 0.0f } },
-		{ { 0.5f, 0.5f, 0.0f },{ 0.0f, 0.0f, 1.0f },{ 1.0f, 1.0f } },
-		{ { -0.5f, 0.5f, 0.0f },{ 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f } },
-
-		{ { -0.5f, -0.5f, 0.5f },{ 1.0f, 0.0f, 0.0f },{ 0.0f, 0.0f } },
-		{ { 0.5f, -0.5f, 0.5f },{ 0.0f, 1.0f, 0.0f },{ 1.0f, 0.0f } },
-		{ { 0.5f, 0.5f, 0.5f },{ 0.0f, 0.0f, 1.0f },{ 1.0f, 1.0f } },
-		{ { -0.5f, 0.5f, 0.5f },{ 1.0f, 1.0f, 1.0f },{ 0.0f, 1.0f } }
-	};
-
-	static const int indices[12] =
-	{
-		0, 1, 2, 0, 3, 2,
-		4, 5, 6, 6, 7, 4
-	};
 
 	VulkanDevice *device = getApplication()->getDevice();
 
-	m_vertexBuffer = new VulkanBuffer(*device, sizeof(vertices), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
-	m_indexBuffer = new VulkanBuffer(*device, sizeof(indices), VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
+	std::vector<VertexPos3Col3Tex2> vertices;
+	std::vector<uint32_t> indices;
+	loadModel(*device, vertices, indices);
+
+	m_indicesCount = static_cast<uint32_t>(indices.size());
+
+	m_vertexBuffer = new VulkanBuffer(*device, static_cast<uint32_t>(vertices.size() * sizeof(VertexPos3Col3Tex2)), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
+	m_indexBuffer = new VulkanBuffer(*device, static_cast<uint32_t>(indices.size() * sizeof(uint32_t)), VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
 	m_uniformBuffer = new VulkanStagedBuffer(*device, sizeof(UniformBufferObject), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 
 
@@ -272,8 +300,8 @@ TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 
 	VulkanDeviceMemory deviceMemory(device->getHandle(), m_meshMemory);
 	void *mapping = deviceMemory.map(0, VK_WHOLE_SIZE);
-	deviceMemory.copyFrom(mapping, vertices, 0, sizeof(vertices));
-	deviceMemory.copyFrom(mapping, indices, static_cast<uint32_t>(indexBufferOffset), sizeof(indices));
+	deviceMemory.copyFrom(mapping, vertices.data(), 0, vertices.size() * sizeof(VertexPos3Col3Tex2));
+	deviceMemory.copyFrom(mapping, indices.data(), static_cast<uint32_t>(indexBufferOffset), indices.size() * sizeof(uint32_t));
 	deviceMemory.unmap();
 
 	m_vertexBuffer->bindToMemory(m_meshMemory, 0);
