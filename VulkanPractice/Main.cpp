@@ -8,7 +8,7 @@ int main()
 {
 	Screen *screen = new TestScreen();
 	Game *game = new Game(*screen);
-	Application *application = new Application(*game, "Test Screen", 640, 480);
+	Application *application = new Application(*game, "Test Screen", 900, 800);
 
 	application->start();
 

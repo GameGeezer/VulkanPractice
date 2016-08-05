@@ -63,7 +63,7 @@ struct UniformBufferObject {
 void
 loadModel(VulkanDevice &device, std::vector<VertexPos3Col3Tex2> &vertices, std::vector<uint32_t> &indices) {
 
-	const std::string MODEL_PATH = "res/models/chalet.obj";
+	const std::string MODEL_PATH = "res/models/Mark7.obj";
 
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
@@ -139,7 +139,7 @@ TestScreen::onCreate()
 
 		VkFence fence = fences->getFenceAtIndex(0);
 		TextureLoader textureLoader;
-		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "res/textures/chalet.jpg", VK_FORMAT_R8G8B8A8_UNORM);
+		VulkanTexture2D *drawTexture = textureLoader.load(*(getApplication()->getDevice()), "res/textures/mk7.png", VK_FORMAT_R8G8B8A8_UNORM);
 
 		std::array<VkWriteDescriptorSet, 2> descriptorWrites = {};
 
@@ -196,7 +196,7 @@ TestScreen::onUpdate(uint32_t delta)
 	float time = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count() / 1000.0f;
 
 	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(), time * glm::radians(20.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.model = glm::rotate(glm::mat4(), time * glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.view = *(m_player->getCamera()->getView());
 	ubo.proj = *(m_player->getCamera()->getProjection());
 	ubo.proj[1][1] *= -1;
