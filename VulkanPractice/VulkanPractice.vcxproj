@@ -127,12 +127,13 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="KeyboardCallback.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MouseClickCallback.cpp" />
     <ClCompile Include="MouseMoveCallback.cpp" />
-    <ClCompile Include="Nova.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SDCircle.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="VertexPos3Col3Tex2.cpp" />
     <ClCompile Include="VulkanDescriptorImageInfo.cpp" />
     <ClCompile Include="VulkanImage.cpp" />
     <ClCompile Include="VulkanImage2D.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="FileUtil.hpp" />
     <ClInclude Include="KeyboardCallback.h" />
     <ClInclude Include="KeyboardListener.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Morton30.hpp" />
     <ClInclude Include="Morton64.hpp" />
     <ClInclude Include="MouseClickCallback.h" />
@@ -199,8 +201,8 @@
     <ClInclude Include="MouseCodes.h" />
     <ClInclude Include="MouseMoveCallback.h" />
     <ClInclude Include="MouseMoveListener.h" />
-    <ClInclude Include="Nova.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="VertexPos3Col3Tex2.h" />
     <ClInclude Include="SDCircle.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="VulkanDescriptorImageInfo.h" />

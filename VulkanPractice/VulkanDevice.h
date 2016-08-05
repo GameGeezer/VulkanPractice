@@ -38,6 +38,9 @@ public:
 	void
 	initialize();
 
+	VkFormat 
+	findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+
 	uint32_t
 	getMemoryType(uint32_t typeBits, VkMemoryPropertyFlags properties);
 

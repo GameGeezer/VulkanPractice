@@ -19,7 +19,6 @@
 #include "VulkanSemaphore.h"
 
 
-
 Application::Application(Game& game, string windowTitle, int windowWidth, int windowHeight) : m_game(&game), m_windowTitle(windowTitle), m_windowWidth(windowWidth), m_windowHeight(windowHeight)
 {
 	

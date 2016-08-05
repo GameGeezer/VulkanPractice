@@ -64,20 +64,14 @@ TextureLoader::load(VulkanDevice &device, std::string fileName, VkFormat format)
 
 	VulkanCommandBuffer oneTimeBuffer(device.beginSingleTimeCommands());
 	oneTimeBuffer.addBarriers(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, &setSRCBarrier, 1);
-	device.endSingleTimeCommands(oneTimeBuffer.getHandle());
-
-	VulkanCommandBuffer oneTimeBuffer2(device.beginSingleTimeCommands());
-	oneTimeBuffer2.addBarriers(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, &setDSTBarrier, 1);
-	device.endSingleTimeCommands(oneTimeBuffer2.getHandle());
-
-	VulkanCommandBuffer oneTimeBuffer3(device.beginSingleTimeCommands());
-	oneTimeBuffer3.commandCopyImage2D(texWidth, texHeight, stagingImage.getHandle(), 0, 0, image->getHandle(), 0, 0);
-	device.endSingleTimeCommands(oneTimeBuffer3.getHandle());
+	
+	oneTimeBuffer.addBarriers(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, &setDSTBarrier, 1);
+	oneTimeBuffer.commandCopyImage2D(texWidth, texHeight, stagingImage.getHandle(), 0, 0, image->getHandle(), 0, 0);
 
 	VkImageMemoryBarrier setSampleableBarrier = image->createSetLayoutBarrier(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, *(subResourceRange.getRaw()));
-	VulkanCommandBuffer oneTimeBuffer4(device.beginSingleTimeCommands());
-	oneTimeBuffer4.addBarriers(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, &setSampleableBarrier, 1);
-	device.endSingleTimeCommands(oneTimeBuffer4.getHandle());
+
+	oneTimeBuffer.addBarriers(VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, nullptr, 0, nullptr, 0, &setSampleableBarrier, 1);
+	device.endSingleTimeCommands(oneTimeBuffer.getHandle());
 
 
 	//float maxLod = (useStaging) ? (float)mipLevels : 0.0f;

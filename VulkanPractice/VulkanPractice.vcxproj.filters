@@ -303,9 +303,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>src\framework\graphics\private</Filter>
     </ClCompile>
-    <ClCompile Include="Nova.cpp">
-      <Filter>src\framework\graphics\private</Filter>
-    </ClCompile>
     <ClCompile Include="KeyboardCallback.cpp">
       <Filter>src\framework\window\callbacks\private</Filter>
     </ClCompile>
@@ -344,6 +341,12 @@
     </ClCompile>
     <ClCompile Include="VulkanTexture2D.cpp">
       <Filter>src\framework\vulkan\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>src\framework\graphics\private</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexPos3Col3Tex2.cpp">
+      <Filter>src\framework\graphics\private</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -503,9 +506,6 @@
     <ClInclude Include="Player.h">
       <Filter>src\game</Filter>
     </ClInclude>
-    <ClInclude Include="Nova.h">
-      <Filter>src\framework\graphics\public</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>src\framework\graphics\public</Filter>
     </ClInclude>
@@ -562,6 +562,12 @@
     </ClInclude>
     <ClInclude Include="VulkanTexture2D.h">
       <Filter>src\framework\vulkan\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>src\framework\graphics\public</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexPos3Col3Tex2.h">
+      <Filter>src\framework\graphics\public</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

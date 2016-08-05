@@ -11,27 +11,30 @@
 #include "VulkanRenderSubPass.h"
 #include "VulkanAttachmentDescription.h"
 
+#include <array>
+
 KeyboardCallback* Window::KEYBOARD = new KeyboardCallback();
 
 MouseClickCallback* Window::MOUSE_CLICK = new MouseClickCallback();
 
 MouseMoveCallback* Window::MOUSE_MOVE = new MouseMoveCallback();
 
-VulkanRenderPass* CreateRenderPass(VkDevice device, VkFormat swapchainFormat)
+VulkanRenderPass* CreateRenderPass(VulkanDevice &device, VkFormat swapchainFormat)
 {
-	VulkanAttachmentDescription attachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
+	VulkanAttachmentDescription diffuseAttachmentDescription(VK_SAMPLE_COUNT_1_BIT, swapchainFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, false);
 
-	VkAttachmentReference attachmentReference = {};
-	attachmentReference.attachment = 0;
-	attachmentReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	VkFormat depthFormat = device.findSupportedFormat({ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
+	VulkanAttachmentDescription depthAttachmentDescription(VK_SAMPLE_COUNT_1_BIT, depthFormat, VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, false);
 
 	VulkanRenderSubPass subpass;
 	subpass.addColorAttachment(0, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+	subpass.setDepthStencilAttachment(1, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 	subpass.initialize();
 
-	VulkanRenderPass *renderPass = new VulkanRenderPass(device);
+	VulkanRenderPass *renderPass = new VulkanRenderPass(device.getHandle());
 	renderPass->addSubPass(subpass);
-	renderPass->addAttachmentDescription(*(attachmentDescription.getDescription()));
+	renderPass->addAttachmentDescription(*(diffuseAttachmentDescription.getDescription()));
+	renderPass->addAttachmentDescription(*(depthAttachmentDescription.getDescription()));
 	renderPass->initialize();
 
 	return renderPass;
@@ -50,7 +53,7 @@ Window::Window(VkInstance instance, VulkanDevice& device, char *title, const uin
 	initOsWindow();
 	m_surface = new VulkanPresentationSurface(*m_device, m_vulkanInstance, initOSSurface());
 	m_swapchain = new VulkanSwapchain(*m_device, *m_surface, m_swapchainImageCount);
-	m_renderPass = CreateRenderPass(m_device->getHandle(), m_surface->getFormat()->format);
+	m_renderPass = CreateRenderPass(*m_device, m_surface->getFormat()->format);
 
 	m_swapchainImages = new VulkanSwapchainImages(*m_device, *m_swapchain, *m_surface, m_renderPass->getHandle());
 }
@@ -76,14 +79,12 @@ Window::acquireNextImage(uint64_t timeout, VkSemaphore imageAcquiredSemaphore)
 void
 Window::beginRenderPass(VkCommandBuffer commandBuffer, uint32_t index)
 {
-	VkClearValue clearValue = {};
 
-	clearValue.color.float32[0] = 0.042f;
-	clearValue.color.float32[1] = 0.042f;
-	clearValue.color.float32[2] = 0.042f;
-	clearValue.color.float32[3] = 1.0f;
+	std::array<VkClearValue, 2> clearValues = {};
+	clearValues[0].color = { 0.042f, 0.042f, 0.042f, 1.0f };
+	clearValues[1].depthStencil = { 1.0f, 0 };
 
-	m_renderPass->begin(commandBuffer, m_swapchainImages->getFrameBuffer(index), m_width, m_height, clearValue, 1);
+	m_renderPass->begin(commandBuffer, m_swapchainImages->getFrameBuffer(index), m_width, m_height, clearValues.data(), static_cast<uint32_t>(clearValues.size()));
 }
 
 void

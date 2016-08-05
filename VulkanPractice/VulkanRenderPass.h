@@ -14,7 +14,7 @@ public:
 	~VulkanRenderPass();
 
 	void
-	begin(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, uint32_t width, uint32_t height, VkClearValue &clearValue, uint32_t clearCount);
+	begin(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, uint32_t width, uint32_t height, VkClearValue *clearValue, uint32_t clearCount);
 
 	void
 	end(VkCommandBuffer commandBuffer);

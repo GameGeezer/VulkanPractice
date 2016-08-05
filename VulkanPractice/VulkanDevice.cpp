@@ -76,6 +76,26 @@ VulkanDevice::initialize()
 	m_commandPool = new VulkanCommandPool(m_device, false, true, m_queueFamilyIndex);
 }
 
+VkFormat
+VulkanDevice::findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+{
+	for (VkFormat format : candidates) {
+		VkFormatProperties props;
+		vkGetPhysicalDeviceFormatProperties(m_physicalDevice->getHandle(), format, &props);
+
+		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features)
+		{
+			return format;
+		}
+		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
+		{
+			return format;
+		}
+	}
+
+	throw std::runtime_error("failed to find supported format!");
+}
+
 VkDeviceMemory
 VulkanDevice::allocateMemory(uint32_t typeBits, VkMemoryPropertyFlags properties, VkDeviceSize size)
 {

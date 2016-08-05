@@ -13,7 +13,7 @@ VulkanRenderPass::~VulkanRenderPass()
 }
 
 void
-VulkanRenderPass::begin(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, uint32_t width, uint32_t height, VkClearValue &clearValue, uint32_t clearCount)
+VulkanRenderPass::begin(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer, uint32_t width, uint32_t height, VkClearValue *clearValue, uint32_t clearCount)
 {
 	VkRenderPassBeginInfo renderPassBeginInfo = {};
 	renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -21,7 +21,7 @@ VulkanRenderPass::begin(VkCommandBuffer commandBuffer, VkFramebuffer frameBuffer
 	renderPassBeginInfo.renderArea.extent.width = width;
 	renderPassBeginInfo.renderArea.extent.height = height;
 	renderPassBeginInfo.renderPass = m_renderPass;
-	renderPassBeginInfo.pClearValues = &clearValue;
+	renderPassBeginInfo.pClearValues = clearValue;
 	renderPassBeginInfo.clearValueCount = clearCount;
 
 	vkCmdBeginRenderPass(commandBuffer, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
