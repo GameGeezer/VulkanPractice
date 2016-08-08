@@ -125,14 +125,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BasicVertexPipeline.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="KeyboardCallback.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshBuilder.cpp" />
     <ClCompile Include="MouseClickCallback.cpp" />
     <ClCompile Include="MouseMoveCallback.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SDCircle.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="VertexAttribute.cpp" />
     <ClCompile Include="VertexPos3Col3Tex2.cpp" />
     <ClCompile Include="VulkanDescriptorImageInfo.cpp" />
     <ClCompile Include="VulkanImage.cpp" />
@@ -190,10 +193,12 @@
     <ClCompile Include="VulkanSwapchainImages.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicVertexPipeline.h" />
     <ClInclude Include="FileUtil.hpp" />
     <ClInclude Include="KeyboardCallback.h" />
     <ClInclude Include="KeyboardListener.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshBuilder.h" />
     <ClInclude Include="Morton30.hpp" />
     <ClInclude Include="Morton64.hpp" />
     <ClInclude Include="MouseClickCallback.h" />
@@ -202,6 +207,7 @@
     <ClInclude Include="MouseMoveCallback.h" />
     <ClInclude Include="MouseMoveListener.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="VertexAttribute.h" />
     <ClInclude Include="VertexPos3Col3Tex2.h" />
     <ClInclude Include="SDCircle.h" />
     <ClInclude Include="TextureLoader.h" />
@@ -250,13 +256,11 @@
     <ClInclude Include="VulkanRenderSubPass.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="VulkanShaderModule.h" />
-    <ClInclude Include="Shaders.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="TestScreen.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="VulkanDevice.h" />
     <ClInclude Include="VulkanDeviceMemory.h" />
-    <ClInclude Include="VulkanHelper.h" />
     <ClInclude Include="VulkanInstance.h" />
     <ClInclude Include="VulkanMemoryAllocateInfo.h" />
     <ClInclude Include="VulkanPresentationSurface.h" />
@@ -270,8 +274,6 @@
     <None Include="BasicShaderFrag.spv" />
     <None Include="BasicShaderVert.spv" />
     <None Include="pattern_02_bc2.ktx" />
-    <None Include="tri.frag" />
-    <None Include="tri.vert" />
     <None Include="Triangle.frag" />
     <None Include="Triangle.vert" />
   </ItemGroup>

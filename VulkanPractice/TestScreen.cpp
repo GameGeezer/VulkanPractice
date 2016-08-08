@@ -31,14 +31,16 @@
 
 #include "VertexPos3Col3Tex2.h"
 
+#include "MeshBuilder.h"
+#include "Mesh.h"
+#include "VertexAttribute.h"
+
 
 #include "Application.h"
 #include "VulkanDevice.h"
 #include "PipelineLayout.h"
 
 #include "Player.h"
-
-#include "Shaders.h"
 
 #include "FileUtil.hpp"
 
@@ -61,7 +63,7 @@ struct UniformBufferObject {
 };
 
 void
-loadModel(VulkanDevice &device, std::vector<VertexPos3Col3Tex2> &vertices, std::vector<uint32_t> &indices) {
+loadModel(VulkanDevice &device, MeshBuilder &builder) {
 
 	const std::string MODEL_PATH = "res/models/Mark7.obj";
 
@@ -77,21 +79,20 @@ loadModel(VulkanDevice &device, std::vector<VertexPos3Col3Tex2> &vertices, std::
 
 	for (const auto& shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
-			VertexPos3Col3Tex2 vertex = {};
 
-			vertex.position = {
+			float vertex[8] = {
 				attrib.vertices[3 * index.vertex_index + 0],
 				attrib.vertices[3 * index.vertex_index + 1],
-				attrib.vertices[3 * index.vertex_index + 2]
-			};
-
-			vertex.texCoord = {
+				attrib.vertices[3 * index.vertex_index + 2],
+				0,
+				0,
+				0,
 				attrib.texcoords[2 * index.texcoord_index + 0],
 				1.0f - attrib.texcoords[2 * index.texcoord_index + 1]
-			};
 
-			vertices.push_back(vertex);
-			indices.push_back(static_cast<uint32_t>(indices.size()));
+			};
+			builder.addVertexData(&vertex[0], 8);
+			builder.addIndex(builder.getIndexCount());
 		}
 	}
 }
@@ -219,7 +220,9 @@ TestScreen::onRender(VulkanCommandBuffer *commandBufferWrapper)
 	vkCmdBindIndexBuffer(commandBuffer, m_indexBuffer->getHandle(), 0, VK_INDEX_TYPE_UINT32);
 	VkBuffer vertBuffer = m_vertexBuffer->getHandle();
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, const_cast<const VkBuffer*>(&vertBuffer), offsets);
+
 	vkCmdDrawIndexed(commandBuffer, m_indicesCount, 1, 0, 0, 0);
+
 }
 
 void
@@ -275,37 +278,19 @@ createPipeline(VkDevice device, VkRenderPass renderPass, VkPipelineLayout layout
 void
 TestScreen::createMeshBuffers(VkCommandBuffer uploadCommandBuffer)
 {
-
-
 	VulkanDevice *device = getApplication()->getDevice();
+	MeshBuilder builder;
+	loadModel(*device, builder);
 
-	std::vector<VertexPos3Col3Tex2> vertices;
-	std::vector<uint32_t> indices;
-	loadModel(*device, vertices, indices);
+	Mesh *mesh = builder.build(*device);
 
-	m_indicesCount = static_cast<uint32_t>(indices.size());
+	m_indicesCount = builder.getIndexCount();
 
-	m_vertexBuffer = new VulkanBuffer(*device, static_cast<uint32_t>(vertices.size() * sizeof(VertexPos3Col3Tex2)), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
-	m_indexBuffer = new VulkanBuffer(*device, static_cast<uint32_t>(indices.size() * sizeof(uint32_t)), VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VkSharingMode::VK_SHARING_MODE_EXCLUSIVE);
+	m_vertexBuffer = mesh->m_vertexBuffer;
+	m_indexBuffer = mesh->m_indexBuffer;
 	m_uniformBuffer = new VulkanStagedBuffer(*device, sizeof(UniformBufferObject), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
 
-
-	VkDeviceSize bufferSize = m_vertexBuffer->getSize();
-	// We want to place the index buffer behind the vertex buffer. Need to take
-	// the alignment into account to find the next suitable location
-	VkDeviceSize indexBufferOffset = RoundToNextMultiple(bufferSize, m_indexBuffer->getAlignment());
-
-	bufferSize = indexBufferOffset + m_indexBuffer->getSize();
-	m_meshMemory = device->allocateMemory(m_vertexBuffer->getMemoryTypeBits(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,bufferSize);
-
-	VulkanDeviceMemory deviceMemory(device->getHandle(), m_meshMemory);
-	void *mapping = deviceMemory.map(0, VK_WHOLE_SIZE);
-	deviceMemory.copyFrom(mapping, vertices.data(), 0, vertices.size() * sizeof(VertexPos3Col3Tex2));
-	deviceMemory.copyFrom(mapping, indices.data(), static_cast<uint32_t>(indexBufferOffset), indices.size() * sizeof(uint32_t));
-	deviceMemory.unmap();
-
-	m_vertexBuffer->bindToMemory(m_meshMemory, 0);
-	m_indexBuffer->bindToMemory(m_meshMemory, static_cast<uint32_t>(indexBufferOffset));
+	m_meshMemory = mesh->m_meshMemory->getHandle();
 	
 }
 

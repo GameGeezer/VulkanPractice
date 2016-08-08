@@ -7,6 +7,8 @@ class VulkanDeviceMemory;
 class VulkanImageView;
 class VulkanSampler;
 
+//	A texture wraps an image, the memory the image is bound to, a view of an image, and a sampler.
+//	It wraps all the components necessary to access an image in a shader.
 class VulkanTexture2D
 {
 public:

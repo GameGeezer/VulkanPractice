@@ -10,7 +10,7 @@ class VulkanImage
 {
 public:
 	
-	//	device -
+	//	device - Used in creation and destruction of the Image
 	//	imageType - The dimensionality of the image
 	//	format - The format and types of elements that will be contained within the image
 	//	initialLayout - The inititial layout of all image sub resources (Must be VK_IMAGE_LAYOUT_UNDEFINED or VK_IMAGE_LAYOUT_PREINITIALIZED)
@@ -53,7 +53,7 @@ public:
 	VkImage
 	getHandle();
 
-	// returns - Each bit itentifies a differnt memory type that is supported
+	// returns - Each bit identifies a differnt memory type that is supported
 	uint32_t
 	getMemoryTypeBits();
 

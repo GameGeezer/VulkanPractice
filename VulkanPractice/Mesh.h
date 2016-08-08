@@ -1,25 +1,25 @@
 #pragma once
 
 #include <vector>
+#include <vulkan\vulkan.h>
 
-template<class T>
+class VertexAttribute;
+class VulkanDevice;
+class VulkanDeviceMemory;
+class VulkanBuffer;
+
 class Mesh
 {
 public:
 
-	void
-	addVertices(std::vector<T> vertices);
+	VulkanDeviceMemory	*	m_meshMemory;
+	VulkanBuffer		*	m_vertexBuffer;
+	VulkanBuffer		*	m_indexBuffer;
 
-	void
-	addindices(std::vector<uint32_t> indices);
+	Mesh(VulkanDevice &device, std::vector<uint32_t>& indices, std::vector<float>& vertexData, std::vector<VertexAttribute*> &vertexAttributes);
 
-	size_t
-	getVertexCount();
-
-	size_t
-	getIndexCount();
-
+	~Mesh();
 private:
-	std::vector<T>			m_vertices;
-	std::vector<uint32_t>	m_indices;
+	VulkanDevice		*	m_device;
+
 };
